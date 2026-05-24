@@ -1,0 +1,113 @@
+---
+// src/components/FloatingContactBar.astro
+// Updated: more reliable visibility + higher z-index + client:load
+
+const phone    = "tel:+27768183494"                          // ← your real number
+const whatsapp = "https://wa.me/2768183494?text=Hello%20Reserved%20Designs"  // ← format: country code without +
+const email    = "mailto:info.reserved23@gmail.com?subject=Project%20Inquiry"
+---
+
+<div 
+  id="floating-contact"
+  class="
+    fixed bottom-6 right-6 z-[100]           /* ↑ higher than nav z-50 */
+    flex flex-col gap-4
+    transition-all duration-500 ease-in-out
+    opacity-0 translate-y-10 pointer-events-none
+    [&.show]:opacity-100 [&.show]:translate-y-0 [&.show]:pointer-events-auto
+  "
+  aria-label="Quick contact options"
+>
+  <a 
+    href={phone}
+    class="floating-btn bg-green-600 hover:bg-green-700 focus:bg-green-700"
+    aria-label="Call us"
+    title="Call us"
+  >
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M6.62 10.79c1.07 2.59 3.02 4.54 5.61 5.61l2.2-2.2c.28-.28.67-.36 1.02-.25 1.12.37 2.32.57 3.57.57.55 0 1 .45 1 1v3.5c0 .55-.45 1-1 1A18 18 0 0 1 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </svg>
+  </a>
+
+  <a 
+    href={whatsapp}
+    target="_blank" rel="noopener noreferrer"
+    class="floating-btn bg-[#25D366] hover:bg-[#1da851] focus:bg-[#1da851]"
+    aria-label="WhatsApp"
+    title="Message on WhatsApp"
+  >
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 2a9.97 9.97 0 0 0-8.11 4.12A10.02 10.02 0 0 0 2 12c0 2.04.62 3.94 1.68 5.51L2 22l4.5-1.68A9.97 9.97 0 0 0 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm3.78 14.57c-.36.7-.73 1.27-1.4 1.4-.66.14-1.4-.33-2.1-.66-.7-.33-1.4-.66-2.1-.66-.66 0-1.4.33-1.4 1.4 0 .94.73 1.4 1.4 1.4.66 0 1.4-.33 2.1-.66.7-.33 1.4-.66 2.1-.66.66 0 1.15.57 1.4 1.27.25.7.25 1.57-.25 2.27z"/>
+    </svg>
+  </a>
+
+  <a 
+    href={email}
+    class="floating-btn bg-pink-600 hover:bg-pink-700 focus:bg-pink-700"
+    aria-label="Email us"
+    title="Send email"
+  >
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+    </svg>
+  </a>
+</div>
+
+<style is:global>
+  .floating-btn {
+    @apply
+      w-14 h-14 rounded-full
+      flex items-center justify-center
+      text-white shadow-lg
+      transition-all duration-300
+      hover:scale-110 hover:shadow-2xl
+      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-current
+      active:scale-95;
+  }
+</style>
+
+<script is:inline>
+  // Very simple & reliable version – no astro:* events
+  (function() {
+    const bar = document.getElementById('floating-contact');
+    if (!bar) return;
+
+    let timer = null;
+    let lastY = window.scrollY;
+
+    function show() {
+      bar.classList.add('show');
+    }
+
+    function hide() {
+      bar.classList.remove('show');
+    }
+
+    function onScroll() {
+      clearTimeout(timer);
+      show();
+
+      timer = setTimeout(() => {
+        // only hide if not scrolling anymore
+        if (Math.abs(window.scrollY - lastY) < 3) {
+          hide();
+        }
+      }, 2200);   // hide after ~2.2 seconds of no scrolling
+
+      lastY = window.scrollY;
+    }
+
+    // Show immediately after load + small delay
+    setTimeout(show, 600);
+
+    // Listen to scroll (passive = better performance)
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Show again when tab becomes visible (mobile / returning to tab)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        show();
+      }
+    });
+  })();
+</script>

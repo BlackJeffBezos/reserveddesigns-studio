@@ -1,0 +1,93 @@
+---
+const logos = [
+  { name: "Allan Gray Orbis Foundation", src: "/logos/allan-gray-orbis-foundation.avif" },
+  { name: "4Di Capital", src: "/logos/4di-capital.avif" },
+  { name: "Knife Capital", src: "/logos/knife-venture-capital.avif" },
+  { name: "Newtown Partners", src: "/logos/newtonton-partners.avif" },
+  { name: "Kalon Venture Partners", src: "/logos/kalon-venture-partners.avif" },
+  { name: "FNB Ventures / FirstRand", src: "/logos/fnb-small-business-investments.avif" },
+  { name: "Nedbank Small Business", src: "/logos/Pitch-and-Polish-Logo.png" },
+  { name: "Standard Bank SME", src: "/logos/standard-bank-summit.avif" },
+  // Add more if you want (e.g. IDC, Savant, etc.)
+];
+---
+
+<section class="bg-zinc-950 py-16 text-white overflow-hidden">
+  <div class="max-w-5xl mx-auto px-6 text-center">
+    <!-- Headline -->
+    <h2 class="text-4xl md:text-5xl font-bold leading-tight mb-6">
+      Are you investor-ready and funding-ready?
+    </h2>
+
+    <p class="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto mb-8">
+      Most founders jump straight to pitching investors without completing this essential checklist 
+      and <span class="text-amber-400 font-medium">yet still fail</span> in front of the panel.
+    </p>
+
+    <p class="text-lg md:text-xl text-zinc-300 max-w-3xl mx-auto mb-10">
+      We refine your story, strengthen your numbers, and position you to stand out when it matters most.
+    </p>
+
+    <!-- CTA Button -->
+    <a 
+      href="#invite" 
+      class="inline-block bg-white text-black font-semibold px-8 py-4 rounded-full text-lg hover:bg-amber-400 hover:text-black transition-all duration-300"
+    >
+      Get the Investor-Ready Checklist
+    </a>
+
+    <!-- Closing Question -->
+    <p class="mt-12 text-2xl md:text-3xl font-medium text-amber-400">
+      Your investors are ready to back you — are you?
+      <br>We are not affiliated with any specific investor, we prepare you to confidently pitch to:
+    </p>
+  </div>
+
+  <!-- Infinite Logo Marquee -->
+  <div class="mt-20">
+    <div class="relative">
+      <!-- Gradient overlays for smooth fade effect -->
+      <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-zinc-950 to-transparent z-10"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-zinc-950 to-transparent z-10"></div>
+
+      <div class="overflow-hidden">
+        <div 
+          class="flex items-center gap-16 md:gap-24 whitespace-nowrap animate-marquee"
+        >
+          {logos.concat(logos).map((logo) => (
+            <div class="flex-shrink-0 flex flex-col items-center opacity-75 hover:opacity-100 transition-opacity">
+              <img 
+                src={logo.src} 
+                alt={logo.name}
+                class="h-10 md:h-12 w-auto grayscale hover:grayscale-0 transition-all"
+                loading="lazy"
+              />
+              <span class="text-[10px] text-zinc-500 mt-2 tracking-widest">{logo.name}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee 5s linear infinite;
+    will-change: transform;
+  }
+
+  /* Pause on hover (optional - remove if you want completely non-stop) */
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+</style>

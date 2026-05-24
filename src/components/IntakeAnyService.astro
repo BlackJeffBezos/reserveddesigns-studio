@@ -1,0 +1,344 @@
+---
+// intakeAnyService.astro — General service brief modal (no package selector)
+// Basin endpoint: https://usebasin.com/f/b12a06bd44cf
+// Trigger: <a href="/IntakeAnyService"> or data-open-intake2 attribute
+---
+
+<div
+  id="intake-modal2"
+  class="hidden fixed inset-0 z-[9999] items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="intake2-modal-title"
+>
+  <!-- Backdrop -->
+  <div id="intake2-overlay" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+  <!-- Panel -->
+  <div
+    id="intake2-content"
+    class="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300"
+  >
+    <!-- Header -->
+    <div class="sticky top-0 bg-white border-b border-gray-100 px-8 py-5 flex items-center justify-between rounded-t-3xl z-10">
+      <div>
+        <p class="text-xs font-bold tracking-[3px] text-[#E91E8C] uppercase mb-1">Design Brief</p>
+        <h2 id="intake2-modal-title" class="text-2xl font-black tracking-tight text-gray-900">
+          Let's start your project.
+        </h2>
+      </div>
+      <button
+        id="intake2-close"
+        aria-label="Close modal"
+        class="w-10 h-10 flex items-center justify-center rounded-full border-2 border-gray-200 hover:border-gray-400 text-gray-500 hover:text-gray-900 transition-all duration-200 flex-shrink-0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form Body -->
+    <div class="px-8 py-8">
+
+      <!-- Success State -->
+      <div id="intake2-success" class="hidden text-center py-12">
+        <div class="w-20 h-20 bg-[#E91E8C]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-[#E91E8C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 class="text-3xl font-black text-gray-900 mb-3">Brief Received!</h3>
+        <p class="text-gray-600 text-lg max-w-sm mx-auto mb-8">
+          We'll review your idea and get back to you within <strong>24 hours</strong>.
+        </p>
+        <button
+          id="intake2-success-close"
+          class="inline-block bg-[#E91E8C] hover:bg-[#c4187a] text-white font-bold px-8 py-3 rounded-2xl transition-all duration-200 hover:scale-105"
+        >
+          Close
+        </button>
+      </div>
+
+      <!-- Form -->
+      <form id="intake2-form" class="space-y-6" novalidate>
+
+        <!-- Name + Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2" for="intake2-name">
+              Your Name <span class="text-[#E91E8C]">*</span>
+            </label>
+            <input
+              id="intake2-name" type="text" name="name"
+              placeholder="Jane Mokoena" required
+              class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#E91E8C] outline-none transition-colors text-gray-900 placeholder-gray-400"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2" for="intake2-email">
+              Your Email <span class="text-[#E91E8C]">*</span>
+            </label>
+            <input
+              id="intake2-email" type="email" name="email"
+              placeholder="jane@example.com" required
+              class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#E91E8C] outline-none transition-colors text-gray-900 placeholder-gray-400"
+            />
+          </div>
+        </div>
+
+        <!-- Describe needs -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2" for="intake2-message">
+            Describe Your Needs <span class="text-[#E91E8C]">*</span>
+          </label>
+          <textarea
+            id="intake2-message" name="message" rows="4" required
+            placeholder="Tell us more about what you would like us to assist you with — the more detail, the better. Include references, anything you have on your mind."
+            class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#E91E8C] outline-none transition-colors resize-none text-gray-900 placeholder-gray-400"
+          ></textarea>
+        </div>
+
+        <!-- File Upload -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Upload Files <span class="text-gray-400 font-normal">(optional)</span>
+          </label>
+          <label for="intake2-file"
+            class="flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-200 hover:border-[#E91E8C] rounded-xl p-6 cursor-pointer transition-colors group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-400 group-hover:text-[#E91E8C] mb-2 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span class="text-sm text-gray-600 group-hover:text-[#E91E8C] transition-colors font-medium">Click to upload sketches, images, videos or docs</span>
+            <span class="text-xs text-gray-400 mt-1">JPG, PNG, MP4, PDF, DOC — Max 10MB per file</span>
+          </label>
+          <input type="file" id="intake2-file" name="files" multiple
+            accept=".jpg,.jpeg,.png,.webp,.mp4,.mov,.pdf,.doc,.docx" class="hidden" />
+          <p id="intake2-file-list" class="text-sm text-gray-600 mt-2 hidden"></p>
+          <p id="intake2-file-error" class="text-sm text-red-500 mt-2 hidden"></p>
+        </div>
+
+        <!-- Submit -->
+        <div class="space-y-3 pt-2">
+          <button type="submit" id="intake2-submit" disabled
+            class="w-full bg-[#E91E8C] hover:bg-[#c4187a] disabled:opacity-40 disabled:cursor-not-allowed text-white py-4 rounded-xl font-black tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
+            SUBMIT MY BRIEF →
+          </button>
+
+          <div class="flex items-center gap-3">
+            <div class="flex-1 h-px bg-gray-200"></div>
+            <span class="text-xs text-gray-400 font-medium">or</span>
+            <div class="flex-1 h-px bg-gray-200"></div>
+          </div>
+
+          <button type="button" id="intake2-whatsapp"
+            class="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#1ebe5d] text-white py-4 rounded-xl font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            SEND BRIEF VIA WHATSAPP
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+(function () {
+  const BASIN_URL = "https://usebasin.com/f/d1012b1e0982";
+
+  // ── DOM refs ──────────────────────────────────────────────
+  const modal        = document.getElementById('intake-modal2');
+  const content      = document.getElementById('intake2-content');
+  const overlay      = document.getElementById('intake2-overlay');
+  const closeBtn     = document.getElementById('intake2-close');
+  const form         = document.getElementById('intake2-form');
+  const successEl    = document.getElementById('intake2-success');
+  const successClose = document.getElementById('intake2-success-close');
+  const submitBtn    = document.getElementById('intake2-submit');
+  const fileInput    = document.getElementById('intake2-file');
+  const fileList     = document.getElementById('intake2-file-list');
+  const fileError    = document.getElementById('intake2-file-error');
+  const whatsappBtn  = document.getElementById('intake2-whatsapp');
+  const nameInput    = document.getElementById('intake2-name');
+  const emailInput   = document.getElementById('intake2-email');
+  const messageInput = document.getElementById('intake2-message');
+
+  // ── NUCLEAR REDIRECT LOCKDOWN ─────────────────────────────
+  let lockdown = false;
+
+  const onBeforeUnload = (e) => {
+    if (!lockdown) return;
+    e.preventDefault();
+    e.returnValue = '';
+  };
+
+  const _pushState    = history.pushState.bind(history);
+  const _replaceState = history.replaceState.bind(history);
+
+  history.pushState = (...a) => {
+    if (lockdown) { console.warn('[BASIN LOCKDOWN] pushState blocked'); return; }
+    _pushState(...a);
+  };
+  history.replaceState = (...a) => {
+    if (lockdown) { console.warn('[BASIN LOCKDOWN] replaceState blocked'); return; }
+    _replaceState(...a);
+  };
+
+  const onNavEvent = (e) => { if (lockdown) e.stopImmediatePropagation(); };
+  window.addEventListener('popstate',   onNavEvent, true);
+  window.addEventListener('hashchange', onNavEvent, true);
+
+  function armLockdown()   { lockdown = true;  window.addEventListener('beforeunload', onBeforeUnload); }
+  function disarmLockdown(){ lockdown = false; window.removeEventListener('beforeunload', onBeforeUnload); }
+
+  // ── Open / Close ──────────────────────────────────────────
+  function openModal() {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      content.classList.remove('scale-95', 'opacity-0');
+      content.classList.add('scale-100', 'opacity-100');
+    }));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }, 250);
+  }
+
+  closeBtn?.addEventListener('click', closeModal);
+  overlay?.addEventListener('click', closeModal);
+  successClose?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+  });
+
+  // Global trigger: <a href="/IntakeAnyService"> or data-open-intake2
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('a, button');
+    if (!el) return;
+    const href = el.getAttribute('href') || '';
+    if (
+      href === '/IntakeAnyService' ||
+      href === '/IntakeAnyService/' ||
+      el.hasAttribute('data-open-intake2')
+    ) {
+      e.preventDefault();
+      openModal();
+    }
+  });
+
+  // ── Form validation ───────────────────────────────────────
+  function checkForm() {
+    submitBtn.disabled = !(
+      nameInput.value.trim() &&
+      emailInput.value.trim() &&
+      messageInput.value.trim()
+    );
+  }
+
+  nameInput.addEventListener('input',    checkForm);
+  emailInput.addEventListener('input',   checkForm);
+  messageInput.addEventListener('input', checkForm);
+
+  // ── File validation ───────────────────────────────────────
+  fileInput?.addEventListener('change', () => {
+    fileError.classList.add('hidden');
+    fileList.classList.add('hidden');
+    const files = Array.from(fileInput.files || []);
+    const MIN = 10 * 1024;
+    const MAX = 10 * 1024 * 1024;
+    for (const f of files) {
+      if (f.size < MIN) {
+        fileError.textContent = `"${f.name}" is too small (min 10 KB).`;
+        fileError.classList.remove('hidden');
+        fileInput.value = '';
+        return;
+      }
+      if (f.size > MAX) {
+        fileError.textContent = `"${f.name}" exceeds 10 MB.`;
+        fileError.classList.remove('hidden');
+        fileInput.value = '';
+        return;
+      }
+    }
+    if (files.length > 0) {
+      fileList.textContent = `${files.length} file(s): ${files.map(f => f.name).join(', ')}`;
+      fileList.classList.remove('hidden');
+    }
+  });
+
+  // ── Submit → Basin ────────────────────────────────────────
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitBtn.disabled) return;
+
+    const nameVal  = nameInput.value.trim();
+    const emailVal = emailInput.value.trim();
+    const msgVal   = messageInput.value.trim();
+    if (!nameVal || !emailVal || !msgVal) return;
+
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Sending…';
+
+    // multipart/form-data so file attachments go through
+    const fd = new FormData();
+    fd.append('name',      nameVal);
+    fd.append('email',     emailVal);
+    fd.append('message',   msgVal);
+    fd.append('_redirect', '');   // tell Basin: no server-side redirect
+
+    Array.from(fileInput?.files || []).forEach(f => fd.append('files', f));
+
+    armLockdown();
+
+    try {
+      const res = await fetch(BASIN_URL, {
+        method:   'POST',
+        redirect: 'manual',       // browser won't auto-follow any 3xx
+        headers:  { 'Accept': 'application/json' },
+        body:     fd
+      });
+
+      disarmLockdown();
+
+      if (res.ok || res.type === 'opaqueredirect') {
+        form.classList.add('hidden');
+        successEl.classList.remove('hidden');
+      } else {
+        throw new Error(`Basin: ${res.status}`);
+      }
+    } catch (err) {
+      disarmLockdown();
+      console.error('[BASIN]', err);
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'SUBMIT MY BRIEF →';
+      const existing = form.querySelector('#intake2-submit-error');
+      if (!existing) {
+        const errP = document.createElement('p');
+        errP.id          = 'intake2-submit-error';
+        errP.className   = 'text-sm text-red-500 text-center';
+        errP.textContent = 'Something went wrong. Please try again.';
+        submitBtn.parentElement.appendChild(errP);
+      }
+    }
+  });
+
+  // ── WhatsApp ──────────────────────────────────────────────
+  whatsappBtn?.addEventListener('click', () => {
+    const text = `Hi Reserved Designs,\n\nI want to start a project:\n\nName: ${nameInput.value || 'Not provided'}\nEmail: ${emailInput.value || 'Not provided'}\n\nIdea:\n${messageInput.value || 'No details provided'}`;
+    window.open(`https://wa.me/27768183494?text=${encodeURIComponent(text)}`, '_blank');
+  });
+
+})();
+</script>

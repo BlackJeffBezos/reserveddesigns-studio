@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BUILDING PRODUCTS THAT DON'T DESTROY THE PLANET</title>
+  <meta name="description" content="How we use circular design principles, biodegradable materials and lifecycle thinking to create responsible innovation."/>
+  <meta name="author" content="Reserved Designs"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet"/>
+
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{title}",
+  "description": "{excerpt}",
+  "datePublished": "{date}",
+  "author": {
+    "@type": "Person",
+    "name": "Ndinga – Reserved Designs"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Reserved Designs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://reserveddesigns.co.za/images/logo.png"
+    }
+  },
+  "image": "https://reserveddesigns.co.za/images/blog-hero.jpg",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{Astro.url.href}"
+  }
+}
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '869775152617835');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=869775152617835&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+  
+  <style>
+    :root {
+      --green: #006d5b;
+      --dark-green: #004d40;
+      --light-green: #e8f5e9;
+      --gray: #444;
+      --light: #f8fafc;
+      --white: #ffffff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.7;
+      color: #1e293b;
+      background: var(--light);
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      text-align: center;
+      padding: 80px 0 60px;
+      background: linear-gradient(135deg, var(--light-green) 0%, #f0fdf4 100%);
+    }
+    .category {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .read-time {
+      font-size: 0.95rem;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--dark-green);
+      margin-bottom: 24px;
+    }
+    .lead {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #334155;
+      max-width: 760px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    main {
+      padding: 40px 0 80px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      color: var(--dark-green);
+      margin: 64px 0 24px;
+      line-height: 1.2;
+    }
+    h3 {
+      font-size: 1.8rem;
+      color: #1e293b;
+      margin: 48px 0 20px;
+    }
+    p {
+      font-size: 1.18rem;
+      margin-bottom: 28px;
+      color: #334155;
+    }
+    ul, ol {
+      font-size: 1.18rem;
+      margin: 24px 0 32px 24px;
+      color: #334155;
+    }
+    li {
+      margin-bottom: 16px;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+      margin: 40px auto;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      display: block;
+    }
+    .highlight-box {
+      background: var(--light-green);
+      border-left: 6px solid var(--green);
+      padding: 32px;
+      margin: 48px 0;
+      border-radius: 8px;
+      font-size: 1.25rem;
+      color: #1e293b;
+    }
+    .cta {
+      background: var(--dark-green);
+      color: white;
+      text-align: center;
+      padding: 64px 20px;
+      margin: 80px 0 0;
+      border-radius: 24px 24px 0 0;
+    }
+    .cta h2 {
+      color: white;
+      margin-bottom: 24px;
+    }
+    .cta a {
+      display: inline-block;
+      background: white;
+      color: var(--dark-green);
+      font-weight: 700;
+      padding: 18px 40px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 1.3rem;
+      transition: all 0.3s;
+    }
+    .cta a:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,109,91,0.3);
+    }
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #64748b;
+      font-size: 0.95rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    @media (max-width: 640px) {
+      header { padding: 60px 0 40px; }
+      h1 { font-size: 2.8rem; }
+      .lead { font-size: 1.25rem; }
+      .cta { padding: 48px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="category">Sustainability • 2 min read</div>
+      <h1>BUILDING PRODUCTS<br>THAT DON'T DESTROY THE PLANET</h1>
+      <p class="lead">
+        How we use circular design principles, biodegradable materials and lifecycle thinking to create responsible innovation.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    <img 
+      src="https://images.unsplash.com/photo-1581092160560-1c1e428e9d65?auto=format&fit=crop&q=80&w=1200" 
+      alt="Engineer holding sustainable product prototype in modern eco-design lab"
+    />
+
+    <h2>The Problem We’re Solving</h2>
+    <p>
+      Every year, over 2 billion tons of waste end up in landfills or oceans — much of it from products designed without thinking about their end-of-life. Single-use plastics, toxic materials, and linear “take-make-dispose” models are pushing the planet past its limits.
+    </p>
+    <p>
+      At Reserved Designs, we refuse to contribute to that destruction. Instead, we build products that are intentionally designed to be <strong>reborn, reused, or safely returned to the earth</strong>.
+    </p>
+
+    <div class="highlight-box">
+      “Good design doesn’t just solve today’s problem — it prevents tomorrow’s crisis.”
+    </div>
+
+    <h2>1. Circular Design Principles</h2>
+    <p>
+      We follow the Ellen MacArthur Foundation’s circular economy framework:
+    </p>
+    <ul>
+      <li>Design out waste and pollution from the beginning</li>
+      <li>Keep products and materials in use for as long as possible</li>
+      <li>Regenerate natural systems instead of depleting them</li>
+    </ul>
+    <p>
+      Example: Our modular desk accessories use snap-fit joints instead of glue — so parts can be replaced or upgraded instead of thrown away.
+    </p>
+
+    <img 
+      src="https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?auto=format&fit=crop&q=80&w=1200" 
+      alt="Circular product design diagram showing reuse, repair, recycle loop"
+    />
+
+    <h2>2. Biodegradable & Low-Impact Materials</h2>
+    <p>
+      We prioritise:
+    </p>
+    <ul>
+      <li>Plant-based PLA and PHA filaments for 3D printing</li>
+      <li>Recycled ocean plastic and post-consumer PET</li>
+      <li>Bamboo, cork, hemp and mycelium composites</li>
+      <li>Non-toxic, water-based finishes instead of solvent paints</li>
+    </ul>
+
+    <h2>3. Full Lifecycle Thinking</h2>
+    <p>
+      Before we draw the first line, we ask:
+    </p>
+    <ul>
+      <li>What raw materials are used and where do they come from?</li>
+      <li>How much energy is consumed during production?</li>
+      <li>How long will the product last? Can it be repaired?</li>
+      <li>What happens at end-of-life — landfill, recycle, or compost?</li>
+    </ul>
+
+    <img 
+      src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&q=80&w=1200" 
+      alt="Lifecycle assessment diagram from raw material to end-of-life reuse"
+    />
+
+    <h2>Why It Matters in South Africa</h2>
+    <p>
+      South Africa generates over 122 million tons of waste annually, with only ~10% recycled. By designing products that are repairable, recyclable or biodegradable, we reduce landfill pressure, create local jobs in repair/reuse sectors, and protect communities from toxic leachate in places like Diepsloot, Khayelitsha and Orange Farm.
+    </p>
+
+    <div class="cta">
+      <h2>Ready to Build Something That Lasts — and Gives Back?</h2>
+      <p style="font-size:1.3rem; margin:24px 0 32px;">
+        Let’s create products people love <em>and</em> the planet can handle.
+      </p>
+      <a href="/contact">Start Your Sustainable Project Today →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Reserved Designs. Building responsibly, one product at a time.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

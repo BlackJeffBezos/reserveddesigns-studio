@@ -1,0 +1,252 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ValidateIdea from '../components/ValidateIdea.astro';
+
+// For re-use: pass service-specific props via Astro.props or frontmatter
+const { 
+  serviceTitle = "PRODUCT DEVELOPMENT",
+  serviceSubtitle = "SENSATIONS",
+  heroImage = "/images/reserved-designs-product-development-solutions.avif",
+  serviceDescription = "Innovation starts with an idea and we turn that idea into reality: functional, market-ready product.",
+  excellenceRating = "★★★★★",
+  stats = [
+    { number: "25+", label: "PROJECTS COMPLETED" },
+    { number: "12+", label: "HAPPY CLIENTS" },
+    { number: "5+", label: "YEARS EXPERIENCE" },
+    { number: "10+", label: "DAILY INQUIRIES" },
+  ],
+  portfolioItems = [
+    { title: "Sketching", image: "/images/reserved-designs-product-development-sketching.avif" },
+    { title: "Schematic Design", image: "/images/reserved-designs-product-development-schematic.avif" },
+    { title: "Custom Motherboard", image: "/images/reserved-designs-product-development-motherboard.avif" },
+  ]
+} = Astro.props;
+---
+
+<MainLayout 
+  title="Product Development Design - Turn Ideas into Loved Products"
+  description="We turn your idea into functional, market-ready everyday product people love. Ready to see what your idea could become? Say hi, we'd love to assist."
+>
+
+  <!-- Back link -->
+  <div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <a href="/services" class="inline-flex items-center text-gray-600 hover:text-primary-pink transition-colors text-sm font-medium">
+      ← ALL SERVICES
+    </a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Text + CTA -->
+        <div class="space-y-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-green-600 text-white text-3xl font-bold shadow-lg">
+            <span class="icon-bulb">💡</span> <!-- or use SVG icon -->
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight uppercase">
+            {serviceTitle}<br />
+            <span class="text-green-600">{serviceSubtitle}</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-gray-700 max-w-2xl">
+            {serviceDescription}
+          </p>
+
+          <div class="pt-4">
+            <a 
+              href="/intake" 
+              class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold uppercase px-10 py-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+            >
+              START YOUR PROJECT
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Image + Excellence Badge -->
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+          <img 
+            src={heroImage}
+            alt="Engineer working on product development in high-tech lab"
+            class="w-full h-full object-cover aspect-[4/3] lg:aspect-square"
+            loading="lazy"
+          />
+
+          <!-- Floating Excellence Badge -->
+          <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border border-gray-200 max-w-[220px]">
+            <p class="text-xs md:text-sm font-bold uppercase text-gray-700 mb-2">SERVICE EXCELLENCE</p>
+            <div class="flex text-yellow-400 text-xl md:text-2xl">
+              {excellenceRating}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Capabilities -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 uppercase">
+        CORE <span class="text-green-600">CAPABILITIES</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <!-- Capability 1 -->
+        <div class="bg-green-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              ⚙️ <!-- Invention / Gear icon placeholder -->
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              INVENTING NEW<br />PRODUCTS
+            </h3>
+            <p class="text-green-100 text-base md:text-lg leading-relaxed">
+              Transforming your ideas into tangible products by applying innovative design principles.
+            </p>
+          </div>
+          <div class="p-8 border-t border-green-700 mt-auto">
+            <a href="/inventing.html" class="block bg-white text-green-700 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 2 -->
+        <div class="bg-green-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🧪 <!-- Prototyping icon placeholder -->
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              PROTOTYPING &<br />TESTING
+            </h3>
+            <p class="text-green-100 text-base md:text-lg leading-relaxed">
+              Real-world prototypes that validate and refine your concepts, ensure safety, usability, ergonomics and functionality.
+            </p>
+          </div>
+          <div class="p-8 border-t border-green-700 mt-auto">
+            <a href="/prototyping.html" class="block bg-white text-green-700 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 3 -->
+        <div class="bg-green-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🏭 <!-- DFM / Factory icon placeholder -->
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              DESIGNING FOR<br/>MANUFACTURING (DFM)
+            </h3>
+            <p class="text-green-100 text-base md:text-lg leading-relaxed">
+              Optimized designs to ensure smooth and cost-efficient production.
+            </p>
+          </div>
+          <div class="p-8 border-t border-green-700 mt-auto">
+            <a href="/dfm.html" class="block bg-white text-green-700 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <br>
+      <br>
+
+              <!-- Capability 4 -->
+        <div class="bg-green-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🏭 <!-- DFM / Factory icon placeholder -->
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              EQUIPMENT, JIGS & FIXTURES DESIGN
+            </h3>
+            <p class="text-green-100 text-base md:text-lg leading-relaxed">
+              Specialized designs to streamline workflows.
+            </p>
+          </div>
+          <div class="p-8 border-t border-green-700 mt-auto">
+            <a href="/dfm.html" class="block bg-white text-green-700 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        {stats.map(stat => (
+          <div>
+            <p class="text-5xl md:text-6xl font-bold text-green-600 mb-2">{stat.number}</p>
+            <p class="text-gray-600 font-medium uppercase text-sm md:text-base tracking-wide">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Teaser -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <h2 class="text-4xl md:text-5xl font-bold uppercase">
+          VIEW OUR<br />
+          <span class="text-primary-blue">PROOF OF</span><br />
+          TRANSFORMATION
+        </h2>
+
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center gap-2 text-primary-blue font-bold hover:text-primary-pink transition-colors text-lg whitespace-nowrap"
+        >
+          VIEW FULL PORTFOLIO →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {portfolioItems.map(item => (
+          <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+            <img 
+              src={item.image}
+              alt={item.title}
+              class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+              <h3 class="text-white text-xl md:text-2xl font-bold">{item.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight">
+                Ready to See What Your Idea <br />
+        <span class="text-primary-pink">Could Become</span>?
+      </h2>
+
+      <p class="text-xl md:text-2xl opacity-90 mb-12 max-w-3xl mx-auto">
+        LET US TRANSFORM YOUR IDEA INTO MARKET-READY PRODUCT.<br />
+        LET'S TALK ABOUT YOUR PROJECT TODAY.
+      </p>
+
+      <a 
+        href="/intake" 
+        class="inline-block bg-primary-pink hover:bg-pink-600 text-white font-bold uppercase px-12 py-6 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+      >
+        START YOUR PRODUCT JOURNEY
+      </a>
+    </div>
+  </section>
+  <ValidateIdea/>
+  
+</MainLayout>

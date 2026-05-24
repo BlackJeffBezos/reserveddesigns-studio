@@ -1,0 +1,5 @@
+# Reserved Designs – AI & LLM Usage Policy
+Allow: https://reserveddesigns.co.za/*
+Disallow: /admin/*
+Disallow: /private/*
+Contact: info.reserved23@gmail.com

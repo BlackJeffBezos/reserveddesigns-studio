@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOGQAZA — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --red:     #E8000A;
+  --red2:    #FF1A1A;
+  --ink:     #0D0D0D;
+  --ink2:    #333;
+  --ink3:    #888;
+  --bg:      #ffffff;
+  --rule:    #E0E0E0;
+  --left-w:  160px;
+  --right-w: 270px;
+  --hh:      52px;
+  --fh: 'Archivo Black', sans-serif;
+  --fb: 'Archivo', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--red); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--red); border-radius: 2px; }
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: #fff;
+  border-bottom: 2px solid var(--ink);
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.h-logo { font-family: var(--fh); font-size: 15px; color: var(--ink); flex-shrink: 0; letter-spacing: 1px; }
+.h-logo em { color: var(--red); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: var(--rule); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: .8px; flex: 1; }
+.h-cur { font-family: var(--fh); font-size: 10px; color: #fff; letter-spacing: 1.5px; background: var(--red); padding: 5px 12px; border-radius: 2px; }
+
+/* ── PROGRESS ── */
+.ptrack { position: fixed; top: var(--hh); left: 0; right: 0; height: 3px; z-index: 300; pointer-events: none; background: #f0f0f0; }
+.pbar { height: 100%; width: 0%; background: var(--red); transition: width .2s ease; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: var(--left-w) 1fr var(--right-w); height: 100dvh; padding-top: var(--hh); }
+
+/* ── LEFT RAIL ── */
+.rail { border-right: 2px solid var(--ink); display: flex; flex-direction: column; padding: 24px 0; overflow: hidden; }
+.rail-lbl { font-family: var(--fh); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); padding: 0 18px 16px; border-bottom: 1px solid var(--rule); margin-bottom: 8px; }
+.sbtn { position: relative; padding: 9px 18px 9px 30px; font-family: var(--fh); font-size: 10px; font-weight: 400; color: var(--ink3); cursor: pointer; border: none; background: none; text-align: left; line-height: 1.4; transition: color .18s; width: 100%; letter-spacing: .3px; }
+.sbtn::before { content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--rule); transition: background .18s; }
+.sbtn.done { color: #bbb; }
+.sbtn.done::before { background: #ddd; }
+.sbtn.active { color: var(--ink); }
+.sbtn.active::before { background: var(--red); box-shadow: 0 0 0 3px rgba(232,0,10,.15); }
+.sbtn.active::after { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px; background: var(--red); border-radius: 0 2px 2px 0; }
+
+/* ── CONTENT ── */
+.content-col { position: relative; overflow: hidden; }
+.swrap { position: relative; width: 100%; height: 100%; }
+.dsec { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 40px 44px 72px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .32s ease, transform .32s ease; }
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--red); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── TYPOGRAPHY ── */
+.s-num { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: 1.5px; margin-bottom: 10px; }
+.s-num em { color: var(--red); font-style: normal; font-weight: 700; }
+.s-title { font-family: var(--fh); font-size: clamp(32px, 4vw, 60px); line-height: .95; color: var(--ink); margin-bottom: 6px; letter-spacing: -1px; text-transform: uppercase; }
+.s-sub { font-family: var(--fb); font-size: 13px; font-style: italic; font-weight: 300; color: var(--ink3); margin-bottom: 24px; }
+.s-rule { height: 2px; background: var(--ink); margin: 20px 0; }
+.s-text { font-family: var(--fb); font-size: 14px; font-weight: 400; color: var(--ink2); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+.s-text strong { font-family: var(--fh); color: var(--ink); }
+
+/* ── IMAGE PLACEHOLDERS ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: 1fr 1fr; }
+.igrid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.iph { background: #F5F5F5; border: 2px solid var(--ink); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #aaa; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; }
+.iph svg { opacity: .45; }
+.iph.red { background: #fff0f0; border-color: var(--red); color: #c06060; }
+.iph.blk { background: #f5f5f5; border-color: var(--ink); color: #777; }
+.iph.bold { background: var(--ink); border-color: var(--ink); color: #aaa; }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── TAGS ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag { font-family: var(--fh); font-size: 9px; padding: 4px 10px; border: 2px solid var(--ink); border-radius: 2px; color: var(--ink); letter-spacing: .5px; text-transform: uppercase; }
+.tag.r { border-color: var(--red); color: var(--red); }
+.tag.fill { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tag.rfill { background: var(--red); color: #fff; border-color: var(--red); }
+
+/* ── STATS ── */
+.srow { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 28px; padding: 20px 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.sv { font-family: var(--fh); font-size: 40px; color: var(--ink); line-height: 1; }
+.sv.r { color: var(--red); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── CALLOUTS ── */
+.alert { background: #fff0f0; border-left: 4px solid var(--red); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 3px 3px 0; }
+.alert strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--red); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.alert span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.note { background: #f5f5f5; border-left: 4px solid var(--ink); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 3px 3px 0; }
+.note strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.note span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.success { background: #f5f5f5; border: 2px solid var(--ink); padding: 16px 18px; margin-bottom: 22px; border-radius: 3px; }
+.success strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.success span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 30px; color: var(--red); min-width: 36px; line-height: 1; }
+.steptxt strong { display: block; font-family: var(--fh); font-size: 13px; color: var(--ink); margin-bottom: 5px; letter-spacing: .3px; text-transform: uppercase; }
+.steptxt span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+/* ── KPI CARDS ── */
+.kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.kcard { border: 2px solid var(--ink); border-radius: 3px; padding: 16px 18px; background: #fff; }
+.kcard.red { border-color: var(--red); background: #fff0f0; }
+.kv { font-family: var(--fh); font-size: 30px; line-height: 1; color: var(--ink); }
+.kv.r { color: var(--red); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 6px; }
+
+/* ── NUMBER GRID (game numbers) ── */
+.numgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 22px; max-width: 320px; }
+.numbox { aspect-ratio: 1; border: 2px solid var(--ink); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-size: 22px; color: var(--ink); cursor: default; transition: all .12s; }
+.numbox.r { border-color: var(--red); color: var(--red); }
+.numbox.fill { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* ── QUOTES ── */
+.quotes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.quote { background: #f5f5f5; border-left: 4px solid var(--red); padding: 14px 18px; border-radius: 0 3px 3px 0; }
+.quote p { font-family: var(--fb); font-size: 14px; font-style: italic; font-weight: 400; color: var(--ink); line-height: 1.65; }
+.quote cite { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 6px; display: block; }
+
+/* ── CTA ── */
+.cta-block { border: 3px solid var(--ink); border-radius: 3px; padding: 32px 28px; text-align: center; margin-top: 10px; background: #fff; }
+.cta-block h3 { font-family: var(--fh); font-size: 26px; color: var(--ink); margin-bottom: 8px; text-transform: uppercase; letter-spacing: -0.5px; }
+.cta-block p { font-size: 13px; font-weight: 300; color: var(--ink2); margin-bottom: 22px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+.cta-btn { display: inline-block; background: var(--red); color: #fff; font-family: var(--fh); font-size: 14px; letter-spacing: 2px; padding: 14px 40px; border-radius: 3px; text-decoration: none; text-transform: uppercase; border: 2px solid var(--red); transition: opacity .15s, transform .15s; }
+.cta-btn:hover { opacity: .88; transform: translateY(-2px); }
+.cta-note { font-family: var(--fm); font-size: 10px; color: var(--ink3); margin-top: 14px; letter-spacing: .5px; }
+
+/* ── SCROLL HINT ── */
+.shint { position: absolute; bottom: 16px; left: 44px; font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; opacity: .5; pointer-events: none; }
+.shint::before { content:''; width:24px; height:2px; background: var(--red); display:block; }
+
+/* ── RIGHT PANEL ── */
+.cpanel { border-left: 2px solid var(--ink); padding: 24px 20px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; }
+.cpanel::-webkit-scrollbar { display: none; }
+.c-img { width: 100%; aspect-ratio: 4/3; background: var(--ink); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #555; margin-bottom: 18px; flex-shrink: 0; font-family: var(--fm); font-size: 9px; letter-spacing: .8px; text-align: center; border: 2px solid var(--ink); }
+.c-badge { background: var(--red); color: #fff; font-family: var(--fh); font-size: 8px; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; display: inline-block; text-transform: uppercase; }
+.c-head { font-family: var(--fh); font-size: 16px; color: var(--ink); margin-bottom: 8px; text-transform: uppercase; letter-spacing: -.5px; }
+.c-head em { color: var(--red); font-style: normal; }
+.c-brief { font-family: var(--fb); font-size: 11px; font-weight: 300; font-style: italic; color: var(--ink2); line-height: 1.7; border-left: 3px solid var(--red); padding-left: 10px; margin-bottom: 16px; }
+.c-rule { height: 1px; background: var(--rule); margin: 14px 0; flex-shrink: 0; }
+.c-rule.bold { height: 2px; background: var(--ink); }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: var(--ink2); line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); margin-bottom: 2px; }
+.cval { font-family: var(--fh); font-size: 12px; color: var(--ink); letter-spacing: .3px; }
+.cval.r { color: var(--red); }
+.cvisit { display: block; margin-top: 12px; padding: 12px; text-align: center; font-family: var(--fh); font-size: 10px; letter-spacing: 1.5px; color: #fff; background: var(--red); border: 2px solid var(--red); border-radius: 3px; text-decoration: none; transition: opacity .15s; text-transform: uppercase; }
+.cvisit:hover { opacity: .88; }
+
+/* ── MOBILE ── */
+.mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: #fff; border-top: 2px solid var(--ink); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom, 0); }
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn { font-family: var(--fh); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: var(--ink3); padding: 13px 12px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
+.mbtn.active { color: var(--ink); border-bottom-color: var(--red); }
+.mob-infobtn { display: none; position: fixed; top: calc(var(--hh) + 10px); right: 14px; z-index: 190; font-family: var(--fh); font-size: 9px; letter-spacing: 1px; color: #fff; background: var(--ink); border: 2px solid var(--ink); padding: 7px 12px; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
+.mob-infopanel { display: none; position: fixed; top: var(--hh); left: 0; right: 0; bottom: 0; background: #fff; z-index: 180; overflow-y: auto; padding: 20px; transform: translateX(100%); transition: transform .28s ease; }
+.mob-infopanel.open { transform: translateX(0); }
+.mob-infopanel .cpanel { border: none; padding: 0; overflow: visible; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec { position: static; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 30px 22px 56px; border-bottom: 2px solid var(--ink); }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+  .numgrid { grid-template-columns: repeat(4,1fr); max-width: 100%; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 28px; }
+  .dsec { padding: 22px 18px 60px; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 24px; }
+  .sv { font-size: 30px; }
+  .h-tag { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo">NOGQAZA<em>.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">South Africa's Next Digital Obsession — Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="cpanel" id="mobConst"></div>
+</div>
+
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Sections</div></aside>
+
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      <!-- 01 OVERVIEW -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 07 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">A game played on torn school pages is becoming South Africa's next digital obsession</div>
+        <div class="s-rule"></div>
+        <p class="s-text">NOGQAZA revives a classic Xhosa childhood reflex game — the one played by tearing pages from school exercise books, writing numbers 1–12, and racing to tap them in order as fast as possible. <strong>No AI assistance. No passive scrolling. Just pure, active human thinking under pressure.</strong></p>
+        <div class="trow">
+          <span class="tag rfill">South Africa</span>
+          <span class="tag r">Reflex Game</span>
+          <span class="tag r">Xhosa Culture</span>
+          <span class="tag fill">Active Thinking</span>
+          <span class="tag">PWA / No Download</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 red">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            NOGQAZA — hero game screenshot / torn page aesthetic
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 4h24v24H4z" stroke="currentColor" stroke-width="1.5"/><path d="M8 12h16M8 16h12M8 20h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Original torn exercise book — paper game
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M13 6h6M16 26v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Digital version — mobile phone interface
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 02 THE PROBLEM -->
+      <section class="dsec" id="sec-problem" data-i="1">
+        <div class="s-num">02 <em>/</em> 07 — THE PROBLEM</div>
+        <h2 class="s-title">The Problem</h2>
+        <div class="s-sub">Effortless answers are quietly reducing effortful thinking</div>
+        <div class="s-rule"></div>
+        <p class="s-text">In a world where answers are increasingly passive, something worrying is happening. <strong>AI has introduced automation bias</strong> — people trust system outputs too much — and <strong>authority bias</strong> — we tend to believe confident answers even when they're wrong.</p>
+        <div class="alert">
+          <strong>The core crisis</strong>
+          <span>Effortless answers are quietly reducing effortful thinking. Many of us are engaging our brains less, outsourcing focus, and slowly losing the habit of deep, active attention. We needed a space where thinking is unavoidable again.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M16 10v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10l12 12M22 10L10 22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Passive scrolling — outsourced thinking
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z" stroke="currentColor" stroke-width="1.5"/><path d="M16 10v6M16 20v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            AI automation bias — trust without thinking
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv r">High</div><div class="sl">Automation bias rate</div></div>
+          <div><div class="sv r">↓</div><div class="sl">Deep focus habits declining</div></div>
+          <div><div class="sv r">Passive</div><div class="sl">Default digital state</div></div>
+          <div><div class="sv r">Needed</div><div class="sl">Active thinking spaces</div></div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 blk">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Active thinking decline — cultural & cognitive data visualisation
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 03 THE SOLUTION -->
+      <section class="dsec" id="sec-solution" data-i="2">
+        <div class="s-num">03 <em>/</em> 07 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">Focus that cannot be outsourced</div>
+        <div class="s-rule"></div>
+        <p class="s-text">NOGQAZA brings back a kind of focus that can't be outsourced. We revived the classic Xhosa childhood reflex game — bringing the torn-page experience into a precision digital format that is <strong>simple on the surface and demanding underneath.</strong></p>
+
+        <!-- Number grid visual -->
+        <div class="numgrid">
+          <div class="numbox r">1</div>
+          <div class="numbox">2</div>
+          <div class="numbox">3</div>
+          <div class="numbox fill">4</div>
+          <div class="numbox">5</div>
+          <div class="numbox r">6</div>
+          <div class="numbox">7</div>
+          <div class="numbox">8</div>
+          <div class="numbox">9</div>
+          <div class="numbox">10</div>
+          <div class="numbox r">11</div>
+          <div class="numbox">12</div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Tap 1 to 12 in sequence</strong>
+              <span>Numbers 1–12 are scattered on screen. Tap them in order as fast as possible before the life bar runs out. Your brain has no choice but to engage fully.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>The NOGQAZA button saves you</strong>
+              <span>Too slow? Hit the big red NOGQAZA button once per number to survive. It's the only lifeline — use it wisely.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>Compete globally — protect your streak</strong>
+              <span>Multiple intense modes, pass-and-play multiplayer, and a global leaderboard that rewards real streaks and consistent performance under pressure.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Game interface — number grid scattered
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/><path d="M16 8v8l5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            NOGQAZA button — big red survival press
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 04 REAL PROOF -->
+      <section class="dsec" id="sec-proof" data-i="3">
+        <div class="s-num">04 <em>/</em> 07 — REAL PROOF</div>
+        <h2 class="s-title">Real Proof</h2>
+        <div class="s-sub">It's working — and the numbers prove it</div>
+        <div class="s-rule"></div>
+        <p class="s-text">This isn't fleeting virality. <strong>It's consistent, addictive mental engagement.</strong> The early traction data tells a story of a product that has struck a genuine cultural nerve — fast.</p>
+        <div class="srow">
+          <div><div class="sv r">193.7K</div><div class="sl">TikTok views</div></div>
+          <div><div class="sv r">11.5K</div><div class="sl">Likes on first video</div></div>
+          <div><div class="sv r">200+</div><div class="sl">Comments in days</div></div>
+          <div><div class="sv r">6–10</div><div class="sl">Rounds per first session</div></div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard red"><div class="kv r">Daily</div><div class="kl">Return rate — streak protection</div></div>
+          <div class="kcard red"><div class="kv r">Viral</div><div class="kl">Organic TikTok traction</div></div>
+          <div class="kcard"><div class="kv">Nostalgia</div><div class="kl">Core emotional driver</div></div>
+          <div class="kcard"><div class="kv">Global</div><div class="kl">Leaderboard competition</div></div>
+        </div>
+        <div class="quotes">
+          <div class="quote">
+            <p>This is the game we used to play!</p>
+            <cite>— TikTok comment, viral video</cite>
+          </div>
+          <div class="quote">
+            <p>New generation could never survive this.</p>
+            <cite>— TikTok comment, viral video</cite>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            TikTok performance — 193.7K views chart
+          </div>
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Session engagement — rounds per player
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 05 WHO IT'S FOR -->
+      <section class="dsec" id="sec-audience" data-i="4">
+        <div class="s-num">05 <em>/</em> 07 — AUDIENCE</div>
+        <h2 class="s-title">Who This Is For</h2>
+        <div class="s-sub">The heart of NOGQAZA</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The core audience is <strong>South Africans aged 25–40</strong> who played the original paper version in junior school. They remember the torn pages, the shouting, the laughter, and the friend who always won.</p>
+        <div class="note">
+          <strong>Primary audience</strong>
+          <span>South Africans aged 25–40 who feel the nostalgia deeply — and want their own children to experience that same sharp, focused play instead of passive scrolling. The game speaks to their memory and challenges their ego simultaneously.</span>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Adults 25–40 — primary player
+          </div>
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Pass-and-play — family & friends
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 28c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Kids — next generation exposure
+          </div>
+        </div>
+        <div class="success">
+          <strong>Cultural anchor</strong>
+          <span>NOGQAZA is not just a game — it is a cultural artefact digitised. The torn exercise book page is a shared South African childhood memory that transcends language, province, and background. The game works because it already lives in people's muscle memory.</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 blk">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            South African players — nostalgia meets competition
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 06 WHY IT MATTERS -->
+      <section class="dsec" id="sec-why" data-i="5">
+        <div class="s-num">06 <em>/</em> 07 — WHY IT MATTERS</div>
+        <h2 class="s-title">Why It Matters Now</h2>
+        <div class="s-sub">Active thinking in an age of passive answers</div>
+        <div class="s-rule"></div>
+        <p class="s-text">In an age where confident AI can make us trust answers without thinking, <strong>NOGQAZA forces active thinking in a world where answers are increasingly passive.</strong></p>
+        <div class="kgrid">
+          <div class="kcard red"><div class="kv r">Focus</div><div class="kl">Rebuilt through play — not discipline</div></div>
+          <div class="kcard red"><div class="kv r">Culture</div><div class="kl">Reconnects with childhood identity</div></div>
+          <div class="kcard"><div class="kv">Effort</div><div class="kl">Mental effort not optional — required</div></div>
+          <div class="kcard"><div class="kv">Zero</div><div class="kl">AI assistance — no outsourcing possible</div></div>
+        </div>
+        <div class="alert">
+          <strong>The counter-culture play</strong>
+          <span>Every other product in 2025 is making thinking easier. NOGQAZA is the only one making it harder — on purpose. And people are loving it for exactly that reason.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z" stroke="currentColor" stroke-width="1.5"/><path d="M12 16l3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Active attention — what NOGQAZA demands
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Return visits — engagement consistency data
+          </div>
+        </div>
+        <div class="note">
+          <strong>Three pillars of impact</strong>
+          <span>
+            1. <strong>Rebuilds focus through play</strong> — cognitive engagement without the feel of "work."<br>
+            2. <strong>Reconnects with childhood culture</strong> — a shared SA memory digitised with respect.<br>
+            3. <strong>Creates mandatory mental effort</strong> — you cannot win by being passive.
+          </span>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 07 PLAY NOW -->
+      <section class="dsec" id="sec-play" data-i="6">
+        <div class="s-num">07 <em>/</em> 07 — PLAY NOW</div>
+        <h2 class="s-title">Ready to Feel the Difference?</h2>
+        <div class="s-sub">Go play. Add to home screen. Tell us your best streak.</div>
+        <div class="s-rule"></div>
+        <p class="s-text">If you've played it before — you'll feel it instantly. If you haven't — you'll understand why it stuck with so many. <strong>No download. No friction. Just press play.</strong></p>
+        <div class="igrid c1">
+          <div class="iph r169 red">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            NOGQAZA — final game hero shot
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv r">PWA</div><div class="sl">No download needed</div></div>
+          <div><div class="sv r">10sec</div><div class="sl">Add to home screen</div></div>
+          <div><div class="sv r">Global</div><div class="sl">Leaderboard competition</div></div>
+          <div><div class="sv r">Free</div><div class="sl">Play now</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M13 6h6M16 26v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Add to home screen — 10 second install
+          </div>
+          <div class="iph r43 red">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="27" cy="6" r="4" fill="currentColor" opacity=".6"/></svg>
+            Global leaderboard — your streak vs the world
+          </div>
+        </div>
+        <div class="cta-block">
+          <h3>What's Your Best Streak?</h3>
+          <p>The game that made South African classrooms erupt is back — sharper, faster, and more competitive than ever. Active thinking starts now.</p>
+          <a class="cta-btn" href="https://nogqaza.reserveddesigns.co.za" target="_blank">GO PLAY NOW →</a>
+          <div class="cta-note">Add it to your home screen in 10 seconds. No download needed.</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">CASE STUDY 2025</div>
+    <div class="c-img">
+      <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="#E8000A" stroke-width="2"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="#555" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="#555" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" rx="1" stroke="#555" stroke-width="1.5"/></svg>
+      <span style="color:#E8000A;font-family:'Archivo Black',sans-serif;font-size:11px;letter-spacing:1px;">NOGQAZA</span>
+    </div>
+    <div class="c-head">Reflex Game<em>.</em></div>
+    <div class="c-brief">"Never lose your sharpest self to passive scrolling." A digitised Xhosa childhood classic — rebuilt to demand active attention in an age of effortless answers.</div>
+    <div class="c-rule bold"></div>
+    <div class="c-desc">NOGQAZA is a cultural artefact turned cognitive tool. Tap 1–12 in sequence. Race the clock. Hit the big red button. Protect your streak. No AI can help you here.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Designer</div><div class="cval r">Ndinga Dyongo</div></div>
+    <div class="cfield"><div class="ckey">Category</div><div class="cval">Reflex / Cultural Game</div></div>
+    <div class="cfield"><div class="ckey">Platform</div><div class="cval">PWA — No Download</div></div>
+    <div class="cfield"><div class="ckey">Primary Market</div><div class="cval">South Africa (25–40)</div></div>
+    <div class="cfield"><div class="ckey">TikTok Views</div><div class="cval r">193.7K</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule bold"></div>
+    <div class="cfield"><div class="ckey">Tagline</div><div class="cval r">"Active thinking is not optional."</div></div>
+    <a class="cvisit" href="https://nogqaza.reserveddesigns.co.za" target="_blank">GO PLAY NOW →</a>
+  </aside>
+
+</div>
+
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+const STAGES = [
+  { id:"overview",  label:"Overview"       },
+  { id:"problem",   label:"The Problem"    },
+  { id:"solution",  label:"The Solution"   },
+  { id:"proof",     label:"Real Proof"     },
+  { id:"audience",  label:"Audience"       },
+  { id:"why",       label:"Why It Matters" },
+  { id:"play",      label:"Play Now"       },
+];
+
+let cur = 0, busy = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rail         = document.getElementById("rail");
+  const mobInner     = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  const mobConst     = document.getElementById("mobConst");
+
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      window.innerWidth <= 960 ? scrollMob(i) : goTo(i);
+    });
+    mobInner.appendChild(mb);
+  });
+
+  const cpanel = document.getElementById("cpanel");
+  if (mobConst) mobConst.innerHTML = cpanel.innerHTML;
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = mobInfoPanel.classList.contains("open") ? "CLOSE" : "INFO";
+    });
+  }
+  setProgress(0);
+});
+
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const sec = document.querySelectorAll(".dsec")[cur];
+  if (!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx) b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+</body>
+</html>

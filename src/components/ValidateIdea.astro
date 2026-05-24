@@ -1,0 +1,142 @@
+<section id="idea-validation" class="bg-[#0a0a0a] py-24 relative overflow-hidden">
+  <div class="max-w-6xl mx-auto px-6">
+    
+    <!-- Headline -->
+    <div class="text-center mb-16">
+      <h3 class="text-5xl md:text-6xl font-black tracking-tighter text-white leading-none mb-4">
+        Validate &amp; Protect Your Idea
+      </h3>
+      <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+        Before the world falls in love with it make sure it stays <span class="text-pink-400">yours</span>.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      
+      <!-- Left Content -->
+      <div class="lg:col-span-5 space-y-10">
+        
+        <div class="space-y-8">
+          <div class="group">
+            <h3 class="text-2xl font-semibold text-white mb-3 flex items-center gap-3">
+              <span class="text-[#00f5ff]">01</span> 
+              Trademark Protection
+            </h3>
+            <p class="text-gray-400">
+              Secure your brand name and identity <span class="underline decoration-pink-400 decoration-2">before someone else registers it</span>.
+            </p>
+          </div>
+
+          <div class="group">
+            <h3 class="text-2xl font-semibold text-white mb-3 flex items-center gap-3">
+              <span class="text-[#00f5ff]">02</span> 
+              Patent Strategy
+            </h3>
+            <p class="text-gray-400">
+              Know what’s protectable and build a clear <span class="underline decoration-pink-400 decoration-2">protection roadmap</span>.
+            </p>
+          </div>
+
+          <div class="group">
+            <h3 class="text-2xl font-semibold text-white mb-3 flex items-center gap-3">
+              <span class="text-[#00f5ff]">03</span> 
+              NDA Safeguards
+            </h3>
+            <p class="text-gray-400">
+              Professional NDAs that protect your idea when sharing with <span class="underline decoration-pink-400 decoration-2">investors and manufacturers</span>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bafana Bafana Case Study -->
+        <div class="bg-[#111827] border-l-4 border-pink-500 p-8 rounded-r-2xl">
+          <p class="text-pink-400 text-sm font-semibold tracking-widest mb-3">REAL SOUTH AFRICAN STORY</p>
+          <p class="text-gray-300 leading-relaxed">
+            In 1994, a businessman registered the trademark <span class="font-semibold">"Bafana Bafana"</span>. 
+            Years later, SAFA had to buy it back for <span class="text-pink-400 font-bold">R5 million</span> just to use their own team’s name.
+          </p>
+          <p class="text-xs text-gray-500 mt-4">Don’t let your future brand become someone else’s leverage.</p>
+        </div>
+                    <a 
+              href=https://mg.co.za/article/2011-03-28-bafana-nameowner-willing-to-negotiate/#:~:text=Wayne's%20father%20ran%20Stanton%20Woodrush,the%20rights%2C%E2%80%9D%20said%20Nematandani./" 
+              target="_blank"
+              class="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
+            >
+              See the full story here →
+            </a>
+            <br>
+            <a 
+            href=https://www.vukuzenzele.gov.za/bafana-holds-its-name"
+              target="_blank"
+              class="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
+            >
+              See the settlement here →
+            </a>
+            <br>
+            <a 
+              href=https://www.saflii.org/za/cases/ZASCA/2002/142.html 
+              target="_blank"
+              class="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
+            >
+              See the legal case here →
+            </a>
+            <br>
+            <a 
+              href=https://www.bbc.com/sport/football/13904981 
+              target="_blank"
+              class="inline-flex items-center gap-2 text-pink-400 hover:text-pink-300 transition-colors text-sm font-medium"
+            >
+              See the BBC report here →
+            </a>
+      </div>
+
+      <!-- Right Content -->
+      <div class="lg:col-span-7 bg-[#111827] rounded-3xl p-10 lg:p-16 flex flex-col justify-center">
+        <div class="max-w-lg">
+          <p class="text-2xl text-white leading-tight mb-10">
+            We help you validate your idea and build proper legal protection, including NDAs <br> 
+            so you can move forward with <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#00f5ff] to-[#ff0088]">confidence and peace of mind</span>.
+          </p>
+
+          <a 
+            href="/contact"
+            class="group inline-flex items-center gap-4 bg-gradient-to-r from-[#00f5ff] to-[#ff0088] hover:from-[#00e6ff] hover:to-[#ff1a8c] text-white font-semibold text-lg px-10 py-5 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95"
+          >
+            let's discuss
+            <span class="text-2xl transition-transform group-hover:translate-x-2">→</span>
+          </a>
+
+          <p class="text-xs text-gray-500 mt-8">
+            Full legal compliance • NDA • Trademark &amp; patent guidance
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll-triggered highlight effect -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('highlight-active');
+        }
+      });
+    }, { threshold: 0.6 });
+
+    document.querySelectorAll('.group').forEach(el => observer.observe(el));
+  </script>
+
+  <style>
+    .group p {
+      transition: all 0.4s ease;
+    }
+    
+    .highlight-active .group p span {
+      background: linear-gradient(to right, #ff0088, #00f5ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
+    }
+  </style>
+</section>

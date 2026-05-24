@@ -1,0 +1,57 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+
+// src/components/OptimizedImage.astro
+interface Props {
+  src: ImageMetadata | string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  decoding?: 'async' | 'sync';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  width = 1200,
+  height = 800,
+  class: className = '',
+  loading = 'lazy',
+  decoding = 'async',
+  fetchpriority = 'auto',
+} = Astro.props;
+
+// If src is a string (remote/public), we can't do format conversion
+const isRemote = typeof src === 'string';
+---
+
+{
+  isRemote ? (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      class={`max-w-full ${className}`}
+    />
+  ) : (
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding={decoding}
+      fetchpriority={fetchpriority}
+      class={`max-w-full ${className}`}
+    />
+  )
+}

@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopRite Money Market — Queue Efficiency Case Study</title>
+<link href="https://reserveddesigns.co.za/contact" rel="page">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --blue:    #00BFFF;
+  --pink:    #FF2070;
+  --green:   #00a050;
+  --ink:     #0D0D0D;
+  --ink2:    #555;
+  --ink3:    #999;
+  --bg:      #ffffff;
+  --rule:    #E8E8E8;
+  --left-w:  160px;
+  --right-w: 270px;
+  --hh:      52px;
+  --fh: 'Archivo Black', sans-serif;
+  --fb: 'Archivo', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--pink); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 24px;
+  gap: 0;
+}
+.h-logo {
+  font-family: var(--fh);
+  font-size: 14px;
+  color: var(--ink);
+  flex-shrink: 0;
+  letter-spacing: .5px;
+}
+.h-logo em { color: var(--pink); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: var(--rule); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: .8px; flex: 1; }
+.h-cur {
+  font-family: var(--fm); font-size: 10px;
+  color: var(--blue); letter-spacing: .8px;
+  background: rgba(0,191,255,.07);
+  padding: 4px 10px; border-radius: 2px;
+}
+
+/* ─────────────────────────────────────────
+   PROGRESS BAR
+───────────────────────────────────────── */
+.ptrack {
+  position: fixed; top: var(--hh); left: 0; right: 0;
+  height: 2px; z-index: 300; pointer-events: none;
+}
+.pbar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--pink));
+  transition: width .2s ease;
+}
+
+/* ─────────────────────────────────────────
+   LAYOUT — 3 COLUMN
+───────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: var(--left-w) 1fr var(--right-w);
+  height: 100dvh;
+  padding-top: var(--hh);
+}
+
+/* ─────────────────────────────────────────
+   LEFT RAIL — NAV
+───────────────────────────────────────── */
+.rail {
+  border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column;
+  padding: 24px 0;
+  overflow: hidden;
+}
+.rail-lbl {
+  font-family: var(--fm);
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--ink3);
+  padding: 0 18px 16px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 8px;
+}
+.sbtn {
+  position: relative;
+  padding: 9px 18px 9px 30px;
+  font-family: var(--fb);
+  font-size: 11px; font-weight: 400;
+  color: var(--ink3);
+  cursor: pointer; border: none; background: none;
+  text-align: left; line-height: 1.3;
+  transition: color .18s;
+  width: 100%;
+}
+.sbtn::before {
+  content: '';
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--rule);
+  transition: background .18s;
+}
+.sbtn.done { color: #c0c0c0; }
+.sbtn.done::before { background: #e0e0e0; }
+.sbtn.active { color: var(--ink); font-weight: 500; }
+.sbtn.active::before {
+  background: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255,32,112,.14);
+}
+.sbtn.active::after {
+  content: '';
+  position: absolute; left: 0; top: 5px; bottom: 5px;
+  width: 2px; background: var(--pink);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ─────────────────────────────────────────
+   MIDDLE CONTENT — SINGLE SECTION VIEW
+───────────────────────────────────────── */
+.content-col {
+  position: relative;
+  overflow: hidden;
+}
+.swrap {
+  position: relative;
+  width: 100%; height: 100%;
+}
+.dsec {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 40px 44px 72px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: opacity .32s ease, transform .32s ease;
+}
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--blue); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── Section typography ── */
+.s-num {
+  font-family: var(--fm); font-size: 10px;
+  color: var(--ink3); letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+.s-num em { color: var(--pink); font-style: normal; }
+.s-title {
+  font-family: var(--fh);
+  font-size: clamp(28px, 3.5vw, 54px);
+  line-height: 1; color: var(--ink);
+  margin-bottom: 5px; letter-spacing: -.5px;
+}
+.s-sub {
+  font-family: var(--fb); font-size: 12px;
+  font-style: italic; font-weight: 300;
+  color: var(--ink3); margin-bottom: 24px;
+}
+.s-rule { height: 1px; background: var(--rule); margin: 20px 0; }
+.s-text {
+  font-family: var(--fb); font-size: 14px; font-weight: 300;
+  color: var(--ink2); line-height: 1.8;
+  max-width: 620px; margin-bottom: 28px;
+}
+
+/* ── Image placeholders ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: 1fr 1fr; }
+.igrid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.iph {
+  background: #F7F7F7; border: 1px solid #EDEDED; border-radius: 5px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; color: #C0C0C0;
+  font-family: var(--fm); font-size: 9px;
+  letter-spacing: .5px; text-align: center; padding: 14px;
+}
+.iph svg { opacity: .5; }
+.iph.blue { background: #f0faff; border-color: rgba(0,191,255,.18); color: #85bdd4; }
+.iph.red  { background: #fff2f5; border-color: rgba(255,32,112,.18); color: #d48a9e; }
+.iph.grn  { background: #f0fff6; border-color: rgba(0,160,80,.18);  color: #7abf9a; }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── Tags ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag {
+  font-family: var(--fm); font-size: 10px;
+  padding: 4px 10px;
+  border: 1px solid var(--rule); border-radius: 2px; color: var(--ink2);
+}
+.tag.b { border-color: rgba(0,191,255,.4); color: var(--blue); }
+.tag.p { border-color: rgba(255,32,112,.4); color: var(--pink); }
+.tag.g { border-color: rgba(0,160,80,.4); color: var(--green); }
+
+/* ── Stats bar ── */
+.srow {
+  display: flex; flex-wrap: wrap; gap: 32px;
+  margin-bottom: 28px; padding: 20px 0;
+  border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+}
+.sv { font-family: var(--fh); font-size: 36px; color: var(--ink); line-height: 1; }
+.sv.p { color: var(--pink); }
+.sv.b { color: var(--blue); }
+.sv.g { color: var(--green); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── Alert / Note callouts ── */
+.alert {
+  background: #fff8f2; border-left: 3px solid var(--pink);
+  padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0;
+}
+.alert strong { display: block; font-size: 12px; color: var(--pink); margin-bottom: 5px; }
+.alert span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+.note {
+  background: #f0faff; border-left: 3px solid var(--blue);
+  padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0;
+}
+.note strong { display: block; font-size: 12px; color: var(--blue); margin-bottom: 5px; }
+.note span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+.success {
+  background: #f0fff6; border-left: 3px solid var(--green);
+  padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0;
+}
+.success strong { display: block; font-size: 12px; color: var(--green); margin-bottom: 5px; }
+.success span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+/* ── Process steps ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 26px; color: var(--pink); min-width: 32px; line-height: 1; }
+.steptxt strong { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.steptxt span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.65; }
+
+/* ── KPI cards ── */
+.kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+.kcard { background: #FAFAFA; border: 1px solid var(--rule); border-radius: 5px; padding: 16px 18px; }
+.kv { font-family: var(--fh); font-size: 30px; line-height: 1; }
+.kv.p { color: var(--pink); }
+.kv.b { color: var(--blue); }
+.kv.g { color: var(--green); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 5px; }
+
+/* ── Scroll hint ── */
+.shint {
+  position: absolute; bottom: 16px; left: 44px;
+  font-family: var(--fm); font-size: 9px;
+  color: var(--ink3); letter-spacing: 1px;
+  display: flex; align-items: center; gap: 8px;
+  opacity: .5; pointer-events: none;
+}
+.shint::before { content:''; width:24px; height:1px; background: var(--blue); display:block; }
+
+/* ─────────────────────────────────────────
+   RIGHT PANEL — PROJECT INFO
+───────────────────────────────────────── */
+.cpanel {
+  border-left: 1px solid var(--rule);
+  padding: 24px 20px;
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  gap: 0;
+}
+.cpanel::-webkit-scrollbar { display: none; }
+
+.c-img {
+  width: 100%; aspect-ratio: 4/3;
+  background: linear-gradient(135deg, #e8f8ff 0%, #f0fff6 100%);
+  border: 1px solid #ddeee7;
+  border-radius: 4px; display: flex;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  color: #7abfae; margin-bottom: 18px; flex-shrink: 0;
+  font-family: var(--fm); font-size: 9px;
+  letter-spacing: .8px; text-align: center;
+}
+.c-badge {
+  background: rgba(255,32,112,.1);
+  color: var(--pink);
+  font-family: var(--fm); font-size: 8px; letter-spacing: 1.5px;
+  padding: 4px 10px; border-radius: 2px; margin-bottom: 6px;
+  display: inline-block;
+}
+.c-head { font-family: var(--fh); font-size: 14px; color: var(--ink); margin-bottom: 8px; }
+.c-head em { color: var(--pink); font-style: normal; }
+.c-brief {
+  font-family: var(--fb); font-size: 11px; font-weight: 300;
+  font-style: italic; color: var(--ink2); line-height: 1.7;
+  border-left: 2px solid var(--blue); padding-left: 10px;
+  margin-bottom: 16px;
+}
+.c-rule { height: 1px; background: var(--rule); margin: 14px 0; flex-shrink: 0; }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: var(--ink2); line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); margin-bottom: 2px; }
+.cval { font-family: var(--fb); font-size: 12px; font-weight: 500; color: var(--ink); }
+.cval.p { color: var(--pink); }
+.cval.b { color: var(--blue); }
+.cval.g { color: var(--green); }
+.cvisit {
+  display: block; margin-top: 12px;
+  padding: 11px; text-align: center;
+  font-family: var(--fm); font-size: 10px; letter-spacing: 1.5px;
+  color: var(--blue); border: 1px solid rgba(0,191,255,.3);
+  border-radius: 3px; text-decoration: none;
+  transition: background .15s;
+}
+.cvisit:hover { background: rgba(0,191,255,.06); }
+
+/* ─────────────────────────────────────────
+   MOBILE NAV
+───────────────────────────────────────── */
+.mob-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: #fff; border-top: 1px solid var(--rule);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn {
+  font-family: var(--fm); font-size: 9px; letter-spacing: .5px;
+  text-transform: uppercase; color: var(--ink3);
+  padding: 13px 12px; background: none; border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.mbtn.active { color: var(--ink); border-bottom-color: var(--pink); }
+
+/* ─────────────────────────────────────────
+   MOBILE INFO BUTTON
+───────────────────────────────────────── */
+.mob-infobtn {
+  display: none;
+  position: fixed;
+  top: calc(var(--hh) + 10px);
+  right: 14px;
+  z-index: 190;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--ink2);
+  background: #fff;
+  border: 1px solid var(--rule);
+  padding: 7px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.mob-infobtn.open {
+  background: var(--pink);
+  color: #fff;
+  border-color: var(--pink);
+}
+
+/* ─────────────────────────────────────────
+   MOBILE INFO PANEL — FIXED SLIDE-IN
+───────────────────────────────────────── */
+.mob-infopanel {
+  display: none; /* shown via JS on mobile */
+  position: fixed;
+  top: var(--hh);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #fff;
+  z-index: 185;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 20px 80px; /* bottom pad clears mobile nav */
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  /* Ensure content is visible */
+  visibility: hidden;
+}
+.mob-infopanel.open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+/* Panel content styles (standalone, no .cpanel wrapper needed) */
+.mob-infopanel .panel-badge {
+  background: rgba(255,32,112,.1);
+  color: var(--pink);
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+.mob-infopanel .panel-kiosk-icon {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, #e8f8ff 0%, #f0fff6 100%);
+  border: 1px solid #ddeee7;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #7abfae;
+  margin-bottom: 18px;
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: .8px;
+  text-align: center;
+}
+.mob-infopanel .panel-head {
+  font-family: var(--fh);
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.mob-infopanel .panel-head em { color: var(--pink); font-style: normal; }
+.mob-infopanel .panel-brief {
+  font-family: var(--fb);
+  font-size: 12px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--ink2);
+  line-height: 1.7;
+  border-left: 2px solid var(--blue);
+  padding-left: 10px;
+  margin-bottom: 16px;
+}
+.mob-infopanel .panel-rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 14px 0;
+}
+.mob-infopanel .panel-desc {
+  font-family: var(--fb);
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--ink2);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.mob-infopanel .panel-field { margin-bottom: 14px; }
+.mob-infopanel .panel-key {
+  font-family: var(--fm);
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 2px;
+}
+.mob-infopanel .panel-val {
+  font-family: var(--fb);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.mob-infopanel .panel-val.p { color: var(--pink); }
+.mob-infopanel .panel-val.b { color: var(--blue); }
+.mob-infopanel .panel-val.g { color: var(--green); }
+.mob-infopanel .panel-link {
+  display: block;
+  margin-top: 12px;
+  padding: 13px;
+  text-align: center;
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--blue);
+  border: 1px solid rgba(0,191,255,.3);
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec {
+    position: static;
+    opacity: 1 !important; transform: none !important;
+    pointer-events: auto !important;
+    padding: 30px 22px 56px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 26px; }
+  .dsec { padding: 22px 18px 60px; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 22px; }
+  .sv { font-size: 28px; }
+  .kv { font-size: 24px; }
+  .srow { gap: 20px; }
+  .h-tag { display: none; }
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .cols2,.cols3,.cols4,.kpi-grid{grid-template-columns:1fr 1fr;}
+  .diamond-section,.uct-banner{padding:56px 28px;}
+  .diamonds{flex-wrap:wrap;}
+  .d-phases{grid-template-columns:1fr;}
+  .rollout-grid{grid-template-columns:1fr;}
+  .rollout-phase{border-right:none;border-bottom:1px solid var(--rule);}
+  .rollout-phase:last-child{border-bottom:none;}
+  .stat-band{grid-template-columns:1fr 1fr;padding:32px 28px;}
+  .section-inner{padding:0 28px;}
+  .uct-inner{grid-template-columns:1fr;gap:32px;}
+}
+@media(max-width:600px){
+  .cols2,.cols3,.cols4,.kpi-grid{grid-template-columns:1fr;}
+  .stat-band{grid-template-columns:1fr 1fr;}
+  .impact-grid{grid-template-columns:1fr;}
+  .impact-card{border-right:none;}
+  .sol-step{grid-template-columns:40px 1fr;}
+  .sol-num{font-size:36px;}
+  .table-8m{font-size:11px;}
+  .table-8m td,.table-8m th{padding:10px 10px;}
+}
+
+.d-phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    width: 100%;
+}
+
+/* Force single column layout on small devices */
+@media (min-width: 320px) and (max-width: 750px) {
+    .d-phases {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+        padding: 0 16px !important;
+    }
+    
+    .d-phase {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .dp-steps {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 14px !important;
+    }
+    
+    .dp-body {
+        font-size: 15px !important;
+        line-height: 1.55 !important;
+    }
+    
+    .dp-step {
+        padding: 7px 11px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+.kpi{background:var(--white);border:1px solid var(--rule);padding:20px 18px;}
+.kpi-v{font-family:var(--fh);font-size:36px;line-height:1;}
+.kpi-v.r{color:var(--accent);}
+.kpi-v.b{color:var(--accent2);}
+.kpi-v.g{color:var(--green);}
+.kpi-v.gold{color:var(--gold);}
+.kpi-l{font-family:var(--fm);font-size:9px;color:var(--ink3);letter-spacing:1px;margin-top:5px;}
+
+/* ── TRIPLE DIAMOND ── */
+.diamond-section{
+  background:var(--ink);
+  padding:80px 52px;
+  position:relative;overflow:hidden;
+}
+.diamond-section::before{
+  content:'TRIPLE DIAMOND';
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%) rotate(90deg);
+  font-family:var(--fh);font-size:80px;color:rgba(255,255,255,0.03);
+  letter-spacing:10px;pointer-events:none;white-space:nowrap;
+}
+.diamond-inner{max-width:1140px;margin:0 auto;}
+.d-eyebrow{font-family:var(--fm);font-size:9px;letter-spacing:2.5px;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.d-eyebrow::before{content:'';width:24px;height:1px;background:var(--accent);}
+.d-title{font-family:var(--fh);font-size:clamp(36px,4vw,56px);color:#fff;letter-spacing:.5px;line-height:1;margin-bottom:6px;}
+.d-sub{font-size:13px;font-weight:300;font-style:italic;color:#555;margin-bottom:48px;}
+
+.diamonds{display:flex;gap:0;align-items:center;justify-content:center;margin-bottom:48px;position:relative;}
+.diamonds::before{
+  content:'';position:absolute;top:50%;left:10%;right:10%;
+  height:1px;background:rgba(255,255,255,0.08);
+  transform:translateY(-50%);pointer-events:none;
+}
+.diamond-block{
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:1;
+}
+.d-shape{
+  width:160px;height:160px;
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.d-shape svg{position:absolute;inset:0;}
+.d-label-top{font-family:var(--fh);font-size:11px;letter-spacing:2px;color:#fff;margin-bottom:8px;text-align:center;}
+.d-label-bottom{font-family:var(--fh);font-size:11px;letter-spacing:2px;color:#fff;margin-top:8px;text-align:center;}
+.d-inner-labels{
+  display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;z-index:2;
+}
+.d-inner-labels span{font-family:var(--fm);font-size:8px;color:rgba(255,255,255,0.6);letter-spacing:1px;}
+.d-connector{
+  width:40px;height:2px;
+  background:linear-gradient(90deg,var(--accent),rgba(232,56,13,0.3));
+  margin:0 -4px;
+  position:relative;top:-20px;
+  flex-shrink:0;
+}
+.d-phase-pills{display:flex;gap:12px;justify-content:center;margin-top:32px;}
+.d-pill{
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  padding:8px 20px;
+  font-family:var(--fm);font-size:9px;
+  letter-spacing:2px;color:#888;
+}
+.d-pill.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+
+.d-phases{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:48px;}
+.d-phase{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:24px;
+}
+.dp-num{font-family:var(--fh);font-size:40px;color:rgba(232,56,13,0.3);line-height:1;margin-bottom:8px;}
+.dp-title{font-family:var(--fh);font-size:16px;color:#fff;letter-spacing:1px;margin-bottom:8px;}
+.dp-sub{font-family:var(--fm);font-size:9px;color:var(--accent);letter-spacing:1.5px;margin-bottom:12px;}
+.dp-body{font-size:12px;font-weight:300;color:#666;line-height:1.75;}
+.dp-steps{margin-top:14px;display:flex;flex-direction:column;gap:6px;}
+.dp-step{
+  font-family:var(--fm);font-size:10px;color:#888;
+  padding:6px 10px;
+  border-left:2px solid rgba(232,56,13,0.3);
+  background:rgba(255,255,255,0.02);
+}
+.dp-step strong{color:#ccc;display:block;margin-bottom:2px;}
+
+/* ── 8Ms TABLE ── */
+.table-8m{width:100%;border-collapse:collapse;margin-bottom:32px;}
+.table-8m th{
+  background:var(--ink);color:#fff;
+  font-family:var(--fm);font-size:9px;letter-spacing:1.5px;
+  padding:12px 16px;text-align:left;
+  border-bottom:2px solid var(--accent);
+}
+.table-8m td{
+  padding:14px 16px;
+  font-size:12px;font-weight:300;color:var(--ink2);
+  border-bottom:1px solid var(--rule);
+  vertical-align:top;
+  line-height:1.65;
+}
+.table-8m tr:hover td{background:rgba(232,56,13,0.03);}
+.m-label{
+  font-family:var(--fh);font-size:15px;
+  letter-spacing:.5px;display:block;margin-bottom:2px;
+}
+.m-label.r{color:var(--accent);}
+.m-label.b{color:var(--accent2);}
+.m-label.g{color:var(--green);}
+.m-label.gold{color:var(--gold);}
+.m-sub{font-family:var(--fm);font-size:8px;color:var(--ink3);letter-spacing:1px;}
+.activation-bar{
+  display:flex;align-items:center;gap:8px;margin-top:6px;
+}
+.act-dot{
+  width:8px;height:8px;border-radius:50%;
+  flex-shrink:0;
+}
+.act-dot.full{background:var(--green);}
+.act-dot.partial{background:var(--gold);}
+.act-dot.none{background:var(--rule);}
+.act-label{font-family:var(--fm);font-size:9px;color:var(--ink3);letter-spacing:.5px;}
+.pill-status{
+  display:inline-block;
+  font-family:var(--fm);font-size:8px;letter-spacing:1px;
+  padding:3px 8px;border-radius:2px;
+}
+.pill-status.high{background:rgba(26,122,74,0.12);color:var(--green);border:1px solid rgba(26,122,74,0.2);}
+.pill-status.med{background:rgba(200,168,80,0.12);color:var(--gold);border:1px solid rgba(200,168,80,0.2);}
+.pill-status.low{background:rgba(232,56,13,0.08);color:var(--accent);border:1px solid rgba(232,56,13,0.15);}
+
+
+/* ── UCT CHALLENGE BANNER ── */
+.uct-banner{
+  background:linear-gradient(135deg, #0A0A0A 0%, #1a1a2e 100%);
+  padding:64px 52px;
+  position:relative;overflow:hidden;
+}
+.uct-banner::after{
+  content:'UCT 2024';
+  position:absolute;right:-10px;bottom:-20px;
+  font-family:var(--fh);font-size:120px;
+  color:rgba(255,255,255,0.03);letter-spacing:5px;
+  pointer-events:none;
+}
+.uct-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1;}
+.uct-label{font-family:var(--fm);font-size:9px;letter-spacing:2.5px;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.uct-label::before{content:'';width:24px;height:1px;background:var(--gold);}
+.uct-title{font-family:var(--fh);font-size:clamp(28px,3vw,44px);color:#fff;line-height:1.05;letter-spacing:1px;margin-bottom:16px;}
+.uct-title em{color:var(--gold);font-style:normal;}
+.uct-body{font-size:13px;font-weight:300;color:#999;line-height:1.85;margin-bottom:20px;}
+.uct-outcomes{display:flex;flex-direction:column;gap:8px;}
+.uct-outcome{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:10px 14px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+}
+.uct-outcome-icon{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:1px;
+}
+.uct-outcome-icon span{font-size:10px;}
+.uct-outcome p{font-size:12px;font-weight:300;color:#aaa;line-height:1.6;}
+
+/* ── IMPACT SECTION ── */
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);margin-bottom:32px;}
+.impact-card{padding:32px 28px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);}
+.impact-card:nth-child(even){border-right:none;}
+.impact-card:nth-child(n+3){border-bottom:none;}
+.ic-icon{font-size:24px;margin-bottom:12px;}
+.ic-title{font-family:var(--fh);font-size:16px;letter-spacing:.5px;color:var(--ink);margin-bottom:6px;}
+.ic-body{font-size:12px;font-weight:300;color:var(--ink2);line-height:1.7;}
+
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     HEADER
+═══════════════════════════════════════ -->
+<header>
+  <div class="h-logo">SHOPRITE<em>.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">Money Market — Queue Efficiency Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<!-- ─────────────────────────────────────────
+   MOBILE INFO BUTTON
+───────────────────────────────────────── -->
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+
+<!-- ─────────────────────────────────────────
+   MOBILE INFO PANEL — self-contained content, no clone
+───────────────────────────────────────── -->
+<div class="mob-infopanel" id="mobInfoPanel" aria-hidden="true">
+
+  <span class="panel-badge">CASE STUDY 2025</span>
+
+  <div class="panel-kiosk-icon">
+    <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+      <rect x="2" y="8" width="28" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M20 8v16M8 14h7M8 18h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    MONEY MARKET KIOSK
+  </div>
+
+  <div class="panel-head">Queue Efficiency<em>.</em></div>
+
+  <div class="panel-brief">
+    ShopRite Money Market kiosks serve thousands of daily customers — but long queues and unannounced service outages were turning loyal customers away at the counter after an hour of waiting.
+  </div>
+
+  <div class="panel-rule"></div>
+
+  <div class="panel-desc">
+    A service-flow redesign to eliminate blind queuing at ShopRite Money Market kiosks across South Africa — protecting vulnerable customers and dramatically reducing wasted visits.
+  </div>
+
+  <div class="panel-rule"></div>
+
+  <div class="panel-field">
+    <div class="panel-key">Design Thinker</div>
+    <div class="panel-val p">Ndinga Dyongo</div>
+  </div>
+  <div class="panel-field">
+    <div class="panel-key">Client</div>
+    <div class="panel-val">ShopRite Holdings Ltd.</div>
+  </div>
+  <div class="panel-field">
+    <div class="panel-key">Industry</div>
+    <div class="panel-val">Retail / Financial Services</div>
+  </div>
+  <div class="panel-field">
+    <div class="panel-key">Year</div>
+    <div class="panel-val">2025</div>
+  </div>
+  <div class="panel-field">
+    <div class="panel-key">Scope</div>
+    <div class="panel-val">Service UX / Queue Design</div>
+  </div>
+
+  <a class="panel-link" href="https://www.shoprite.co.za" target="_blank">VISIT SHOPRITE ↗</a>
+  <a class="panel-link" href="https://reserveddesigns.co.za/contact" target="_blank">REQUEST SOFA PROTOTYPE ↗</a>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     3-COLUMN LAYOUT
+═══════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- LEFT: nav rail -->
+  <aside class="rail" id="rail">
+    <div class="rail-lbl">Process</div>
+  </aside>
+
+  <!-- MIDDLE: content -->
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      
+
+      <!-- ══════════════════════
+           01 — OVERVIEW
+      ══════════════════════ -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+
+        
+        <!-- ══════════════════════════════════
+  UCT CHALLENGE BANNER
+══════════════════════════════════ -->
+<div class="uct-banner">
+  <div class="uct-inner">
+    <div>
+      <div class="uct-label">UCT DESIGN THINKING WEEK — 2024</div>
+      <h2 class="uct-title">MUIZENBERG<br>PROMENADE<br><em>ENHANCEMENT</em></h2>
+      <p class="uct-body">I, Ndinga Dyongo, participated in the <strong style="color:#fff;">UCT Design Thinking Week Challenge</strong>, tackling the Muizenberg Promenade Enhancement brief. Working within a multidisciplinary team under tight time constraints, we applied the full design thinking process — from empathic observation to rapid prototyping — to address real physical access barriers and social equity challenges.</p>
+      <p class="uct-body">Our solutions addressed physical access barriers and also contributed to making Muizenberg a more inclusive, welcoming destination for all visitors — aligning with principles of <strong style="color:#fff;">universal design and social equity</strong>.</p>
+      <p class="uct-body">The skills, processes, and disciplined frameworks applied in that challenge — particularly translating lived-experience insights into human-centered outcomes under pressure — are the same foundation driving this ShopRite case study.</p>
+    </div>
+    <div>
+      <div class="uct-outcomes">
+        <div class="uct-outcome">
+          <div class="uct-outcome-icon"><span>🎯</span></div>
+          <p>Developed ability to translate lived-experience insights into tangible, human-centered design outcomes under tight time constraints</p>
+        </div>
+        <div class="uct-outcome">
+          <div class="uct-outcome-icon"><span>🤝</span></div>
+          <p>Sharpened multidisciplinary team collaboration — aligning diverse perspectives toward coherent service solutions</p>
+        </div>
+        <div class="uct-outcome">
+          <div class="uct-outcome-icon"><span>♿</span></div>
+          <p>Grounded in universal design principles — ensuring solutions serve the most vulnerable first</p>
+        </div>
+        <div class="uct-outcome">
+          <div class="uct-outcome-icon"><span>⚡</span></div>
+          <p>Demonstrated constraint-driven creativity — producing viable, real-world proposals within strict workshop parameters</p>
+        </div>
+        <div class="uct-outcome">
+          <div class="uct-outcome-icon"><span>🔬</span></div>
+          <p>Applied structured design frameworks (Triple Diamond, 8Ms) in both challenges to ensure rigour and measurability</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+        
+        <div class="s-num">01 <em>/</em> 07 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">The challenge at ShopRite Money Market</div>
+        <div class="s-rule"></div>
+        <p class="s-text">ShopRite Money Market kiosks are essential community infrastructure across South Africa — serving customers who buy bus tickets, play the lottery, pay life insurance premiums, and send money across the continent. But a broken queue system is quietly destroying the customer experience every single day.</p>
+        <p class="s-text">While many services exist online, a significant portion of customers cannot access or rely on digital platforms — making the physical kiosk their only option.</p>
+        <div class="alert">
+
+
+
+          <strong>Core problem</strong>
+          <span>Customers — particularly senior citizens — wait up to 60 minutes in a blind queue, only to discover the specific service they need is offline when they finally reach the counter. They leave empty-handed and must return another day.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 red">
+            <img src="/images/shoprite-money-market-long-queue.avif" alt="Daily queue — current state" style="width:100%;height:100%;object-fit:cover;" />
+            Daily queue — current state
+          </div>
+          <div class="iph r43 red">
+            <img src="/images/shoprite-money-market-customer-turned-away2.avif" alt="Customer turned away at counter" style="width:100%;height:100%;object-fit:cover;" />
+            Customer turned away at counter
+          </div>
+        </div>
+        <div class="trow">
+          <span class="tag b">Money Market</span>
+          <span class="tag b">Queue Management</span>
+          <span class="tag p">Senior Citizens</span>
+          <span class="tag p">Service Outages</span>
+          <span class="tag">South Africa</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169">
+            <img src="/images/money-market-services.avif" alt="ShopRite Money Market kiosk" style="width:100%;height:100%;object-fit:cover;" /> 
+            ShopRite Money Market kiosk services
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           02 — THE KIOSK
+      ══════════════════════ -->
+      <section class="dsec" id="sec-kiosk" data-i="1">
+        <div class="s-num">02 <em>/</em> 07 — THE KIOSK</div>
+        <h2 class="s-title">The Kiosk</h2>
+        <div class="s-sub">Services offered & why customers still come in-store</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The Money Market kiosk is not merely a convenience feature — it is the primary financial access point for a significant segment of South African society who cannot or choose not to use digital banking platforms.</p>
+        <div class="note">
+          <strong>Three reasons driving strong physical foot traffic</strong>
+          <span>(1) Accessibility for senior citizens, non-techy, non-smartphone users and internet restricted individuals who need face-to-face assistance. (2) Completely fee-free cash transactions with no deductions or hidden costs. (3) Exclusive in-store promotions not available through digital channels.</span>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 blue">
+            <img src="/images/money-market-bus-tickets.avif" alt=" Bus & travel tickets" style="width:100%;height:100%;object-fit:contain;" />
+            Bus & travel tickets
+          </div>
+          <div class="iph r11 blue">
+            <img src="/images/money-market-play-lotto.avif" alt="play lotto at shorite money makert kiosk" style="width:100%;height:100%;object-fit:contain;" />
+            Lottery / lotto
+          </div>
+          <div class="iph r11 blue">
+            <img src="/images/money-market-bank.avif" alt="money-market-bank" style="width:100%;height:100%;object-fit:cover;" />
+            Life insurance payments
+          </div>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 grn">
+            <img src="/images/money-market-send-money.avif" alt="money-market-send-money" style="width:100%;height:100%;object-fit:cover;" />
+            Cross-border money transfers
+          </div>
+          <div class="iph r11 grn">
+            <img src="/images/money-market-ott-voucher.avif" alt="money-market-ott-voucher" style="width:100%;height:100%;object-fit:cover;" />
+            Electricity, Vouchers & utilities
+          </div>
+          <div class="iph r11 grn">
+            <img src="/images/money-market-all-services.avif" alt="money-market-all-services" style="width:100%;height:100%;object-fit:contain;" />
+            Other financial services
+          </div>
+        </div>
+        <p class="s-text">While ShopRite offers mobile apps and online platforms for many services, a significant portion of customers — especially senior citizens and non-tech-savvy individuals — still depend entirely on the in-store kiosk for every transaction.</p>
+        <div class="igrid c1">
+          <div class="iph r169">
+            <img src="/images/money-market-services2.avif" alt="money-market-services2" style="width:100%;height:100%;object-fit:contain;" />
+            In-store kiosk — service counter overview
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           03 — THE PROBLEM
+      ══════════════════════ -->
+      <section class="dsec" id="sec-problem" data-i="2">
+        <div class="s-num">03 <em>/</em> 07 — THE PROBLEM</div>
+        <h2 class="s-title">The Problem</h2>
+        <div class="s-sub">Blind queue breakdown</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The current system fails customers at the most critical moment — after they have already waited. The blind queue model means no one knows whether a service is available until a customer physically reaches the teller window.</p>
+        <div class="srow">
+          <div><div class="sv p">60min</div><div class="sl">Average wait time</div></div>
+          <div><div class="sv p">0</div><div class="sl">Pre-queue service checks</div></div>
+          <div><div class="sv p">1+</div><div class="sl">Wasted visits per outage</div></div>
+          <div><div class="sv p">High</div><div class="sl">Senior citizen impact</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 red">
+            <img src="/images/shoprite-money-market-long-queue.avif" alt="Long standing queue — blind, uninformed" style="width:100%;height:100%;object-fit:cover;" />
+            Long standing queue — blind, uninformed
+          </div>
+          <div class="iph r43 red">
+            <img src="/images/shoprite-money-market-customer-turned-away2.avif" alt="Customer turned away at counter" style="width:100%;height:100%;object-fit:cover;" />
+            Customer turned away — service offline
+          </div>
+        </div>
+        <br>
+        <br>
+        <div class="alert">
+          <strong>Teller awareness gap</strong>
+          <span>Tellers themselves are often unaware that a service is offline until a customer reaches them and requests it — making every outage invisible until it causes direct harm to a customer who has already waited an hour.</span>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           04 — THE SOLUTION
+      ══════════════════════ -->
+      <section class="dsec" id="sec-solution" data-i="3">
+        <div class="s-num">04 <em>/</em> 07 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">A proven system, adopted</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Reserved Designs Studio proposed solution requires no new technology or invention — only the adoption of a customer-flow process already proven by major South African banks. A trained greeter and a compact point-of-service machine at the entrance transform the entire experience before a single customer joins a queue.</p>
+
+<!-- ══════════════════════════════════
+  TRIPLE DIAMOND
+══════════════════════════════════ -->
+<div class="diamond-section">
+  <div class="diamond-inner">
+    <div class="d-eyebrow">DESIGN PROCESS</div>
+    <h2 class="d-title">THE TRIPLE DIAMOND<br>APPROACH</h2>
+    <p class="d-sub">Industry-standard design thinking framework — three phases, three diamonds, one coherent solution</p>
+
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);padding:20px 24px;margin-bottom:40px;">
+      <p style="font-size:13px;font-weight:300;color:#777;line-height:1.8;">The <strong style="color:#ccc;">Triple Diamond</strong> is an evolution of the Double Diamond (British Design Council), extending the diverge-converge rhythm into three sequential phases: <strong style="color:#ccc;">Research → Experiment → Deliver</strong>. Each diamond opens with exploration (divergence) and closes with a decision (convergence). This structured yet flexible process was applied rigorously to the ShopRite queue problem — ensuring the solution emerged from evidence, not assumption.</p>
+    </div>
+
+    <div class="diamonds">
+      <!-- Diamond 1 -->
+      <div class="diamond-block">
+        <div class="d-label-top">DISCOVERY</div>
+        <div class="d-shape">
+          <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="80,4 156,80 80,156 4,80" fill="rgba(232,56,13,0.18)" stroke="#E8380D" stroke-width="1.5"/>
+            <line x1="80" y1="4" x2="80" y2="156" stroke="rgba(232,56,13,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+          </svg>
+          <div class="d-inner-labels">
+            <span>EXPLORING</span>
+            <span style="font-size:10px;color:#E8380D;font-weight:500;">RESEARCH</span>
+            <span>NARROWING</span>
+          </div>
+        </div>
+        <div class="d-label-bottom">WHY</div>
+      </div>
+
+      <div class="d-connector"></div>
+
+      <!-- Diamond 2 -->
+      <div class="diamond-block">
+        <div class="d-label-top">DESIGN</div>
+        <div class="d-shape">
+          <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="80,4 156,80 80,156 4,80" fill="rgba(26,92,255,0.2)" stroke="#1A5CFF" stroke-width="1.5"/>
+            <line x1="80" y1="4" x2="80" y2="156" stroke="rgba(26,92,255,0.35)" stroke-width="1" stroke-dasharray="4,4"/>
+          </svg>
+          <div class="d-inner-labels">
+            <span>IDEATING</span>
+            <span style="font-size:10px;color:#1A5CFF;font-weight:500;">EXPERIMENT</span>
+            <span>VALIDATING</span>
+          </div>
+        </div>
+        <div class="d-label-bottom">WHAT</div>
+      </div>
+
+      <div class="d-connector" style="background:linear-gradient(90deg,var(--accent2),rgba(26,92,255,0.3));"></div>
+
+      <!-- Diamond 3 -->
+      <div class="diamond-block">
+        <div class="d-label-top">DEVELOPMENT</div>
+        <div class="d-shape">
+          <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="80,4 156,80 80,156 4,80" fill="rgba(26,122,74,0.2)" stroke="#1A7A4A" stroke-width="1.5"/>
+            <line x1="80" y1="4" x2="80" y2="156" stroke="rgba(26,122,74,0.35)" stroke-width="1" stroke-dasharray="4,4"/>
+          </svg>
+          <div class="d-inner-labels">
+            <span>COMPLETING</span>
+            <span style="font-size:10px;color:#1A7A4A;font-weight:500;">DELIVER</span>
+            <span>ANALYSING</span>
+          </div>
+        </div>
+        <div class="d-label-bottom">HOW</div>
+      </div>
+    </div>
+
+    <div class="d-phases">
+      <div class="d-phase">
+        <div class="dp-num">01</div>
+        <div class="dp-title">RESEARCH</div>
+        <div class="dp-sub">DISCOVERY DIAMOND — WHY</div>
+        <div class="dp-body">The first diamond opened wide with observational research at ShopRite Money Market kiosks — watching, listening, and documenting the real lived experience of customers and staff before any solution was conceived.</div>
+        <div class="dp-steps">
+          <div class="dp-step"><strong>OBSERVE</strong>Field observation at kiosks — queue behaviour, wait times, customer demographics</div>
+          <div class="dp-step"><strong>INTERVIEW</strong>Conversations with senior customers, tellers, and store managers</div>
+          <div class="dp-step"><strong>SYNTHESISE</strong>Blind queue identified as root cause — not individual service failures</div>
+          <div class="dp-step"><strong>INSIGHT</strong>"Customers have no information until they've already lost an hour"</div>
+          <div class="dp-step"><strong>DECIDE</strong>Problem statement: eliminate information asymmetry before the queue</div>
+        </div>
+      </div>
+
+      <div class="d-phase">
+        <div class="dp-num">02</div>
+        <div class="dp-title">EXPERIMENT</div>
+        <div class="dp-sub">DESIGN DIAMOND — WHAT</div>
+        <div class="dp-body">The second diamond explored a broad range of possible interventions — from app-based alerts to WhatsApp bots to physical signage — before converging on the simplest, most proven, and most inclusive approach.</div>
+        <div class="dp-steps">
+          <div class="dp-step"><strong>IDEATE</strong>15+ solution concepts generated — digital, physical, hybrid</div>
+          <div class="dp-step"><strong>BENCHMARK</strong>South African bank branches already operate this exact model successfully</div>
+          <div class="dp-step"><strong>FILTER</strong>Excluded: digital-only solutions (excludes elderly/non-tech users)</div>
+          <div class="dp-step"><strong>PROTOTYPE</strong>Service blueprint mapped — greeter + display + ticket + lounge</div>
+          <div class="dp-step"><strong>VALIDATE</strong>Concept tested against user needs: confirmed service before queue entry</div>
+          <div class="dp-step"><strong>DECIDE</strong>Four-component system adopted — proven, low-cost, inclusive</div>
+        </div>
+      </div>
+
+      <div class="d-phase">
+        <div class="dp-num">03</div>
+        <div class="dp-title">DELIVER</div>
+        <div class="dp-sub">DEVELOPMENT DIAMOND — HOW</div>
+        <div class="dp-body">The third diamond translated the validated concept into a complete, rollout-ready implementation plan — specifying components, training requirements, spatial layout, pilot parameters, and success metrics.</div>
+        <div class="dp-steps">
+          <div class="dp-step"><strong>SPECIFY</strong>Service availability display, Friendly Buddy, ticketing kiosk, Eco-Lounge seating</div>
+          <div class="dp-step"><strong>PLAN</strong>1-month pilot, 3 locations, phased national rollout</div>
+          <div class="dp-step"><strong>COST</strong>Low capex — leverages existing infrastructure and proven equipment</div>
+          <div class="dp-step"><strong>TRAIN</strong>Fast staff training — greeter role modelled on bank branch protocols</div>
+          <div class="dp-step"><strong>MEASURE</strong>KPIs defined: wasted visits, wait-to-serve ratio, CSAT scores</div>
+          <div class="dp-step"><strong>ANALYSE</strong>8Ms framework applied to assess and optimise performance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+        <div class="steps">
+
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Service availability display</strong>
+              <span>
+              Customers instantly view which services are online, offline, or delayed through a visible monitor — eliminating blind decision-making before entering the queue.
+              </span>
+              <div class="iph r11 grn">
+                <img src="/images/money-market-kiosk-service-availability-monitor-reserved-designs.avif" alt="Customer turned away at counter" style="width:100%;height:100%;object-fit:cover;" />
+                Available & unavailable services clearly displayed 
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>"Friendly Buddy" assistance</strong>
+              <span>
+              A dedicated assistant equipped with an iPad supports non-tech users, non-smartphone users, and internet-restricted customers — resolving issues before they reach the counter.
+              </span>
+              <div class="iph r11 grn">
+                <img src="/images/money-market-kiosk-buddy-assisting-elderly-custumers.avif" alt="money-market-kiosk-buddy-assisting-elderly-customers" style="width:100%;height:100%;object-fit:cover;" />
+                Assisting customers without even reaching the counter
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>Queue ticket confirmation</strong>
+              <span>
+              A ticketing system assigns a number only for confirmed available services — ensuring every customer in the queue has a valid outcome.
+              </span>
+              <div class="iph r11 grn">
+                <img src="/images/Moviik-Paper-TIcket-Kiosk.avif" alt="Moviik-Paper-TIcket-Kiosk" style="width:100%;height:100%;object-fit:cover;" />
+                Numbered ticket — confirmed service
+              </div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="stepnum">4</div>
+            <div class="steptxt">
+              <strong>Eco-Lounge seating</strong>
+              <span>
+              Lightweight cardboard lounge sofas provide seating for waiting customers, reducing fatigue — especially for senior citizens and physically vulnerable users.
+              </span>
+
+              <h4>REFERENCES:</h4>
+              <ul> 
+                <li><a href="https://youtu.be/krdCSfeovSE">Making a Cardboard box Sofa</a></li>
+              </ul>
+              <div class="iph r11 grn">
+                <img src="/images/eco-friendly-money-market-lounge-by-reserved-designs.avif" alt="eco-friendly-money-market-lounge-by-reserved-designs" style="width:100%;height:100%;object-fit:contain;" />
+                Redesigned waiting area — seated, informed, dignified
+              </div>
+              <br>
+              <div class="iph r169 grn">
+                <img src="/images/reserved-designs-lounge-sofa-cross-section-reveals-cardboard-boxes.avif" alt=" Eco Lounge seating — lightweight, sustainable, comfortable" style="width:100%;height:100%;object-fit:cover;" />
+                Eco Lounge seating — lightweight, sustainable, comfortable
+              </div>
+              <br>
+              <div class="iph r11 grn">
+                <img src="/images/money-market-lounge-sofa-concept-by-reserved-designs.avif" alt="Sofa Concept" style="width:100%;height:100%;object-fit:contain;" />
+                Sofa Concept
+              </div>          
+            </div>
+          </div>
+
+        </div><!-- /steps -->
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           05 — KEY BENEFITS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-benefits" data-i="4">
+        <div class="s-num">05 <em>/</em> 07 — KEY BENEFITS</div>
+        <h2 class="s-title">Key Benefits</h2>
+        <div class="s-sub">Impact for every stakeholder</div>
+        <div class="s-rule"></div>
+        <p class="s-text">This approach transforms the blind-queue experience into a professional, respectful, and efficient service model — delivering meaningful improvements for customers, tellers, and the ShopRite brand simultaneously.</p>
+        <div class="kgrid">
+          <div class="kcard"><div class="kv g">100%</div><div class="kl">Service confirmed before queuing</div></div>
+          <div class="kcard"><div class="kv b">↓60%</div><div class="kl">Estimated wasted customer visits</div></div>
+          <div class="kcard"><div class="kv p">Zero</div><div class="kl">Counter rejections after waiting</div></div>
+          <div class="kcard"><div class="kv g">Low</div><div class="kl">Implementation cost</div></div>
+        </div>
+        <div class="success">
+          <strong>Motivation & confidence effect</strong>
+          <span>Customers wait with purpose — they hold a number and have confirmed their service is available. This single change dramatically reduces frustration and increases trust in the ShopRite brand at every visit.</span>
+        </div>
+
+        
+<!-- ══════════════════════════════════
+  8Ms FRAMEWORK
+══════════════════════════════════ -->
+<section class="section">
+  <div class="section-inner wide">
+    <div class="sec-eyebrow">05 / 08 — 8MS PERFORMANCE FRAMEWORK</div>
+    <h2 class="sec-title">8Ms ANALYSIS</h2>
+    <p class="sec-sub">How the framework was applied to assess performance, efficiency, and waste reduction</p>
+    <div class="rule"></div>
+
+    <div class="cols2" style="margin-bottom:32px;">
+      <div>
+        <p class="body-text">The <strong>8Ms Framework</strong> — drawn from Ishikawa / Cause-and-Effect analysis methodology, widely used in lean operations and service design — was applied to evaluate the ShopRite Money Market queue solution across every operational dimension. Each "M" was assessed in its current (broken) state and its proposed (redesigned) state to measure the delta in performance, efficiency, and waste.</p>
+      </div>
+      <div>
+        <div class="callout gold">
+          <strong>FRAMEWORK APPLICATION METHOD</strong>
+          <p>For each M, three questions were applied: (1) What is currently failing or wasted? (2) What does the solution activate or change? (3) What is the measurable or observable outcome? This structured assessment ensures every solution component is justified beyond aesthetics — grounded in operational logic.</p>
+        </div>
+      </div>
+    </div>
+
+    <table class="table-8m">
+      <thead>
+        <tr>
+          <th style="width:160px;">THE 8M</th>
+          <th>CURRENT STATE — WASTE / FAILURE</th>
+          <th>SOLUTION ACTIVATION</th>
+          <th style="width:200px;">OUTCOME</th>
+          <th style="width:100px;">ACTIVATION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <span class="m-label r">MANPOWER</span>
+            <span class="m-sub">Skills, training &amp; human resources</span>
+          </td>
+          <td>Tellers spend time managing frustrated customers who waited to discover offline services. No dedicated greeter role exists. Staff lack protocols for proactive outage communication. Customer-facing skills are underutilised at the point of highest impact.</td>
+          <td><strong>Friendly Buddy greeter role created.</strong> Trained in service availability communication, digital assistance, and customer de-escalation. Tellers freed from queue management — focused purely on transactions. Fast-track training protocol modelled on bank branch greeter programmes.</td>
+          <td>
+            <div>Teller throughput ↑</div>
+            <div style="margin-top:4px;">Customer-facing skills deployed at entry</div>
+            <div style="margin-top:4px;">Frustration-management burden ↓</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">HIGH IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label b">MACHINERY</span>
+            <span class="m-sub">Equipment, technology &amp; tools</span>
+          </td>
+          <td>No service-status display exists. No ticketing system at entry. No digital tool at point of entry. Customers and tellers operate with zero real-time service information. The kiosk's own infrastructure is not used to communicate its own operational state.</td>
+          <td><strong>Service availability monitor deployed at entrance.</strong> Ticketing kiosk (Moviik-type) introduced — issues confirmed-service tickets only. Greeter equipped with iPad for digital resolution. All three are low-cost, commercially available, and already deployed in banking environments nationally.</td>
+          <td>
+            <div>Real-time service visibility: ON</div>
+            <div style="margin-top:4px;">Ticket = service guarantee</div>
+            <div style="margin-top:4px;">iPad resolves pre-counter queries</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">HIGH IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label" style="color:var(--gold);">MATERIALS</span>
+            <span class="m-sub">Raw resources, inventory &amp; supply chain</span>
+          </td>
+          <td>No seating materials exist in the queue area. Customers — particularly the elderly — stand for up to 60 minutes on hard retail floors. No tactile or physical signal differentiates a queue for one service from another. Physical environment reinforces the blind, undifferentiated queue.</td>
+          <td><strong>Eco-Lounge cardboard-frame sofas introduced.</strong> Sourced from repurposed industrial cardboard — abundant, low-cost, local. Sofa units are lightweight, modular, and replaceable. Minimal supply chain complexity — no specialist manufacturing required. Ticket paper stock for the ticketing kiosk is the only ongoing consumable.</td>
+          <td>
+            <div>Seating available: dignified wait</div>
+            <div style="margin-top:4px;">Material cost: low (cardboard)</div>
+            <div style="margin-top:4px;">Replenishment: simple</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">MEDIUM-HIGH IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label g">METHODS</span>
+            <span class="m-sub">SOPs, processes &amp; workflows</span>
+          </td>
+          <td>No Standard Operating Procedure exists for outage communication. Tellers have no established protocol for informing customers of service unavailability before they reach the counter. Queue management is entirely reactive — action only occurs when a customer is already disappointed.</td>
+          <td><strong>New service SOP introduced:</strong> (1) Monitor updated when any service changes state. (2) Greeter briefs customers at entry. (3) Tickets issued only for confirmed services. (4) Tellers follow escalation protocol for extended outages. Process modelled on Standard Bank and FNB branch queue management SOPs — adaptation, not invention.</td>
+          <td>
+            <div>Proactive &gt; reactive service</div>
+            <div style="margin-top:4px;">Queue entry = informed decision</div>
+            <div style="margin-top:4px;">Outage handling: structured</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">HIGH IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label r">MEASUREMENT</span>
+            <span class="m-sub">KPIs, tracking &amp; evaluation metrics</span>
+          </td>
+          <td>No KPIs exist for queue efficiency, wasted visits, or service availability uptime. ShopRite has no visibility into how many customers are turned away per day per outage. The problem is invisible in operations data — making it impossible to manage or report.</td>
+          <td><strong>KPI suite introduced:</strong> (1) Wasted visits per outage event. (2) Wait-to-service conversion rate. (3) Customer Satisfaction Score (CSAT) at exit. (4) Average queue-to-counter time. (5) Service uptime % per kiosk. Ticketing system provides automatic count data. 1-month pilot at 3 locations generates baseline for national rollout decisions.</td>
+          <td>
+            <div>Wasted visits: measurable</div>
+            <div style="margin-top:4px;">CSAT: trackable</div>
+            <div style="margin-top:4px;">Rollout: data-driven</div>
+          </td>
+          <td>
+            <span class="pill-status med">ACTIVATED (PILOT)</span>
+            <div class="activation-bar"><div class="act-dot partial"></div><div class="act-label">MEDIUM IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label g">MOTHER NATURE</span>
+            <span class="m-sub">Environmental impact &amp; sustainability</span>
+          </td>
+          <td>No sustainability consideration in current queue setup. Hard retail flooring with no seating creates physical discomfort that amounts to a hostile environment for elderly and disabled users. No materials reuse or eco-conscious design present in the service zone.</td>
+          <td><strong>Eco-Lounge uses repurposed cardboard construction</strong> — a circular economy application that diverts waste material from landfill into functional furniture. Lightweight units reduce transport emissions. The waiting environment is transformed from hostile (standing, uninformed) to comfortable and dignified. Universal Design principles applied — supporting physical accessibility and inclusion.</td>
+          <td>
+            <div>Cardboard → functional furniture</div>
+            <div style="margin-top:4px;">Waste diverted from landfill</div>
+            <div style="margin-top:4px;">Inclusive environment created</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">HIGH IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label b">MANAGEMENT</span>
+            <span class="m-sub">Leadership, strategy &amp; supervision</span>
+          </td>
+          <td>No management ownership of queue efficiency as a customer experience metric. Outage communication has no escalation chain. Store managers have no real-time dashboard of service states. Queue problems are reported anecdotally, if at all — making structural change difficult to justify or budget.</td>
+          <td><strong>Management visibility introduced:</strong> Service state monitor creates a shared source of truth for store manager, tellers, and greeter simultaneously. KPI dashboard enables district managers to track pilot outcomes. Greeter reports to store manager daily on queue observations. Rollout decision-making is grounded in pilot data, not anecdote — making the business case transparent and defensible.</td>
+          <td>
+            <div>Shared service state dashboard</div>
+            <div style="margin-top:4px;">Manager accountability: enabled</div>
+            <div style="margin-top:4px;">Business case: evidence-based</div>
+          </td>
+          <td>
+            <span class="pill-status med">ACTIVATED (PILOT)</span>
+            <div class="activation-bar"><div class="act-dot partial"></div><div class="act-label">MEDIUM IMPACT</div></div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="m-label" style="color:var(--gold);">MONEY</span>
+            <span class="m-sub">Financial resources, capital &amp; budgets</span>
+          </td>
+          <td>Wasted customer visits represent invisible revenue leakage — customers who leave without transacting don't return that day, and some do not return at all. Brand trust erosion among high-frequency users (senior citizens, low-income households) compounds the revenue impact over time. No budget has been allocated because the problem has never been quantified.</td>
+          <td><strong>Low capex implementation:</strong> All components use commercially available, off-the-shelf equipment already proven in banking. Eco-Lounge sofas are built from low-cost materials. 1-month pilot at 3 locations provides ROI data before national commitment. Estimated ↓60% reduction in wasted visits translates directly to increased daily transaction volume — generating measurable revenue upside at minimal cost.</td>
+          <td>
+            <div>Capex: low</div>
+            <div style="margin-top:4px;">Transaction volume: ↑ (projected)</div>
+            <div style="margin-top:4px;">ROI: measurable post-pilot</div>
+          </td>
+          <td>
+            <span class="pill-status high">FULLY ACTIVATED</span>
+            <div class="activation-bar"><div class="act-dot full"></div><div class="act-label">HIGH IMPACT</div></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout green">
+      <strong>8Ms SUMMARY — ACTIVATION SCORE: 6 FULLY ACTIVATED / 2 ACTIVATED IN PILOT PHASE</strong>
+      <p>All 8 dimensions are addressed and activated by the solution. Six Ms are fully activated at launch (Manpower, Machinery, Materials, Methods, Mother Nature, Money). Two Ms (Measurement, Management) are activated but scale to full deployment only after the pilot generates operational data — a deliberate, responsible sequencing choice that de-risks the national rollout.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+  KEY BENEFITS
+══════════════════════════════════ -->
+<section class="section" style="background:var(--white);">
+  <div class="section-inner">
+
+    <h2 class="sec-title">PERFORMANCE<br>OUTCOMES</h2>
+    <p class="sec-sub">Projected impact across every stakeholder group</p>
+    <div class="rule"></div>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="ic-icon">👴</div>
+        <div class="ic-title">SENIOR CITIZENS</div>
+        <div class="ic-body">The most vulnerable group benefits most. They avoid standing for an hour only to be turned away. The system gives them dignity, predictability, and physical comfort — transforming their relationship with ShopRite Money Market and reducing the physical toll of failed visits.</div>
+      </div>
+      <div class="impact-card">
+        <div class="ic-icon">🧾</div>
+        <div class="ic-title">TELLERS</div>
+        <div class="ic-body">Freed from managing the emotional fallout of blind queue failures. Tellers interact only with customers who have confirmed needs — reducing stress, improving throughput, and enabling focus on high-quality service rather than crisis management.</div>
+      </div>
+      <div class="impact-card">
+        <div class="ic-icon">🏪</div>
+        <div class="ic-title">SHOPRITE BRAND</div>
+        <div class="ic-body">Every customer who walks away having received exactly what they came for strengthens the brand. Reduced frustration converts to increased loyalty, word-of-mouth, and repeat visits — improving CSAT scores and NPS across the Money Market division.</div>
+      </div>
+      <div class="impact-card">
+        <div class="ic-icon">📊</div>
+        <div class="ic-title">OPERATIONS</div>
+        <div class="ic-body">For the first time, queue efficiency is measurable. Management has data, not anecdote. Outage events have a structured response. The pilot generates the evidence base for confident national rollout — turning a recurring cost into a competitive advantage.</div>
+      </div>
+    </div>
+
+    <div class="callout green">
+      <strong>MOTIVATION &amp; CONFIDENCE EFFECT</strong>
+      <p>Customers wait with purpose — they hold a number and have confirmed their service is available. This single change dramatically reduces frustration and increases trust in the ShopRite brand at every visit. The psychological shift from "I might be wasting my time" to "my place is confirmed" cannot be overstated — particularly for customers whose time and transport costs are precious.</p>
+    </div>
+  </div>
+</section>
+
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           06 — ROLLOUT PLAN
+      ══════════════════════ -->
+      <section class="dsec" id="sec-rollout" data-i="5">
+        <div class="s-num">06 <em>/</em> 07 — ROLLOUT PLAN</div>
+        <h2 class="s-title">Rollout Plan</h2>
+        <div class="s-sub">Phased, low-risk implementation</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Because this system is already proven in South African bank branches, rollout is adaptation rather than invention. Implementation can be phased across ShopRite's existing store network rapidly and at low cost — with minimal disruption to daily operations.</p>
+        <div class="srow">
+          <div><div class="sv b">1mo</div><div class="sl">Pilot duration</div></div>
+          <div><div class="sv b">3</div><div class="sl">Test locations</div></div>
+          <div><div class="sv b">Low</div><div class="sl">Capex required</div></div>
+          <div><div class="sv b">Fast</div><div class="sl">Staff training</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blue">
+            <img src="/images/money-market-staff-training.avif" alt="money-market-staff-training" style="width:100%;height:100%;object-fit:cover;" />
+            Greeter staff training session
+          </div>
+        </div>
+        <br>
+        <div class="note">
+          <strong>Space considerations</strong>
+          <span>While dedicated lounge space may be more limited in a busy retail environment than a bank branch, the core principle remains highly effective: confirm service availability first, then issue a number and allow comfortable waiting wherever space permits.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blue">
+            <img src="/images/shoprite-money-market-floor-design.avif" alt="shoprite-money-market-floor-design" style="width:100%;height:100%;object-fit:cover;" />
+            Entry greeter zone — layout design
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           07 — EXPECTED IMPACT
+      ══════════════════════ -->
+      <section class="dsec" id="sec-impact" data-i="6">
+        <div class="s-num">07 <em>/</em> 07 — EXPECTED IMPACT</div>
+        <h2 class="s-title">Expected Impact</h2>
+        <div class="s-sub">Projected outcomes based on proven benchmarks</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Every metric below is based on outcomes already observed in South African banking environments using equivalent queue management systems. This is not speculative — it is a proven model applied to a new and equally deserving context.</p>
+        <div class="kgrid">
+          <div class="kcard"><div class="kv g">↑</div><div class="kl">Customer satisfaction score</div></div>
+          <div class="kcard"><div class="kv p">↓</div><div class="kl">Wasted customer journeys</div></div>
+          <div class="kcard"><div class="kv b">↑</div><div class="kl">Teller throughput efficiency</div></div>
+          <div class="kcard"><div class="kv g">↑</div><div class="kl">Brand trust & loyalty</div></div>
+        </div>
+        <div class="success">
+          <strong>Senior citizen focus</strong>
+          <span>Senior citizens and vulnerable customers benefit most. They avoid standing for an hour only to be turned away. The system gives them dignity, predictability, and physical comfort at every single visit — transforming their relationship with ShopRite Money Market.</span>
+        </div>
+
+        <div class="s-num" style="margin-top:32px;">08 <em>/</em> 08 — DISCLAIMER</div>
+        <h2 class="s-title">DISCLAIMER</h2>
+        <br>
+        <p class="s-text">This case study is an independent conceptual design exploration created for research, design-thinking, and customer experience analysis purposes only.</p>
+        <p class="s-text">Some visuals, mockups, renderings, scenarios, names, environments, or representations within this case study may include artificially generated or conceptual imagery intended solely to communicate ideas, user experiences, and proposed solutions. Such visuals should not be interpreted as factual representations, official business material, operational realities, endorsements, or direct depictions of the businesses or individuals mentioned.</p>
+        <p class="s-text">The purpose of this case study is not to expose, defame, attack, discredit, harm, or negatively portray any company, brand, institution, employee, or individual referenced. Instead, it is intended to highlight potential customer pain points, accessibility challenges, and service-experience opportunities that may exist within broader industry environments.</p>
+        <p class="s-text">We are not affiliated with, endorsed by, sponsored by, employed by, or officially connected to the businesses, organizations, or individuals mentioned in this case study unless explicitly stated otherwise. Any trademarks, company names, or references remain the property of their respective owners and are used strictly for commentary, educational, conceptual, research, portfolio, and design-thinking purposes.</p>
+        <p class="s-text">This work represents speculative problem-solving and user-experience exploration from an independent design perspective. The observations, concepts, and proposed solutions presented may also apply broadly across similar businesses or industries and should not be interpreted as statements of fact regarding any specific company's operations, policies, or service standards.</p>
+        <p class="s-text">All opinions, concepts, and design proposals contained herein are presented in good faith and without malicious intent.</p>
+        <p class="s-text">If any referenced business, organization, or authorized representative believes that content within this case study is inaccurate, inappropriate, misleading, infringes rights, or should be removed, we encourage direct communication with us. We are open to constructive engagement and reserve the willingness to review, amend, clarify, or voluntarily remove content where reasonably necessary.</p>
+        <p class="s-text">This case study is published in the spirit of innovation, accessibility improvement, customer-centered design, and public-interest design exploration.</p>
+
+      </section>
+
+    </div><!-- /swrap -->
+  </main>
+
+  <!-- RIGHT: constants panel -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">CASE STUDY 2025</div>
+    <div class="c-img">
+      <svg width="38" height="38" viewBox="0 0 32 32" fill="none"><rect x="2" y="8" width="28" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M20 8v16M8 14h7M8 18h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      MONEY MARKET KIOSK
+    </div>
+    <div class="c-head">Queue Efficiency<em>.</em></div>
+    <div class="c-brief">ShopRite Money Market kiosks serve thousands of daily customers — but long queues and unannounced service outages were turning loyal customers away at the counter after an hour of waiting.</div>
+    <div class="c-rule"></div>
+    <div class="c-desc">A service-flow redesign to eliminate blind queuing at ShopRite Money Market kiosks across South Africa — protecting vulnerable customers and dramatically reducing wasted visits.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Design Thinker</div><div class="cval p">Ndinga Dyongo</div></div>
+    <div class="cfield"><div class="ckey">Client</div><div class="cval">ShopRite Holdings Ltd.</div></div>
+    <div class="cfield"><div class="ckey">Industry</div><div class="cval">Retail / Financial Services</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="cfield"><div class="ckey">Scope</div><div class="cval">Service UX / Queue Design</div></div>
+    <a class="cvisit" href="https://www.shoprite.co.za" target="_blank">VISIT SHOPRITE ↗</a>
+    <a class="cvisit" href="https://reserveddesigns.co.za/contact" target="_blank">REQUEST SOFA PROTOTYPE ↗</a>
+  </aside>
+
+</div><!-- /layout -->
+
+<!-- Mobile bottom nav -->
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+/* ══════════════════════════════
+   STAGE CONFIG
+══════════════════════════════ */
+const STAGES = [
+  { id:"overview",  label:"Overview"       },
+  { id:"kiosk",     label:"The Kiosk"      },
+  { id:"problem",   label:"The Problem"    },
+  { id:"solution",  label:"The Solution"   },
+  { id:"benefits",  label:"Key Benefits"   },
+  { id:"rollout",   label:"Rollout Plan"   },
+  { id:"impact",    label:"Expected Impact"},
+];
+
+let cur = 0, busy = false;
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+  const rail         = document.getElementById("rail");
+  const mobInner     = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+
+  /* Build left rail & mobile tabs */
+  STAGES.forEach((s, i) => {
+    // Desktop rail button
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    // Mobile tab button
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      if (window.innerWidth <= 960) {
+        // Close info panel if open, then scroll
+        if (mobInfoPanel.classList.contains("open")) {
+          closeInfoPanel();
+        }
+        scrollMob(i);
+      } else {
+        goTo(i);
+      }
+    });
+    mobInner.appendChild(mb);
+  });
+
+  /* Set initial header current section text */
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+
+  /* Desktop: listen for scroll-to-bottom inside active section */
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+
+  /* Mobile: watch window scroll */
+  window.addEventListener("scroll", onWinScroll);
+
+  /* Mobile info panel toggle */
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      if (mobInfoPanel.classList.contains("open")) {
+        closeInfoPanel();
+      } else {
+        openInfoPanel();
+      }
+    });
+  }
+
+  /* Close panel when tapping outside (on the content area) */
+  document.querySelector(".layout").addEventListener("click", (e) => {
+    if (mobInfoPanel.classList.contains("open")) {
+      closeInfoPanel();
+    }
+  });
+
+  setProgress(0);
+});
+
+function openInfoPanel() {
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  mobInfoPanel.classList.add("open");
+  mobInfoPanel.setAttribute("aria-hidden", "false");
+  mobInfoBtn.textContent = "CLOSE";
+  mobInfoBtn.classList.add("open");
+  // Prevent body scroll while panel is open
+  document.body.style.overflow = "hidden";
+}
+
+function closeInfoPanel() {
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  mobInfoPanel.classList.remove("open");
+  mobInfoPanel.setAttribute("aria-hidden", "true");
+  mobInfoBtn.textContent = "INFO";
+  mobInfoBtn.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+/* ══════════════════════════════
+   DESKTOP NAVIGATION
+══════════════════════════════ */
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+/* ══════════════════════════════
+   MOBILE SCROLL TO SECTION
+══════════════════════════════ */
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+/* ══════════════════════════════
+   SCROLL HANDLERS
+══════════════════════════════ */
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const secs = document.querySelectorAll(".dsec");
+  const sec  = secs[cur];
+  if (!sec || e.target !== sec) return;
+
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) {
+    goTo(cur + 1);
+    return;
+  }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+/* ══════════════════════════════
+   UI SYNC
+══════════════════════════════ */
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx)  b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+
+</body>
+</html>

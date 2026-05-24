@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VYTALINK CORE — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --milk:    #FAF9F6;
+  --milk2:   #F3F1EC;
+  --milk3:   #EAE7E0;
+  --pink:    #D4003A;
+  --pink2:   #E8004A;
+  --pink3:   #FFD0D8;
+  --ink:     #0D0D0D;
+  --ink2:    #2A2A2A;
+  --ink3:    #666;
+  --muted:   #999;
+  --rule:    #E0DDD6;
+  --left-w:  165px;
+  --right-w: 275px;
+  --hh:      52px;
+  --fh: 'Archivo Black', sans-serif;
+  --fb: 'Archivo', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--milk);
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--pink); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--pink); border-radius: 2px; }
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: var(--milk);
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.h-logo { font-family: var(--fh); font-size: 13px; color: var(--ink); flex-shrink: 0; letter-spacing: .5px; text-transform: uppercase; }
+.h-logo em { color: var(--pink); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: var(--rule); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: var(--muted); letter-spacing: .8px; flex: 1; }
+.h-cur { font-family: var(--fm); font-size: 10px; color: #fff; letter-spacing: 1px; background: var(--pink); padding: 5px 12px; border-radius: 2px; white-space: nowrap; }
+
+/* ── PROGRESS ── */
+.ptrack { position: fixed; top: var(--hh); left: 0; right: 0; height: 2px; z-index: 300; pointer-events: none; background: var(--milk3); }
+.pbar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--pink), var(--pink2)); transition: width .2s ease; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: var(--left-w) 1fr var(--right-w); height: 100dvh; padding-top: var(--hh); }
+
+/* ── LEFT RAIL ── */
+.rail { border-right: 1px solid var(--rule); display: flex; flex-direction: column; padding: 24px 0; overflow: hidden; background: var(--milk); }
+.rail-lbl { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0 18px 16px; border-bottom: 1px solid var(--rule); margin-bottom: 8px; }
+.sbtn { position: relative; padding: 9px 18px 9px 30px; font-family: var(--fb); font-size: 11px; font-weight: 400; color: var(--muted); cursor: pointer; border: none; background: none; text-align: left; line-height: 1.3; transition: color .18s; width: 100%; }
+.sbtn::before { content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--rule); transition: background .18s; }
+.sbtn.done { color: #ccc; }
+.sbtn.done::before { background: #e0e0e0; }
+.sbtn.active { color: var(--ink); font-weight: 500; }
+.sbtn.active::before { background: var(--pink); box-shadow: 0 0 0 3px rgba(255,31,113,.14); }
+.sbtn.active::after { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px; background: var(--pink); border-radius: 0 2px 2px 0; }
+
+/* ── CONTENT ── */
+.content-col { position: relative; overflow: hidden; background: var(--milk); }
+.swrap { position: relative; width: 100%; height: 100%; }
+.dsec { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 40px 44px 72px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .32s ease, transform .32s ease; }
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--pink); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── TYPOGRAPHY ── */
+.s-num { font-family: var(--fm); font-size: 10px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 10px; }
+.s-num em { color: var(--pink); font-style: normal; }
+.s-title { font-family: var(--fh); font-size: clamp(28px, 3.5vw, 52px); line-height: .95; color: var(--ink); margin-bottom: 6px; letter-spacing: -1px; text-transform: uppercase; }
+.s-sub { font-family: var(--fb); font-size: 13px; font-style: italic; font-weight: 300; color: var(--muted); margin-bottom: 24px; }
+.s-rule { height: 1px; background: var(--rule); margin: 20px 0; }
+.s-rule.pink { background: linear-gradient(90deg, var(--pink), var(--pink3), transparent); }
+.s-text { font-family: var(--fb); font-size: 14px; font-weight: 300; color: var(--ink2); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+.s-text strong { font-family: var(--fh); color: var(--ink); }
+
+/* ── IMAGE PLACEHOLDERS ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
+.igrid.c3 { grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr); }
+.iph { background: var(--milk2); border: 1px solid var(--rule); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #ccc; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; }
+.iph svg { opacity: .4; }
+.iph.pink { background: rgba(255,31,113,.05); border-color: rgba(255,31,113,.2); color: var(--pink2); }
+.iph.soft { background: rgba(255,31,113,.03); border-color: rgba(255,31,113,.1); color: var(--pink); }
+.iph.plain { background: var(--milk3); border-color: var(--rule); color: var(--muted); }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── TAGS ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag { font-family: var(--fm); font-size: 10px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 2px; color: var(--ink3); }
+.tag.p { border-color: rgba(255,31,113,.35); color: var(--pink); }
+.tag.pfill { background: var(--pink); color: #fff; border-color: var(--pink); font-family: var(--fh); font-size: 9px; letter-spacing: .5px; }
+.tag.soft { background: var(--pink3); color: var(--pink); border-color: var(--pink3); }
+
+/* ── STATS ── */
+.srow { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 28px; padding: 20px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.sv { font-family: var(--fh); font-size: 38px; color: var(--ink); line-height: 1; }
+.sv.p { color: var(--pink); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── CALLOUTS ── */
+.alert { background: rgba(255,31,113,.05); border-left: 3px solid var(--pink); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 4px 4px 0; }
+.alert strong { display: block; font-family: var(--fh); font-size: 11px; color: var(--pink); margin-bottom: 6px; letter-spacing: .8px; text-transform: uppercase; }
+.alert span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.note { background: var(--milk2); border-left: 3px solid var(--ink); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 4px 4px 0; }
+.note strong { display: block; font-family: var(--fh); font-size: 11px; color: var(--ink); margin-bottom: 6px; letter-spacing: .8px; text-transform: uppercase; }
+.note span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.insight { background: var(--milk3); border: 1px solid var(--rule); border-radius: 4px; padding: 20px 22px; margin-bottom: 22px; text-align: center; }
+.insight p { font-family: var(--fh); font-size: 16px; color: var(--ink); line-height: 1.3; letter-spacing: -.3px; }
+.insight em { color: var(--pink); font-style: normal; }
+
+/* ── PROCESS STEPS ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 28px; color: var(--pink); min-width: 36px; line-height: 1; }
+.steptxt strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 5px; letter-spacing: .5px; text-transform: uppercase; }
+.steptxt span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+/* ── NODE CARDS ── */
+.nodes { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; margin-bottom: 22px; }
+.node { border-radius: 5px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.node.chest { border: 1px solid rgba(255,31,113,.3); }
+.node.hub   { border: 1px solid var(--ink); }
+.node-img { width: 100%; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; flex-shrink: 0; }
+.node.chest .node-img { background: rgba(255,31,113,.06); color: var(--pink2); }
+.node.hub   .node-img { background: var(--milk3); color: var(--muted); }
+.node-img svg { opacity: .5; }
+.node-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; background: var(--milk); }
+.node-label { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.node-title { font-family: var(--fh); font-size: 13px; margin-bottom: 8px; text-transform: uppercase; line-height: 1.1; word-break: break-word; }
+.node.chest .node-title { color: var(--pink); }
+.node.hub   .node-title { color: var(--ink); }
+.node-rule { height: 1px; background: var(--rule); margin-bottom: 10px; }
+.node-desc { font-size: 11px; font-weight: 300; color: var(--ink2); line-height: 1.65; }
+.node-features { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.node-features li { font-family: var(--fm); font-size: 9px; letter-spacing: .3px; color: var(--ink3); padding-left: 14px; position: relative; line-height: 1.5; }
+.node-features li::before { content: '—'; position: absolute; left: 0; color: var(--pink); }
+
+/* ── KPI CARDS ── */
+.kgrid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; margin-bottom: 22px; }
+.kcard { border: 1px solid var(--rule); border-radius: 4px; padding: 16px 18px; background: var(--milk2); }
+.kcard.p { border-color: rgba(255,31,113,.25); background: rgba(255,31,113,.04); }
+.kv { font-family: var(--fh); font-size: 26px; line-height: 1; color: var(--ink); }
+.kv.p { color: var(--pink); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 6px; }
+
+/* ── TIMELINE ── */
+.timeline { display: flex; flex-direction: column; gap: 0; margin-bottom: 22px; }
+.tl-item { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+.tl-item:last-child { border-bottom: none; }
+.tl-time { font-family: var(--fh); font-size: 11px; color: var(--pink); min-width: 80px; line-height: 1.4; padding-top: 2px; }
+.tl-content strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .3px; }
+.tl-content span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.65; }
+
+/* ── INNOVATION BLOCKS ── */
+.innovations { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.inn { display: flex; gap: 14px; align-items: flex-start; border: 1px solid var(--rule); border-radius: 4px; padding: 14px 16px; background: var(--milk2); }
+.inn.p { border-color: rgba(255,31,113,.2); background: rgba(255,31,113,.03); }
+.inn-num { font-family: var(--fh); font-size: 22px; color: var(--pink); line-height: 1; min-width: 28px; }
+.inn-body strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .3px; }
+.inn-body span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.65; }
+
+/* ── SCROLL HINT ── */
+.shint { position: absolute; bottom: 16px; left: 44px; font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; opacity: .5; pointer-events: none; }
+.shint::before { content:''; width:24px; height:1px; background: var(--pink); display:block; }
+
+/* ── RIGHT PANEL ── */
+.cpanel { border-left: 1px solid var(--rule); padding: 24px 20px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: var(--milk); }
+.cpanel::-webkit-scrollbar { display: none; }
+.c-img { width: 100%; aspect-ratio: 4/3; background: rgba(255,31,113,.05); border: 1px solid rgba(255,31,113,.18); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; flex-shrink: 0; font-family: var(--fm); font-size: 9px; letter-spacing: .8px; text-align: center; color: var(--pink2); }
+.c-badge { background: var(--pink); color: #fff; font-family: var(--fh); font-size: 8px; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; display: inline-block; text-transform: uppercase; }
+.c-head { font-family: var(--fh); font-size: 14px; color: var(--ink); margin-bottom: 8px; text-transform: uppercase; letter-spacing: .5px; line-height: 1.2; }
+.c-head em { color: var(--pink); font-style: normal; }
+.c-brief { font-family: var(--fb); font-size: 11px; font-weight: 300; font-style: italic; color: var(--ink3); line-height: 1.7; border-left: 2px solid var(--pink); padding-left: 10px; margin-bottom: 16px; }
+.c-rule { height: 1px; background: var(--rule); margin: 14px 0; flex-shrink: 0; }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: var(--ink3); line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.cval { font-family: var(--fb); font-size: 12px; font-weight: 500; color: var(--ink); }
+.cval.p { color: var(--pink); }
+.cvisit { display: block; margin-top: 14px; padding: 12px; text-align: center; font-family: var(--fh); font-size: 10px; letter-spacing: 1.5px; color: #fff; background: var(--pink); border: 1px solid var(--pink); border-radius: 3px; text-decoration: none; transition: opacity .15s; text-transform: uppercase; }
+.cvisit:hover { opacity: .88; }
+
+/* ── MOBILE ── */
+.mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--milk); border-top: 1px solid var(--rule); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom, 0); }
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn { font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 13px 12px; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
+.mbtn.active { color: var(--ink); border-bottom-color: var(--pink); }
+.mob-infobtn { display: none; position: fixed; top: calc(var(--hh) + 10px); right: 14px; z-index: 190; font-family: var(--fm); font-size: 9px; letter-spacing: 1px; color: #fff; background: var(--pink); border: none; padding: 7px 12px; border-radius: 3px; cursor: pointer; }
+.mob-infopanel { display: none; position: fixed; top: var(--hh); left: 0; right: 0; bottom: 0; background: var(--milk); z-index: 180; overflow-y: auto; padding: 20px; transform: translateX(100%); transition: transform .28s ease; }
+.mob-infopanel.open { transform: translateX(0); }
+.mob-infopanel .cpanel { border: none; padding: 0; overflow: visible; background: transparent; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec { position: static; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 30px 22px 56px; border-bottom: 1px solid var(--rule); }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+  .nodes { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 26px; }
+  .dsec { padding: 22px 18px 60px; }
+  .nodes { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 22px; }
+  .sv { font-size: 30px; }
+  .h-tag { display: none; }
+  .kgrid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo">VYTALINK<em> CORE.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">VYTALINK CORE — Emergency Wearable System · Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="cpanel" id="mobConst"></div>
+</div>
+
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Process</div></aside>
+
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      <!-- ══════════════════════
+           01 — OVERVIEW
+      ══════════════════════ -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 09 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">A zero-delay emergency link for medical aid providers and health institutions</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">VYTALINK CORE is a two-part wearable architecture that separates sensing from communication — removing all friction between distress and response. <strong>Designed for the critical seconds when apps and phones are too slow.</strong></p>
+        <div class="insight">
+          <p>The fastest emergency system is not an app.<br>It is a <em>dedicated, always-ready physical interface.</em></p>
+        </div>
+        <div class="trow">
+          <span class="tag pfill">Medical Wearable</span>
+          <span class="tag p">Emergency Response</span>
+          <span class="tag p">ECG Monitoring</span>
+          <span class="tag p">GPS Tracking</span>
+          <span class="tag">Cellular / SMS</span>
+          <span class="tag">Dual-Node Architecture</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 pink">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><path d="M16 28S4 20 4 12a7 7 0 0112-4.9A7 7 0 0128 12c0 8-12 16-12 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="16" cy="12" r="3" stroke="currentColor" stroke-width="1.2"/></svg>
+            VYTALINK CORE — wearable hero product shot
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 pink">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Chest Sensor Node — body-worn intelligence
+          </div>
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="4" width="16" height="24" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="22" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M12 10h8M12 14h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Emergency Hub — necklace / clip device
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           02 — THE CHALLENGE
+      ══════════════════════ -->
+      <section class="dsec" id="sec-challenge" data-i="1">
+        <div class="s-num">02 <em>/</em> 09 — THE CHALLENGE</div>
+        <h2 class="s-title">The Challenge</h2>
+        <div class="s-sub">Friction kills. Seconds decide outcomes.</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">Across healthcare systems relying on mobile apps, emergency response begins with a friction chain that introduces avoidable, life-threatening delay. In high-stress situations — car accidents, sudden collapse, medical distress — <strong>this process is too slow.</strong></p>
+        <div class="alert">
+          <strong>The mobile app friction chain</strong>
+          <span>Unlock phone → Open app → Navigate to emergency feature → Confirm action.<br>In cardiac arrest, brain damage begins in 4–6 minutes. Every tap costs time that patients do not have.</span>
+        </div>
+        <div class="srow">
+          <div><div class="sv p">4–6</div><div class="sl">Minutes to brain damage</div></div>
+          <div><div class="sv p">4+</div><div class="sl">Taps on any mobile app</div></div>
+          <div><div class="sv p">0</div><div class="sl">Context delivered by most alerts</div></div>
+          <div><div class="sv p">Delay</div><div class="sl">Status quo emergency trigger</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M13 6h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Mobile app — 4+ tap friction chain
+          </div>
+          <div class="iph r43 pink">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M16 9v7M16 20v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Limited context — no vitals, no location
+          </div>
+        </div>
+        <div class="note">
+          <strong>A second compounding problem</strong>
+          <span>Even when alerts are triggered, context is critically limited — location may be delayed, vitals unavailable, and situational awareness entirely unclear. Responders arrive blind.</span>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           03 — THE TWO NODES
+      ══════════════════════ -->
+      <section class="dsec" id="sec-nodes" data-i="2">
+        <div class="s-num">03 <em>/</em> 09 — THE TWO NODES</div>
+        <h2 class="s-title">The Two Nodes</h2>
+        <div class="s-sub">Sensing separated from communication</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">The system splits into two dedicated components — each optimised for its role. This separation improves signal quality, reliability, and flexibility far beyond any single-device approach.</p>
+        <div class="nodes">
+
+          <!-- Chest Node -->
+          <div class="node chest">
+            <div class="node-img">
+              <svg width="38" height="38" viewBox="0 0 32 32" fill="none"><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Chest Sensor Node — body-worn
+            </div>
+            <div class="node-body">
+              <div class="node-label">Node 01</div>
+              <div class="node-title">Chest Sensor Node</div>
+              <div class="node-rule"></div>
+              <div class="node-desc">A lightweight chest attachment responsible for body-worn intelligence. Minimal processing, high signal accuracy, continuous low-power monitoring.</div>
+              <ul class="node-features">
+                <li>ECG monitoring (heart activity)</li>
+                <li>Heart rate tracking (PPG backup)</li>
+                <li>Fall detection</li>
+                <li>Sudden impact sensing</li>
+                <li>Immobility / collapse detection</li>
+                <li>Wireless transmission to hub</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Hub Node -->
+          <div class="node hub">
+            <div class="node-img">
+              <svg width="38" height="38" viewBox="0 0 32 32" fill="none"><rect x="8" y="4" width="16" height="24" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="22" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M12 10h8M12 14h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 2c0 2 2 3 6 3s6-1 6-3" stroke="currentColor" stroke-width="1" opacity=".4"/></svg>
+              Emergency Hub — necklace / clip
+            </div>
+            <div class="node-body">
+              <div class="node-label">Node 02</div>
+              <div class="node-title">Emergency Hub</div>
+              <div class="node-rule"></div>
+              <div class="node-desc">A compact MiFi-sized necklace or clip device acting as primary communicator, emergency trigger interface, and context transmitter.</div>
+              <ul class="node-features">
+                <li>One-press emergency button</li>
+                <li>GPS location tracking</li>
+                <li>Cellular communication (SIM / eSIM)</li>
+                <li>Microphone — priority audio capture</li>
+                <li>Camera — multi-snapshot transmission</li>
+                <li>Independent operation without chest node</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           04 — HOW IT WORKS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-how" data-i="3">
+        <div class="s-num">04 <em>/</em> 09 — HOW IT WORKS</div>
+        <h2 class="s-title">How It Works</h2>
+        <div class="s-sub">Zero to response in under 2 seconds</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">The system operates in two phases: an instant trigger layer that fires in 0–2 seconds, and an escalation sequence that builds context in real-time as responders mobilise.</p>
+        <div class="alert">
+          <strong>Instant trigger — 0 to 2 seconds</strong>
+          <span>A single button press immediately sends an emergency alert, transmits last known location, and delivers a basic health snapshot — via cellular data with SMS fallback for low-signal environments.</span>
+        </div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-time">0–2 sec</div>
+            <div class="tl-content"><strong>Button press</strong><span>Alert fires. Location transmitted. Health snapshot sent via cellular + SMS fallback.</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">2–10 sec</div>
+            <div class="tl-content"><strong>Location lock</strong><span>Live GPS tracking begins. Continuous location updates stream to provider portal.</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">10–30 sec</div>
+            <div class="tl-content"><strong>Sensor streaming</strong><span>ECG, heart rate, and motion data stream from chest node to hub and onward to provider.</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">30–60 sec</div>
+            <div class="tl-content"><strong>Audio activates</strong><span>Microphone opens for low-bandwidth, high-context ambient audio capture and transmission.</span></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-time">Ongoing</div>
+            <div class="tl-content"><strong>Visual context</strong><span>Camera captures burst images, compressed and transmitted. Reconstructed server-side into video for responders.</span></div>
+          </div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 pink">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Trigger-to-response timeline — data flow diagram
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           05 — KEY INNOVATIONS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-innovation" data-i="4">
+        <div class="s-num">05 <em>/</em> 09 — KEY INNOVATIONS</div>
+        <h2 class="s-title">Key Innovations</h2>
+        <div class="s-sub">Five design decisions that change outcomes</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">Each innovation targets a specific failure mode in existing emergency systems — from interface friction to bandwidth constraints to network unreliability.</p>
+        <div class="innovations">
+          <div class="inn p">
+            <div class="inn-num">1</div>
+            <div class="inn-body">
+              <strong>Frictionless Emergency Activation</strong>
+              <span>No app. No navigation. No unlock. One physical action triggers the full response chain. Designed for trembling hands, impaired cognition, and zero cognitive load under distress.</span>
+            </div>
+          </div>
+          <div class="inn">
+            <div class="inn-num">2</div>
+            <div class="inn-body">
+              <strong>Distributed System Architecture</strong>
+              <span>Separating sensing (body) from communication (hub) improves signal quality, allows independent component failure without total system failure, and optimises each unit for its specific task.</span>
+            </div>
+          </div>
+          <div class="inn p">
+            <div class="inn-num">3</div>
+            <div class="inn-body">
+              <strong>Multi-Layer Communication Reliability</strong>
+              <span>LTE cellular as primary. SMS as fallback. Local buffering as final safety net. Designed specifically for real-world network conditions including regions with unstable connectivity.</span>
+            </div>
+          </div>
+          <div class="inn">
+            <div class="inn-num">4</div>
+            <div class="inn-body">
+              <strong>Bandwidth-Aware Context Streaming</strong>
+              <span>Instead of heavy video streaming, the system uses multi-image burst transmission converted to video server-side. Visual context delivered without network overload.</span>
+            </div>
+          </div>
+          <div class="inn p">
+            <div class="inn-num">5</div>
+            <div class="inn-body">
+              <strong>Independent Operation Mode</strong>
+              <span>The hub functions fully without the chest node — acting as a standalone emergency communicator. Redundancy is built into the architecture, not bolted on.</span>
+            </div>
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           06 — PLATFORM
+      ══════════════════════ -->
+      <section class="dsec" id="sec-platform" data-i="5">
+        <div class="s-num">06 <em>/</em> 09 — PLATFORM INTEGRATION</div>
+        <h2 class="s-title">Platform</h2>
+        <div class="s-sub">Provider portal & system integration</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">Designed for medical aid providers but built for extensibility. Every organisation can integrate into existing infrastructure or deploy a custom receiver dashboard — without rebuilding their system from scratch.</p>
+        <div class="kgrid">
+          <div class="kcard p"><div class="kv p">Live</div><div class="kl">Patient location tracking</div></div>
+          <div class="kcard p"><div class="kv p">Real-time</div><div class="kl">Vitals monitoring feed</div></div>
+          <div class="kcard"><div class="kv">Audio</div><div class="kl">Live ambient feed access</div></div>
+          <div class="kcard"><div class="kv">Visual</div><div class="kl">Image-based video reconstruction</div></div>
+        </div>
+        <div class="note">
+          <strong>Extensible deployment targets</strong>
+          <span>Medical aid providers · Private emergency response services · Hospitals and clinics · Elderly care systems · Workplace safety monitoring · Security and personal protection sectors</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="2" y="6" width="28" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h28M8 6v6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Provider dashboard — live monitoring portal
+          </div>
+          <div class="iph r43 pink">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M12 4L4 8v20l8-4 8 4 8-4V4l-8 4-8-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 4v20M20 8v20" stroke="currentColor" stroke-width="1.2"/></svg>
+            System integration — hospital & clinic network
+          </div>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 plain">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            ECG log view
+          </div>
+          <div class="iph r11 pink">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="4" stroke="currentColor" stroke-width="1.2"/><path d="M16 4v4M28 16h-4M16 28v-4M4 16h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            GPS case map
+          </div>
+          <div class="iph r11 plain">
+            <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M20 16l-8-5v10l8-5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Visual feed
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           07 — TARGET USERS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-users" data-i="6">
+        <div class="s-num">07 <em>/</em> 09 — TARGET USERS</div>
+        <h2 class="s-title">Target Users</h2>
+        <div class="s-sub">Designed for those who cannot afford a slow response</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">The system serves anyone whose risk profile demands faster, richer, and more reliable emergency access — from high-risk patients to outdoor workers, to the general public seeking something better than a phone.</p>
+        <div class="igrid c3">
+          <div class="iph r43 pink">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            High-risk cardiac patients
+          </div>
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Elderly — living alone
+          </div>
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="14" width="24" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 14V10a6 6 0 0112 0v4" stroke="currentColor" stroke-width="1.5"/></svg>
+            Outdoor workers / drivers
+          </div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard p">
+            <div class="kv p">Patient</div>
+            <div class="kl">Instant help. No phone dependency. Increased safety.</div>
+          </div>
+          <div class="kcard p">
+            <div class="kv p">Provider</div>
+            <div class="kl">Faster detection. Richer data. Improved response accuracy.</div>
+          </div>
+          <div class="kcard">
+            <div class="kv">Responder</div>
+            <div class="kl">Better situational awareness before arrival. Reduced uncertainty.</div>
+          </div>
+          <div class="kcard">
+            <div class="kv">Institution</div>
+            <div class="kl">Scalable infrastructure. Modular deployment. Real-time case logging.</div>
+          </div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 pink">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            User spectrum — patient, provider, responder
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           08 — IMPACT
+      ══════════════════════ -->
+      <section class="dsec" id="sec-impact" data-i="7">
+        <div class="s-num">08 <em>/</em> 09 — IMPACT</div>
+        <h2 class="s-title">Impact</h2>
+        <div class="s-sub">What changes when friction is removed</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">Removing friction from emergency activation doesn't just improve speed. It changes what responders know, what patients survive, and what providers can offer their members.</p>
+        <div class="srow">
+          <div><div class="sv p">0–2sec</div><div class="sl">Alert trigger time</div></div>
+          <div><div class="sv p">↑</div><div class="sl">Survival probability</div></div>
+          <div><div class="sv p">↓</div><div class="sl">Response uncertainty</div></div>
+          <div><div class="sv p">Rich</div><div class="sl">Context delivered</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 pink">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Before — delayed, context-blind response
+          </div>
+          <div class="iph r43 plain">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M8 16l5 5 11-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            After — instant trigger, rich context stream
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">↑</div>
+            <div class="steptxt">
+              <strong>For Patients & Users</strong>
+              <span>Instant access to help with no dependence on phone interaction. Increased safety and confidence for high-risk individuals, elderly, and solo workers.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">↑</div>
+            <div class="steptxt">
+              <strong>For Medical Aid Providers</strong>
+              <span>Faster incident detection, richer real-time data, and improved response accuracy — turning reactive emergency services into proactive life-saving systems.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">↑</div>
+            <div class="steptxt">
+              <strong>For Emergency Services</strong>
+              <span>Better situational awareness before arrival. Reduced uncertainty. Potentially improved survival outcomes through richer pre-arrival data streams.</span>
+            </div>
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           09 — CONCLUSION
+      ══════════════════════ -->
+      <section class="dsec" id="sec-conclusion" data-i="8">
+        <div class="s-num">09 <em>/</em> 09 — CONCLUSION</div>
+        <h2 class="s-title">Conclusion</h2>
+        <div class="s-sub">Not just a wearable — an infrastructure shift</div>
+        <div class="s-rule pink"></div>
+        <p class="s-text">VYTALINK CORE redefines emergency response by removing friction, increasing reliability, and delivering real-time context when it matters most. <strong>Originally designed for medical aid providers, its modular architecture allows adoption across any health and safety institution.</strong></p>
+        <div class="insight">
+          <p><em>When Every Second Matters.</em></p>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 pink">
+            <svg width="38" height="38" viewBox="0 0 32 32" fill="none"><path d="M16 28S4 20 4 12a7 7 0 0112-4.9A7 7 0 0128 12c0 8-12 16-12 16z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity=".6"/></svg>
+            VYTALINK CORE — full product and portal ecosystem visual
+          </div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard p"><div class="kv p">Frictionless</div><div class="kl">Emergency activation</div></div>
+          <div class="kcard p"><div class="kv p">Distributed</div><div class="kl">Sensing + communication architecture</div></div>
+          <div class="kcard"><div class="kv">Redundant</div><div class="kl">Multi-layer communication reliability</div></div>
+          <div class="kcard"><div class="kv">Scalable</div><div class="kl">Modular deployment across sectors</div></div>
+        </div>
+        <div class="note">
+          <strong>Strategic positioning</strong>
+          <span>This system is not just a wearable. It is a real-time emergency communication infrastructure — bridging the gap between event occurrence and response activation. Designed for medical aid, built for everywhere it is needed.</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">Case Study 2025</div>
+    <div class="c-img">
+      <svg width="38" height="38" viewBox="0 0 32 32" fill="none">
+        <path d="M4 16h4l3-8 4 16 3-10 2 4h8" stroke="#D4003A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M16 28S4 20 4 12a7 7 0 0112-4.9A7 7 0 0128 12c0 8-12 16-12 16z" stroke="#E8004A" stroke-width="1" opacity=".35" stroke-linejoin="round"/>
+      </svg>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#D4003A;">VYTALINK CORE</span>
+    </div>
+    <div class="c-head">Emergency<em> Wearable.</em></div>
+    <div class="c-brief">A two-part wearable architecture that removes all friction between distress and response — designed so that the fastest emergency system is not an app, but a single press.</div>
+    <div class="c-rule"></div>
+    <div class="c-desc">Chest Sensor Node + Emergency Hub. Separated sensing and communication for signal quality, reliability, and redundancy that no single device can match.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Designer</div><div class="cval p">Ndinga Dyongo</div></div>
+    <div class="cfield"><div class="ckey">Category</div><div class="cval">Medical Wearable System</div></div>
+    <div class="cfield"><div class="ckey">Primary Market</div><div class="cval">Medical Aid Providers</div></div>
+    <div class="cfield"><div class="ckey">Trigger Time</div><div class="cval p">0–2 Seconds</div></div>
+    <div class="cfield"><div class="ckey">Nodes</div><div class="cval">Chest Sensor + Hub</div></div>
+    <div class="cfield"><div class="ckey">Communication</div><div class="cval">LTE / Cellular + SMS Fallback</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Our Motto</div><div class="cval p">When Every Second Matters.</div></div>
+    <a class="cvisit" href="#" target="_blank">REQUEST DEMO →</a>
+  </aside>
+
+</div>
+
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+const STAGES = [
+  { id:"overview",    label:"Overview"     },
+  { id:"challenge",   label:"Challenge"    },
+  { id:"nodes",       label:"Two Nodes"    },
+  { id:"how",         label:"How It Works" },
+  { id:"innovation",  label:"Innovations"  },
+  { id:"platform",    label:"Platform"     },
+  { id:"users",       label:"Users"        },
+  { id:"impact",      label:"Impact"       },
+  { id:"conclusion",  label:"Conclusion"   },
+];
+
+let cur = 0, busy = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rail         = document.getElementById("rail");
+  const mobInner     = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  const mobConst     = document.getElementById("mobConst");
+
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      window.innerWidth <= 960 ? scrollMob(i) : goTo(i);
+    });
+    mobInner.appendChild(mb);
+  });
+
+  const cpanel = document.getElementById("cpanel");
+  if (mobConst) mobConst.innerHTML = cpanel.innerHTML;
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = mobInfoPanel.classList.contains("open") ? "CLOSE" : "INFO";
+    });
+  }
+  setProgress(0);
+});
+
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const sec = document.querySelectorAll(".dsec")[cur];
+  if (!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx) b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+</body>
+</html>

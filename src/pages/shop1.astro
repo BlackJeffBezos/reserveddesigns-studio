@@ -1,0 +1,301 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+---
+<MainLayout title="Shop - Buy Loved Products Born from Creative Ideas" 
+description="Browse and purchase unique, handcrafted items and custom pieces we've brought to life from crazy ideas. We always sold out on launches, get your very own masterpieces now.">
+
+
+  <section class="py-20 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="section-title text-center mb-12"><span class="gradient-text">SHOP</span> OUR PRODUCTS</h1>
+  </section>
+
+<!-- Glowing Gold Announcement Strip -->
+<section class="
+  relative py-3 sm:py-4 px-4 sm:px-6 lg:px-8
+  bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950
+  overflow-hidden
+">
+  <!-- Subtle glowing gold overlay -->
+  <div class="absolute inset-0 bg-gradient-to-r from-transparent via-amber-500/10 to-transparent pointer-events-none animate-pulse-slow"></div>
+
+  <div class="relative max-w-7xl mx-auto">
+    <!-- Desktop: horizontal centered -->
+    <div class="hidden sm:flex items-center justify-center gap-6 md:gap-10 text-center text-amber-100 text-sm md:text-base font-medium">
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 text-lg md:text-xl">✦</span>
+        Free delivery on orders above <span class="font-bold text-amber-300">R750</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 text-lg md:text-xl">✉</span>
+        Sign up to our newsletter & get <span class="font-bold text-amber-300">R100 off</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 text-lg md:text-xl">📱</span>
+        Follow us on social media for new drops
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-amber-400 text-lg md:text-xl">🏆</span>
+        The more you buy, more rewards await!
+      </div>
+    </div>
+
+    <!-- Mobile: stacked, centered, glowing text -->
+    <div class="sm:hidden space-y-3 text-center text-amber-100 text-sm font-medium">
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-amber-400 text-lg">✦</span>
+        Free delivery on orders above <span class="font-bold text-amber-300">R750</span>
+      </div>
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-amber-400 text-lg">✉</span>
+        Sign up & get <span class="font-bold text-amber-300">R100 off</span>
+      </div>
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-amber-400 text-lg">📱</span>
+        Follow us for new drops
+      </div>
+      <div class="flex items-center justify-center gap-2">
+        <span class="text-amber-400 text-lg">🏆</span>
+        More buys = more rewards!
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.35; }
+  }
+  .animate-pulse-slow {
+    animation: pulse-slow 8s ease-in-out infinite;
+  }
+</style>
+
+  <!-- Product Cards Grid - Shop Section -->
+<section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bm-100 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <!-- Two rows of 4 cards each (8 products total) -->
+      
+<div class="
+  grid 
+  grid-cols-2           /* 2 columns on very small phones */
+  xs:grid-cols-2        /* still 2 on ~400px+ */
+  sm:grid-cols-3 
+  lg:grid-cols-4 
+  gap-4 md:gap-6 lg:gap-8
+  gap-x-4 gap-y-355 sm:gap-y-8 lg:gap-y-10 
+  pb-4 sm:pb-8 lg:pb-12                
+">
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Red sport sneakers"
+    name="Premium Running Sneakers Pro Max"
+    description="Lightweight breathable mesh with responsive cushioning for all-day comfort."
+    price={89}
+    originalPrice={178}
+    discount="50% OFF"
+    rating={4.5}
+    ratingCount={128}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1576871335552-2a916377f6f5?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Straw sun hat"
+    name="Wide Brim Summer Hat"
+    description="UV-protective straw hat with adjustable inner band and elegant bow detail."
+    price={45}
+    originalPrice={90}
+    discount="50% OFF"
+    rating={5}
+    ratingCount={89}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Red sport sneakers"
+    name="Premium Running Sneakers Pro Max"
+    description="Lightweight breathable mesh with responsive cushioning for all-day comfort."
+    price={89}
+    originalPrice={178}
+    discount="50% OFF"
+    rating={4.5}
+    ratingCount={128}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1576871335552-2a916377f6f5?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Straw sun hat"
+    name="Wide Brim Summer Hat"
+    description="UV-protective straw hat with adjustable inner band and elegant bow detail."
+    price={45}
+    originalPrice={90}
+    discount="50% OFF"
+    rating={5}
+    ratingCount={89}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Red sport sneakers"
+    name="Premium Running Sneakers Pro Max"
+    description="Lightweight breathable mesh with responsive cushioning for all-day comfort."
+    price={89}
+    originalPrice={178}
+    discount="50% OFF"
+    rating={4.5}
+    ratingCount={128}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1576871335552-2a916377f6f5?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Straw sun hat"
+    name="Wide Brim Summer Hat"
+    description="UV-protective straw hat with adjustable inner band and elegant bow detail."
+    price={45}
+    originalPrice={90}
+    discount="50% OFF"
+    rating={5}
+    ratingCount={89}
+  />
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Red sport sneakers"
+    name="Premium Running Sneakers Pro Max"
+    description="Lightweight breathable mesh with responsive cushioning for all-day comfort."
+    price={89}
+    originalPrice={178}
+    discount="50% OFF"
+    rating={4.5}
+    ratingCount={128}
+  />
+
+  <ProductCard
+    imageSrc="https://images.unsplash.com/photo-1576871335552-2a916377f6f5?auto=format&fit=crop&q=80&w=800"
+    imageAlt="Straw sun hat"
+    name="Wide Brim Summer Hat"
+    description="UV-protective straw hat with adjustable inner band and elegant bow detail."
+    price={45}
+    originalPrice={90}
+    discount="50% OFF"
+    rating={5}
+    ratingCount={89}
+  />
+       </div>
+      </div>
+      </section>
+
+
+    <!-- Shop with Ease – Trust & Benefits Section -->
+<section class="py-12 sm:py-16 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <h2 class="
+      text-2xl sm:text-3xl md:text-4xl lg:text-5xl
+      font-bold text-center mb-10 sm:mb-12 md:mb-16
+      text-gray-900
+    ">
+      SHOP WITH EASE BECAUSE WE GOT YOU COVERED
+    </h2>
+
+    <div class="
+      grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4
+      gap-6 sm:gap-8 lg:gap-10
+    ">
+      <!-- Card 1 -->
+      <div class="
+        bg-gradient-to-br from-blue-50 to-blue-100
+        rounded-2xl sm:rounded-3xl p-6 sm:p-8
+        text-center border border-blue-200/50 shadow-sm hover:shadow-md
+        transition-all duration-300
+      ">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
+          <!-- Mastercard/Visa icon placeholder – replace with real SVG if needed -->
+          <svg class="w-full h-full text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+            <circle cx="8" cy="12" r="6" fill="#eb001b"/>
+            <circle cx="16" cy="12" r="6" fill="#ff5f00" opacity="0.8"/>
+            <circle cx="12" cy="12" r="6" fill="#f9a617" opacity="0.6"/>
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+          All Major Banks Accepted
+        </h3>
+        <p class="text-sm sm:text-base text-gray-600">
+          We support payments from all major South African banks and trusted international institutions.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="
+        bg-gradient-to-br from-green-50 to-green-100
+        rounded-2xl sm:rounded-3xl p-6 sm:p-8
+        text-center border border-green-200/50 shadow-sm hover:shadow-md
+        transition-all duration-300
+      ">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
+          <svg class="w-full h-full text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="4" y="6" width="16" height="12" rx="2" stroke-width="2"/>
+            <circle cx="12" cy="12" r="2" stroke-width="2"/>
+            <path d="M8 12h8" stroke-width="2"/>
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+          Secure Payments
+        </h3>
+        <p class="text-sm sm:text-base text-gray-600">
+          Protected by leading encryption technology to ensure your details are always safe.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="
+        bg-gradient-to-br from-indigo-50 to-indigo-100
+        rounded-2xl sm:rounded-3xl p-6 sm:p-8
+        text-center border border-indigo-200/50 shadow-sm hover:shadow-md
+        transition-all duration-300
+      ">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
+          <svg class="w-full h-full text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+            <path d="M12 2v4m0 12v4m-8-8h4m12 0h4" stroke-width="2"/>
+            <path d="M4 4l4 4m8 8l4 4m-12-12l4 4m8 8l4 4" stroke-width="2" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+          National & International Orders
+        </h3>
+        <p class="text-sm sm:text-base text-gray-600">
+          We ship locally & globally with trusted courier services for peace of mind.
+        </p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="
+        bg-gradient-to-br from-amber-50 to-amber-100
+        rounded-2xl sm:rounded-3xl p-6 sm:p-8
+        text-center border border-amber-200/50 shadow-sm hover:shadow-md
+        transition-all duration-300
+      ">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
+          <svg class="w-full h-full text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M20 7l-3-4H7L4 7v10a2 2 0 002 2h12a2 2 0 002-2V7z" stroke-width="2"/>
+            <path d="M4 7h16" stroke-width="2"/>
+            <circle cx="8" cy="13" r="1" fill="currentColor"/>
+            <circle cx="16" cy="13" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
+          Free Delivery
+        </h3>
+        <p class="text-sm sm:text-base text-gray-600">
+          Get free delivery on purchases of R750.00 or more.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</MainLayout>
+
+--->

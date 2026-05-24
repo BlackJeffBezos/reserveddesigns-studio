@@ -1,0 +1,347 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const serviceTitle = "GRAPHIC DESIGNING";
+const serviceSubtitle = "SENSATIONS";
+const heroImage = "/images/reserved-designs-graphic-design-services.avif";
+const serviceDescription = "Our graphic design services are built to make your brand stand out with designs that are bold, memorable and effective.";
+const excellenceRating = "★★★★★";
+const stats = [
+  { number: "25+", label: "PROJECTS COMPLETED" },
+  { number: "12+", label: "HAPPY CLIENTS" },
+  { number: "5+", label: "YEARS EXPERIENCE" },
+  { number: "10+", label: "DAILY INQUIRIES" },
+];
+const portfolioItems = [
+  { title: "ElectroFix", image: "/images/electro-fix-logo-designed-by-reserved-designs.avif" },
+  { title: "HAIBO APPAREL", image: "/images/reserved-designs-haibo-apparel-t-shit-design-graphic-design.avif" },
+  { title: "Springboks IV Victory", image: "/images/reserved-designs-springboks-iv-victory-graphic-design.avif" },
+];
+---
+
+<MainLayout 
+  title="Graphic Designing Sensations - Bold, Memorable & Effective Visuals"
+  description="We create standout graphic designs that are bold, memorable and effective across all platforms. Ready to elevate your brand? Let's talk."
+>
+
+  <!-- Back link -->
+  <div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <a href="/services" class="inline-flex items-center text-gray-600 hover:text-primary-pink transition-colors text-sm font-medium">
+      ← ALL SERVICES
+    </a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Text + CTA -->
+        <div class="space-y-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-pink-600 text-white text-3xl font-bold shadow-lg">
+            <span>🎨</span> <!-- or replace with fa fa-paint-brush / SVG -->
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight uppercase">
+            {serviceTitle}<br />
+            <span class="text-primary-pink">{serviceSubtitle}</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-gray-700 max-w-2xl">
+            {serviceDescription}
+          </p>
+
+          <div class="pt-4">
+            <a 
+              href="/IntakeAnyService"
+              class="inline-block bg-primary-pink hover:bg-pink-700 text-white font-bold uppercase px-10 py-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+            >
+              START YOUR PROJECT
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Image + Excellence Badge -->
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+          <img 
+            src={heroImage}
+            alt="Designer working on graphic project in modern studio"
+            class="w-full h-full object-cover aspect-[4/3] lg:aspect-square"
+            loading="lazy"
+          />
+
+          <!-- Floating Excellence Badge -->
+          <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border border-gray-200 max-w-[220px]">
+            <p class="text-xs md:text-sm font-bold uppercase text-gray-700 mb-2">SERVICE EXCELLENCE</p>
+            <div class="flex text-yellow-400 text-xl md:text-2xl">
+              {excellenceRating}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Capabilities -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 uppercase">
+        CORE <span class="text-primary-pink">CAPABILITIES</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <!-- Capability 1: Logo Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🎨
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              LOGO DESIGN
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Get a face for your business that is creative, memorable and functional across all platforms.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/logo-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 2: Business Cards -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              💳
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              BUSINESS CARDS
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Bring engaging and unforgettable business cards to your business to increase interaction and possible sales.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/business-card.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 3: Posters & Flyers -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🖼️
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              POSTERS & FLYERS
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Create real-world connection that people can't scroll past, with attention-catching posters and flyers.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="posters-&-flyers.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 4: T-Shirt Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              <svg fill="#5b0085" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-26 -26 312.00 312.00" enable-background="new 0 0 260 218" xml:space="preserve" stroke="#5b0085"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-26" y="-26" width="312.00" height="312.00" rx="156" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M258,130.347l-17.809-32.478l17.705-33.002h-51.995C189.079,27.976,151.851,2.27,108.73,2.27C49.879,2.27,2,50.149,2,109 c0,58.851,47.879,106.73,106.73,106.73c51.543,0,94.668-36.726,104.584-85.383H258z M237.917,76.821l-11.325,21.11l11.22,20.461 h-22.77c0.271-3.096,0.418-6.227,0.418-9.393c0-11.21-1.742-22.02-4.961-32.178H237.917z M35.796,48.544l72.932,22.029l74.608-19.96 c12.631,16.104,20.171,36.381,20.171,58.387c0,8.559-1.147,16.853-3.284,24.745l-91.494-23.039l-92.937,16.893 c-1.202-6.016-1.837-12.235-1.837-18.599C13.954,86.04,22.163,64.963,35.796,48.544z M114.844,186.689 c-0.949,0.038-1.907,0.056-2.856,0.056c-11.001,0-21.946-2.452-31.829-7.149l7.835-16.469c8.201,3.899,16.995,5.693,26.145,5.345 c14.994-0.582,28.851-6.99,38.997-18.028l13.425,12.335C153.099,177.426,134.732,185.918,114.844,186.689z M80.763,91.298 c-1.693,9.623-10.085,16.928-20.2,16.928c-11.326,0-20.518-9.182-20.518-20.518c0-2.011,0.287-3.95,0.831-5.786L80.763,91.298z M178.11,87.707c0,11.336-9.182,20.518-20.518,20.518c-10.105,0-18.508-7.305-20.2-16.928l39.888-9.367 C177.823,83.768,178.11,85.707,178.11,87.707z"></path> </g></svg>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              CHARACTER DESIGN
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Engaging character designs that bring stories and your brand to life.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/character-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Capability 4: T-Shirt Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              <svg viewBox="-102.4 -102.4 1228.80 1228.80" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-102.4" y="-102.4" width="1228.80" height="1228.80" rx="614.4" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M896 896H128c-35.3 0-64-28.7-64-64V192c0-35.3 28.7-64 64-64h768c35.3 0 64 28.7 64 64v640c0 35.3-28.7 64-64 64z" fill="#3D5AFE"></path><path d="M256 383.5m-64 0a64 64 0 1 0 128 0 64 64 0 1 0-128 0Z" fill="#e302ba"></path><path d="M896 896c35.3 0 64-28.7 64-64V605L768.1 320l-320 319.9-64-64L82.7 877.3C94.3 888.8 110.3 896 128 896h768z" fill="#536DFE"></path><path d="M114.3 894.5c1.3 0.3 2.6 0.5 3.9 0.7-1.3-0.1-2.6-0.4-3.9-0.7z" fill="#8C9EFF"></path><path d="M64 192v640c0 17.7 7.2 33.7 18.7 45.3L384 576l64 64 241.4-241.3c-29.9-114.4-103.8-211-202.6-270.6H128c-35.3-0.1-64 28.6-64 63.9z m192 127.5c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64z" fill="#536DFE"></path><path d="M704 512c0-39.2-5-77.2-14.5-113.4L448.1 639.9l-64-64L82.7 877.3c0.7 0.7 1.5 1.4 2.2 2.1 1.5 1.4 3.1 2.7 4.7 3.9s3.3 2.4 5.1 3.4c1.8 1.1 3.6 2.1 5.4 3 0.9 0.4 1.9 0.9 2.8 1.3 0.6 0.3 1.2 0.5 1.8 0.7 1.2 0.5 2.4 0.9 3.7 1.3 1.9 0.6 3.8 1.1 5.7 1.5 1.3 0.3 2.6 0.5 3.9 0.7 3.2 0.5 6.4 0.7 9.7 0.7h358.9C617 817.6 704 675 704 512z" fill="#e302ba"></path><path d="M104.9 891.7c1.2 0.5 2.4 0.9 3.7 1.3-1.3-0.4-2.5-0.8-3.7-1.3z" fill="#8C9EFF"></path></g></svg>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              ILLUSTRATION
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Custom illustrations that add personality and creativity to your projects.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/custom-illustration.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Capability 4: T-Shirt Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+             <svg height="200px" width="200px" version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-51.2 -51.2 614.40 614.40" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"><rect x="-51.2" y="-51.2" width="614.40" height="614.40" rx="307.2" fill="#ffffff" strokewidth="0"></rect></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#b300a4;} </style> <g> <path class="st0" d="M106.911,446.479h294.227v-6.34V73.624H106.911V446.479z M119.592,86.304h268.865v275.831 c-3.39-7.15-7.818-13.619-13.612-18.793c-46.493-41.468-41.696-68.734-42.612-85.622c-1.173-21.694,22.276-131.916-83.256-127.815 c-3.213,4.193-6.482,19.092-6.184,27.01c39.606-1.208,46.607,32.974,46.607,65.514s-15.786,54.042-15.786,54.042 c-0.754,2.203-1.927,1.606-0.64,3.54c0,0,2.274,2.744,5.061,5.722c3.02,13.192,14.152,30.031,40.423,32.96 c18.857,2.09,20.741,4.186,29.469,8.7c2.36,2.146,4.08,4.264,4.933,6.284c-19.348-0.882-52.023,24.622-52.023,24.622 s-32.313,6.269-62.088,5.146c2.382-3.412,5.118-6.362,8.203-8.416c1.414-0.939,1.791-2.851,0.853-4.265 c-0.946-1.414-2.858-1.791-4.272-0.853c-4.435,2.964-7.975,7.08-10.854,11.529l-0.966,1.578 c-17.336-1.422-32.803-5.843-39.044-16.156c-9.162-15.112,48.369-42.207,48.369-42.207v-27.26c0,0-10.819,0.249-24.885-14.99 c-20.684-22.411-15.637-73.746-6.781-87.904c13.228-21.139,27.266-14.955,26.968-18.466c-0.974-11.714,5.402-26.171,5.402-26.171 c-4.25,0.198-13.975,1.876-24.089,6.077c-10.882,4.528-28.474,16.242-37.267,63.154c-8.103,43.216,8.757,95.005-1.791,107.316 c-10.555,12.311-14.074,21.992-14.074,29.903c0,15.175-2.929,29.683-4.684,31.446c-1.642,1.635-17.45,25.539-19.547,66.032h-20.698 V86.304z"></path> <path class="st0" d="M466.879,413.476c-2.104-13.171-4.308-24.849-6.546-34.708c-2.325-10.164-3.547-23.13-3.54-37.48 c-0.007-16.854,1.727-35.22,4.755-50.388c1.429-7.186,3.134-13.534,4.926-18.374c0.811-2.21,1.663-4.144,2.488-5.644 c0.619-1.159,1.152-1.841,1.329-2.026c4.883-4.883,4.883-12.822-0.007-17.713c-0.142-0.149-0.696-0.86-1.351-2.076 c-1.435-2.601-3.042-6.809-4.406-11.564c-2.289-7.89-4.215-17.777-5.573-28.595c-1.414-11.217-2.16-23.045-2.16-34.204 c-0.007-14.344,1.215-27.301,3.54-37.48c2.239-9.83,4.436-21.509,6.546-34.701c5.217-32.639,8.338-64.66,8.928-70.902 c0.305-3.305-0.74-6.66-2.872-9.197c-2.167-2.587-5.21-4.158-8.508-4.428c-0.043,0-5.246-0.448-14.842-0.455 c-14.166,0.007-37.146,0.995-66.211,5.637c-13.484,2.16-26.115,3.255-37.537,3.255c-11.444,0-21.75-1.052-31.502-3.213 c-13.171-2.928-22.866-7.392-30.664-10.988l-0.804-0.362c-4.087-1.877-7.947-3.639-12.076-5.09C265.39,0.882,260.692,0,256,0 c-3.298,0-6.724,0.462-10.178,1.365c-5.523,1.436-10.52,3.696-15.36,5.9l-1.635,0.746c-6.98,3.206-14.195,6.525-23.541,9.262 c-11.892,3.461-24.686,5.146-39.116,5.16c-11.422,0-24.052-1.095-37.537-3.255c-29.071-4.642-52.052-5.63-66.217-5.637 c-9.617,0.007-14.785,0.455-14.785,0.455c-3.348,0.27-6.39,1.841-8.551,4.421c-2.168,2.566-3.192,5.829-2.879,9.276 c0.256,2.75,1.656,17.436,4.087,36.634c1.536,12.205,3.163,23.705,4.834,34.196c2.125,13.242,4.328,24.921,6.553,34.708 c2.317,10.136,3.54,23.093,3.54,37.473c0,16.867-1.735,35.234-4.762,50.396c-1.422,7.158-3.12,13.505-4.912,18.367 c-0.839,2.267-1.692,4.208-2.488,5.636c-0.632,1.18-1.18,1.876-1.35,2.054c-2.325,2.339-3.661,5.559-3.661,8.843 c0,3.291,1.336,6.511,3.703,8.892c0.142,0.149,0.676,0.831,1.323,2.033c1.435,2.601,3.042,6.824,4.414,11.571 c2.274,7.847,4.2,17.734,5.572,28.595c1.415,11.21,2.161,23.037,2.161,34.203c0,14.38-1.223,27.338-3.54,37.48 c-2.232,9.809-4.428,21.48-6.553,34.701c-5.182,32.426-8.33,64.576-8.928,70.916c-0.306,3.355,0.718,6.624,2.886,9.198 c2.161,2.573,5.196,4.144,8.664,4.435c1.777,0.128,6.767,0.434,14.671,0.434c14.116,0,37.068-0.981,66.217-5.637 c13.484-2.161,26.115-3.256,37.537-3.256c11.465,0.007,21.772,1.059,31.496,3.213c13.178,2.929,22.874,7.393,30.671,10.989 l0.874,0.398c4.059,1.855,7.89,3.618,11.998,5.054c5.41,1.898,10.108,2.78,14.792,2.78c3.298,0,6.731-0.462,10.2-1.365 c5.559-1.45,10.534-3.71,15.346-5.9l1.65-0.753c6.973-3.206,14.18-6.525,23.527-9.248c11.884-3.469,24.678-5.153,39.115-5.168 c11.416,0,24.046,1.095,37.537,3.256c29.142,4.656,52.095,5.637,66.211,5.637c7.954,0,12.922-0.306,14.798-0.448 c3.348-0.277,6.384-1.848,8.558-4.435c2.161-2.58,3.177-5.85,2.858-9.269c-0.256-2.751-1.657-17.443-4.08-36.634 C470.205,435.61,468.57,424.103,466.879,413.476z M436.997,225.99c1.706,8.544,3.718,15.993,5.985,22.156 c1.087,2.943,2.21,5.53,3.411,7.862c-2.175,4.208-4.066,9.184-5.914,15.53c-2.672,9.241-4.819,20.151-6.369,32.426 c-1.542,12.269-2.352,25.176-2.352,37.324c0.007,16.405,1.408,30.884,4.166,43.038c2.097,9.234,4.2,20.372,6.233,33.102 c2.858,17.841,5.083,35.768,6.44,47.658c0.348,3.035,0.661,5.836,0.931,8.338c-13.228,0-34.737-0.932-62.202-5.324 c-14.834-2.367-28.788-3.568-41.489-3.568c-13.107,0-25.532,1.279-36.912,3.81c-15.588,3.44-27.216,8.778-35.71,12.673 c-4.479,2.061-7.869,3.597-10.698,4.592c-2.651,0.924-4.727,1.358-6.518,1.358c-1.18,0-2.43-0.178-3.938-0.568 c-3.056-0.775-7.186-2.588-11.195-4.428l-2.033-0.931c-6.916-3.171-15.516-7.123-26.541-10.336 c-14.209-4.151-29.299-6.169-46.124-6.169c-12.744,0-26.704,1.201-41.503,3.568c-27.451,4.393-48.96,5.324-62.194,5.324 c0.71-6.532,1.684-15.048,2.892-24.565c2.318-18.133,6.056-44.048,10.719-64.54c2.75-12.141,4.151-26.613,4.166-43.025 c-0.015-18.744-1.877-38.369-5.246-55.278c-1.714-8.587-3.732-16.043-5.985-22.149c-1.095-2.964-2.203-5.537-3.405-7.868 c2.175-4.215,4.066-9.191,5.907-15.524c2.68-9.276,4.826-20.187,6.369-32.441c1.536-12.19,2.353-25.098,2.36-37.331 c-0.015-16.412-1.415-30.884-4.166-43.032c-2.097-9.233-4.201-20.371-6.234-33.101c-2.864-17.87-5.082-35.781-6.439-47.666 c-0.356-3.028-0.668-5.822-0.938-8.323h0.099c13.172,0,34.644,0.924,62.096,5.317c14.799,2.367,28.759,3.568,41.503,3.568 c13.114,0,25.532-1.279,36.905-3.81c15.68-3.462,27.259-8.786,35.71-12.674c4.464-2.054,7.847-3.582,10.704-4.584 c2.644-0.932,4.713-1.365,6.511-1.365c1.187,0,2.431,0.178,3.938,0.568c3.098,0.789,7.207,2.594,11.202,4.428l2.069,0.946 c6.908,3.17,15.502,7.115,26.498,10.328c14.195,4.151,29.285,6.162,46.131,6.162c12.702,0,26.655-1.201,41.489-3.568 c27.43-4.386,48.874-5.317,62.202-5.317c-0.704,6.525-1.678,15.04-2.893,24.565c-2.296,18.054-6.02,43.898-10.711,64.533 c-2.758,12.147-4.158,26.626-4.166,43.024C431.766,189.427,433.628,209.066,436.997,225.99z"></path> </g> </g></svg>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              ABSTRACT DESIGN
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Visual Arts concepts that capture and evoke emotions.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/abstract-art-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Capability 4: T-Shirt Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              👕
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              T-SHIRT DESIGN
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Get custom T-shirt designs that stand out and separate yourself from the crowd.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/t-shirt-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Capability 5: Product Package Design -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              📦
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              PRODUCT PACKAGE DESIGN
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Creative and functional packaging that makes your products stand out.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/package-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Capability 6: Custom Icons -->
+        <div class="bg-primary-pink text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🎯
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              CUSTOM ICONS
+            </h3>
+            <p class="text-pink-100 text-base md:text-lg leading-relaxed">
+              Unique, branded icons designed to match your visual identity.
+            </p>
+          </div>
+          <div class="p-8 border-t border-pink-700 mt-auto">
+            <a href="/custom-icon-design.html" class="block bg-white text-primary-pink font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        {stats.map(stat => (
+          <div key={stat.label}>
+            <p class="text-5xl md:text-6xl font-bold text-primary-pink mb-2">{stat.number}</p>
+            <p class="text-gray-600 font-medium uppercase text-sm md:text-base tracking-wide">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Teaser -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <h2 class="text-4xl md:text-5xl font-bold uppercase">
+          VIEW OUR<br />
+          <span class="text-primary-blue">PROOF OF</span><br />
+          TRANSFORMATION
+        </h2>
+
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center gap-2 text-primary-blue font-bold hover:text-primary-pink transition-colors text-lg whitespace-nowrap"
+        >
+          VIEW FULL PORTFOLIO →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {portfolioItems.map(item => (
+          <div key={item.title} class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+            <img 
+              src={item.image}
+              alt={item.title}
+              class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+              <h3 class="text-white text-xl md:text-2xl font-bold">{item.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight">
+        READY TO CREATE A<br />
+        <span class="text-primary-pink">SENSATION</span>?
+      </h2>
+
+      <p class="text-xl md:text-2xl opacity-90 mb-12 max-w-3xl mx-auto">
+        OUR STUDIO IS OPTIMIZED FOR RAPID EXECUTION AND ELITE DESIGN STANDARDS.<br />
+        LET'S TALK ABOUT YOUR PROJECT TODAY.
+      </p>
+
+      <a 
+        href="/IntakeAnyService"
+        class="inline-block bg-primary-pink hover:bg-pink-600 text-white font-bold uppercase px-12 py-6 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+      >
+        START PROJECT
+      </a>
+    </div>
+  </section>
+
+</MainLayout>

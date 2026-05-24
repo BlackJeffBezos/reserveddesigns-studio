@@ -1,0 +1,161 @@
+---
+const pricingTiers = [
+  {
+    range: "R3,500 – R6,000",
+    label: "STARTER",
+    description: "Best for first-time makers who want to see their idea come to life quickly and have something real to show.",
+        highlight: false,
+    features: [
+      "Concept refinement",
+      "Professional Product Design & Product renders",
+      "Sign-up Landing Page",
+      "Sweet & simple prototype",
+      "Perfect for early social media posts or sharing with potential early supporters."
+    ]
+  },
+  {
+    range: "R6,000 – R10,000",
+    label: "MOST POPULAR",
+    description: "Best for serious makers who want something impressive enough to show investors or launch early campaigns to raise funds before actual production.",
+    highlight: true,
+    features: [
+      "Branding & Marketing materials",
+      "Realistic 3D renders and visualization",
+      "User Flow animation",
+      "Complete Business Website",
+      "Pitch deck & Basic Exhibition stand",
+      "Functional prototype with testing",
+      "1–2 rounds of refinements",
+      "Functional prototype to confidently showcase & test in front of prospects."
+    ]
+  },
+  {
+    range: "R10,000+",
+    label: "PREMIUM",
+    description: "Best for makers who are ready to move toward mass production, launch and secure serious Contracts.",
+    highlight: false,
+    features: [
+      "Strong Branding",
+      "E-commerce website with custom animated Icons",
+      "High-end 3D renders and visualization",
+      "Advanced engineering analysis",
+      "Multiple prototypes & usability testing",
+      "2-3 refinement rounds",
+      "Clear next steps guidance",
+      "Actual build to perform rigorous tests & intense practical demo in front of prospects to secure serious Contracts, funding & trust."
+    ]
+  }
+];
+---
+
+<div class="bg-[#0a0a0a] py-20 border-t border-white/10">
+  <div class="max-w-5xl mx-auto px-6">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 mb-4">
+        <div class="h-px w-8 bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
+        <span class="uppercase text-xs tracking-[2px] font-medium text-pink-400">PROJECTS START AT R3,500</span>
+        <div class="h-px w-8 bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
+      </div>
+
+      <h2 class="text-4xl md:text-6xl font-black tracking-tighter text-white mb-4">
+        SIMPLE, TRANSPARENT<br>PRICING
+      </h2>
+      
+      <p class="text-lg text-gray-400 max-w-md mx-auto">
+        Choose your budget range below — we’ll match the scope to your idea.
+      </p>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="max-w-4xl mx-auto">
+      <div class="space-y-6">
+        {
+          pricingTiers.map((tier, index) => (
+            <div 
+              class={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-1 ${
+                tier.highlight 
+                  ? 'border-pink-500/50 bg-[#111827] shadow-xl shadow-pink-500/10' 
+                  : 'border-white/10 bg-[#111827] hover:border-white/20'
+              }`}
+            >
+              <div class="p-8 md:p-10">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <!-- Left Side -->
+                  <div class="flex-1">
+                    <div class={`inline-block px-5 py-1.5 rounded-full text-sm font-semibold tracking-wider mb-4 ${
+                      tier.highlight 
+                        ? 'bg-gradient-to-r from-[#00f5ff] to-[#ff0088] text-white' 
+                        : 'bg-white/10 text-white'
+                    }`}>
+                      {tier.label}
+                    </div>
+                    
+                    <div class="text-4xl md:text-5xl font-bold text-white tracking-tighter mb-2">
+                      {tier.range}
+                    </div>
+                    
+                    <p class="text-gray-400 text-lg">
+                      {tier.description}
+                    </p>
+                                        <p class="text-gray-400 text-lg">
+                      {tier.description1}
+                    </p>
+                                        <p class="text-gray-400 text-lg">
+                      {tier.description2}
+                    </p>
+                  </div>
+
+                  <!-- Right Side Features -->
+                  <div class="flex-1 md:border-l md:border-white/10 md:pl-10">
+                    <ul class="space-y-3 text-gray-300">
+                      {tier.features.map((feature) => (
+                        <li class="flex items-start gap-3">
+                          <span class="text-emerald-400 mt-1">•</span>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Neon Gradient Bottom Bar -->
+              <div class={`h-1.5 bg-gradient-to-r from-[#00f5ff] via-[#ff00ff] to-[#ff0088] ${
+                !tier.highlight && 'opacity-70'
+              }`}></div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="text-center mt-16">
+      <p class="text-sm text-gray-500 max-w-md mx-auto">
+        Everything is custom-quoted after your idea review. 
+        Final pricing depends on complexity and iterations. <br>No hidden fees.No commitment. No pressure.Just clarity on your idea.
+      </p>
+      
+      <a 
+        href="/intake/#intake-modal" 
+        class="mt-8 inline-flex items-center gap-3 bg-gradient-to-r from-[#00f5ff] to-[#ff0088] hover:from-[#00e6ff] hover:to-[#ff1a8c] text-white font-semibold px-10 py-4 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95" id="open-modal"
+      >
+        Get Your Custom Quote
+        <span class="text-xl">→</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Subtle click animation on cards
+  document.querySelectorAll('.group').forEach(card => {
+    card.addEventListener('click', () => {
+      card.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        card.style.transform = '';
+      }, 180);
+    });
+  });
+</script>

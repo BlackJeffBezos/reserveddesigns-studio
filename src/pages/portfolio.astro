@@ -1,0 +1,310 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+---
+
+<MainLayout title="Portfolio - Ideas Transformed into Loved Products" 
+  description="See our work: real examples of turning concepts into functional websites, brands, physical items, and public art that people love and use daily.">
+
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-12 md:mb-16">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight">
+          OUR <span class="text-pink-600">AMAZING WORK</span>
+        </h1>
+        <p class="mt-4 text-lg md:text-xl text-gray-600">
+          Explore real projects we’ve brought to life.
+        </p>
+      </div>
+
+      <!-- Portfolio Grid -->
+      <div id="portfolio-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
+        <!-- Your Portfolio Cards – IMPORTANT: each must have data-tags and correct structure -->
+
+             <!-- 
+      <PortfolioCard
+        href="https://www.canva.com/design/DAFyourlinkhere/view"
+        imageSrc="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80"
+        imageAlt="Pepper spray product from Proguard."
+        category="Product Design"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="Logo Design"
+        description="A company devoted to provide wide range of Pepper Spray products to the world to fight against crime."
+        partnerLabel="ProGuard"
+        partnerName="ProGuard"
+        animationDelay="0s"
+        data-tags="product-development, innovation, 3d-printing, Product design, Full Branding."
+      />
+
+      -->
+        
+      <PortfolioCard
+        href="case-studies/shoprite-case-study.html"
+        imageSrc="/images/reserved-designs-solutions-for-money-market-long-queue.avif"
+        imageAlt="Solving long queues at Shoprite money market Kiosk"
+        category="Customer Experience (UX)"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="SHOPRITE MONEY MARKET KIOSK LONG QUEUE CASE STUDY"
+        description="Shoprite Money Market kiosks are essential community infrastructure across South Africa especially for senior citizens, non-techy savvy, non-smart phone users and internet restricted individuals. But a broken queue system is quietly destroying the customer experience every single day. Customers wait up to 60 minutes in a blind queue, only to discover the specific service they need is offline when they finally reach the counter. They leave empty-handed and must return another day."
+        partnerLabel="Eco-Lounge Sofa, Service Availability Display Monitor, Queue-Ticket System, Friendly Buddy with tablet/Ipad"
+        partnerName="Shoprite Money Market Kiosk"
+        data-tags="customer experience, retail, design for community, design-thinker, design development, systems designs, efficiency"
+      />
+
+      <PortfolioCard
+        href="case-studies/diketo-case-study.html"
+        imageSrc="/images/ls-bakery-logo-designed-by-reserved-designs.svg"
+        imageAlt="Ndinga Dyongo Announces Diketo game reimagined & preserved for future generations"
+        category="indigenous Game Mordenization"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="DIKETO GAME REIMAGINED"
+        description="In many South African homes today, traditional indigenous games are slowly disappearing. Children are growing up surrounded by smartphones, tablets, and global entertainment, while the rich cultural games their parents and grandparents once played are fading into memory. Ndinga reimagine DIKETO game, a classic African stone-tossing game that enhances eye-hand & catching coordination without removing its soul. He adds non-toxic Glow-in-the-dark stones. Premium feel. Pure African heritage. Designed for both relaxed family play and energetic social settings."
+        partnerLabel="Modernize African game, Preserve African Heritage, Game board"
+        partnerName="Ndinga Dyongo"
+        data-tags="indigenous Game Mordenization, game board design, package design, modernize, redesign, reinvent"
+      />
+
+      <!-- Example Card 2 -->
+      <PortfolioCard
+        href="https://canva.link/okot4yputwenf4k"
+        imageSrc="/images/safari-canvas-logo-designed-by-reserved-designs.avif"
+        imageAlt="South African inspired apparel maker & Market house, Safari Canvas Reserved Designs Studio  division."
+        category="RSA Apparel Maker & Market Place"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="Safari Canvas"
+        description="Your heartbeat syncs with the bassline of a Jozi taxi rank. Your skin remembers the salt of Cape Town waves. Your soul hums with the fire of a thousand township braais. Now imagine wrapping that exact electricity around your body—every single day. While the world drowns in faded 'California Love' tees and sun-bleached Miami dreams, we’re rising with ink that bleeds red, gold, and green. Safari Canvas isn’t selling clothes. We’re bottling Mzansi magic and daring you to wear it unapologetically."
+        partnerLabel="T-Shirt design, RSA Graphic T-Shirts Market Place"
+        partnerName="Reserved Designs Studio."
+        animationDelay="0.1s"
+        data-tags="RSA Apparel Maker & Market Place, T-Shirt design, RSA Graphic T-Shirts Market Place ,South African Inspired Apparel, T-Shirt design, graphic design, logo, logo design."
+      />
+
+      <PortfolioCard
+        href="case-studies/linkpod-casestudy.html"
+        imageSrc="/images/og-default.jpg"
+        imageAlt="Reserved Designs LinkPod Mifi router attached to phone to make your phone and router a unified product"
+        category="Product Design"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="LINKPOD"
+        description="LINKPOD is a 2-in-1 Magnetic MiFi Router Pouch + Phone Integration Stand System designed to unify portable connectivity into one compact experience. It transforms the MiFi router from a loose, forgotten device into a structured companion to your phone."
+        partnerLabel="Product Development, Product Design"
+        partnerName="Ndinga Dyongo"
+        animationDelay="0s"
+        data-tags="Invent, Product development, Product design, mifi-router, mifi-router attachment."
+      />
+        
+             <!-- Example Card 2 -->
+      <PortfolioCard
+        href="case-studies/nogqaza-case-study.html"
+        imageSrc="/images/electro-fix-logo-designed-by-reserved-designs.avif"
+        imageAlt="Nogqaza A fast reflex Xhosa game by reserved designs."
+        category="Digitized Childhood Game"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="NOGQAZA"
+        description="Never lose your sharpest self to passive scrolling. This NOGQAZA version revives a classic Xhosa childhood reflex game — the one played by tearing pages from school exercise books, writing numbers 1–12, and racing to tap them in order as fast as possible. A digitised childhood classic — rebuilt to demand active attention in an age of effortless answers. No AI assistance. No passive scrolling. Just pure, active human thinking under pressure."
+        partnerLabel="Website, Logo"
+        partnerName="Reserved Designs"
+        animationDelay="0.1s"
+        data-tags="Website Design & Development, Branding, Logo Design, web design."
+      />
+
+        <PortfolioCard
+          href="case-studies/anti-qr-fraud-casestudy.html"
+          imageSrc="/images/achievers-academy-logo-revamp-by-reserved-designs.svg"
+          imageAlt="Qr-code payment security with anti-overlay design from reserved designs"
+          category="QR-Code payment security"
+          categoryColor="blue-600"
+          borderColor="blue-500/30"
+          title="ANTI-QR CODE OVERLAY FRAUD"
+          description="Across South Africa and globally, QR-based payments have rapidly become a preferred transaction method. Platforms like SnapScan and Zapper have enabled businesses to move faster, reduce friction, and operate without cash or card dependency. But within this speed lies a critical vulnerability, the physical display itself. A physical security system that eliminates QR overlay fraud at the point of interaction without software, training, or behaviour change. Anti-QR Overlay Fraud Display Technology secures the last inch of every cashless transaction. Five physical innovations working together to make overlay attacks visually obvious and practically impossible."
+          partnerLabel="payment security, card-less transaction protection, QR-code base fraud"
+          partnerName="Reserved Designs"
+          data-tags="payment security, card-less transaction security, QR-code base fraud"
+        />
+
+       <PortfolioCard
+        href="case-studies/queen-case-study.html"
+        imageSrc="/images/thephunokheja-logo-design-by-reserved-designs.svg"
+        imageAlt="Thephunokheja website and logo design."
+        category="Idea Capture Device"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="QUEEN IDEA CAPTURE"
+        description="A premium chess queen-shaped desk device that eliminates the gap between having an idea and capturing it. One press of the crown. Zero friction. Local-first. Private by design. Queen is not just a recorder. It is a physical interface for thinking — combining elegant design, privacy-first architecture, and reliable local-to-cloud workflow to create a lovable, talk-worthy product."
+        partnerLabel="Zero Friction Idea Capturing, Organized Ideas, Protect Ideas"
+        partnerName="Ndinga Dyongo" 
+        animationDelay="0s"
+        data-tags="Queen, Idea Capture device, Zero Friction idea capturing"
+      />
+ 
+      <!-- Example Card 2 -->
+      <PortfolioCard
+        href="case-studies/vytalink-core-case-study.html"
+        imageSrc="/images/reserved-designs-mspt-logo-design.avif"
+        imageAlt="MSPT Branding."
+        category="Emergency Device"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="VYTALINK CORE"
+        description="VYTALINK CORE is a two-part wearable Concept architecture that separates sensing from communication — removing all friction between distress and response. Designed for the critical seconds when apps and phones are too slow. Designed so that the fastest emergency system is not an app, but a single press. Chest Sensor Nodes + Emergency Hub. Separated sensing and communication for signal quality, reliability, and redundancy that no single device can match. The fastest emergency system is not an app. It is a dedicated, always-ready physical interface."
+        partnerLabel="Concept Design, Product Render, Product design"
+        partnerName="Reserved Designs Studio"
+        animationDelay="0.1s"
+        data-tags="Concept design, Product Render, Product design"
+      />
+
+        <PortfolioCard
+          href="https://legalckdyongo.pages.dev/"
+          imageSrc="/images/ck-dyongo-and-associates-new-logo-designed-by-reserved-designs.svg"
+          imageAlt="CK Dyongo & Associates websites and logo Design"
+          category="Full Branding"
+          categoryColor="blue-600"
+          borderColor="blue-500/30"
+          title="CK Dyongo & Associates"
+          description="Website, Business Card design, Logo design and strategic Branding for a legal consultant in JHB."
+          partnerLabel="Website, Logo, Branding"
+          partnerName="Churchill Khanyiso Dyongo"
+          data-tags="web-design,branding,logo-design"
+        />
+
+        <PortfolioCard
+          href="https://ls-bakery.pages.dev/"
+          imageSrc="/images/ls-bakery-logo-designed-by-reserved-designs.svg"
+          imageAlt="LS Bakery Website and Logo Design"
+          category="Branding"
+          categoryColor="pink-600"
+          borderColor="pink-500/30"
+          title="LS Bakery"
+          description="Website & Logo Design for a local bakery."
+          partnerLabel="Website, Logo design"
+          partnerName="Lucky"
+          data-tags="web-design, branding,logo-design"
+        />   
+
+        <PortfolioCard
+          href="https://ac-tutorials.pages.dev/"
+          imageSrc="/images/achievers-academy-logo-revamp-by-reserved-designs.svg"
+          imageAlt="Achievers Academy website and logo Design"
+          category="Website design"
+          categoryColor="blue-600"
+          borderColor="blue-500/30"
+          title="Achievers Academy"
+          description="Website & Logo revamp for a extra class academy in Benoni North Mead."
+          partnerLabel="Website, Logo revamp."
+          partnerName="Kabelo Tladi"
+          data-tags="web-design,branding,logo-design"
+        />
+
+
+          <PortfolioCard
+        href="https://thephunokheja-hardware.pages.dev/"
+        imageSrc="/images/thephunokheja-logo-design-by-reserved-designs.svg"
+        imageAlt="Thephunokheja website and logo design."
+        category="Branding"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="Thephunokheja Steel suppliers"
+        description="Website & Logo design for a local hardware, alumuniun and stainless steel supplier"
+        partnerLabel="Website, Logo"
+        partnerName="Shadrack" 
+        animationDelay="0s"
+        data-tags="Website Design & Development, Logo Design, Branding, web design."
+      />
+
+      <!-- Example Card 2 -->
+      <PortfolioCard
+        href="https://electrofix.pages.dev/"
+        imageSrc="/images/electro-fix-logo-designed-by-reserved-designs.avif"
+        imageAlt="Website, Logo design for electronics repair shop in central Brakpan."
+        category="Branding"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="ElectroFix"
+        description="Website & Logo design for electronics repair shop in central Brakpan."
+        partnerLabel="Website, Logo"
+        partnerName="ElectroFix"
+        animationDelay="0.1s"
+        data-tags="Website Design & Development, Branding, Logo Design, web design."
+      />
+
+          <PortfolioCard
+        href="https://canva.link/71i7qnnd2wc2kzq"
+        imageSrc="/images/og-default.jpg"
+        imageAlt="Design studio full branding"
+        category="Full Branding"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="Reserved Designs"
+        description="Website, Business Card design, logo design & strategic branding for a Design studio in JHB South Africa."
+        partnerLabel="Full Branding"
+        partnerName="Ndinga Dyongo"
+        animationDelay="0s"
+        data-tags="Full Branding, web design, website design & development, strategic branding, Logo, logo design."
+      />
+
+      <!-- Example Card 2 -->
+      <PortfolioCard
+        href="https://canva.link/kskvdhjlagrsaso"
+        imageSrc="/images/reserved-designs-mspt-logo-design.avif"
+        imageAlt="MSPT Branding."
+        category="Branding"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="MSPT Sport & Tourism."
+        description="Logo & letter design for a Sport & Tourism promotion company in Durban."
+        partnerLabel="logo design, letter design"
+        partnerName="Welcome Mteto"
+        animationDelay="0.1s"
+        data-tags="Branding, Logo, logo design, letter design, letterhead, letter,"
+      />
+
+
+      <!-- Example Card 2 -->
+      <PortfolioCard
+        href="https://canva.link/hf773n5w684wgt4"
+        imageSrc="/images/reserved-designs-superior-bricks-logo-design.avif"
+        imageAlt="Construction company logo."
+        category="Logo Design"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="Superior Bricks"
+        description="A construction & and Brick supplier company in Mogwase North West."
+        partnerLabel="Logo Design"
+        partnerName="Superior Bricks"
+        animationDelay="0.1s"
+        data-tags="Logo, logo design, branding"
+      />
+  </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA (your existing one) -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight">
+        Now let's see what your Idea <br />
+        <span class="text-primary-pink">Could Become</span>?
+      </h2>
+      <p class="text-xl md:text-2xl opacity-90 mb-12 max-w-3xl mx-auto">
+        SO SAD YOU'VE REACHED THE END OF OUR AMAZING WORK.<br />
+        BUT WE CAN ADD YOURS, LET'S TALK ABOUT YOUR IDEA NOW.
+      </p>
+      <a 
+        href="/contact" 
+        class="inline-block bg-primary-pink hover:bg-pink-600 text-white font-bold uppercase px-12 py-6 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+      >
+        LET'S START YOUR PROJECT
+      </a>
+    </div>
+  </section>
+
+</MainLayout>

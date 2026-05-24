@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anti-QR Fraud Display — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --blue:    #0057FF;
+  --blue2:   #1A6FFF;
+  --blue3:   #0099FF;
+  --bluedk:  #003BB5;
+  --bluelite:#4DAAFF;
+  --ink:     #0A0F2E;
+  --ink2:    #1C2A5E;
+  --ink3:    #5A78BB;
+  --bg:      #F0F5FF;
+  --bgsec:   #E8F0FF;
+  --rule:    #C0D0F0;
+  --left-w:  160px;
+  --right-w: 270px;
+  --hh:      52px;
+  --fh:      'Archivo Black', sans-serif;
+  --fb:      'Archivo', sans-serif;
+  --fm:      'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--blue); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: linear-gradient(135deg, #0A1A5C 0%, #0057FF 60%, #0099FF 100%);
+  border-bottom: 2px solid var(--bluedk);
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.h-logo { font-family: var(--fh); font-size: 13px; color: #fff; flex-shrink: 0; letter-spacing: 1px; }
+.h-logo em { color: var(--bluelite); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: rgba(255,255,255,.25); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: rgba(255,255,255,.6); letter-spacing: .8px; flex: 1; }
+.h-cur { font-family: var(--fh); font-size: 10px; color: var(--ink); letter-spacing: 1.5px; background: #fff; padding: 5px 12px; border-radius: 2px; }
+
+/* ── PROGRESS ── */
+.ptrack { position: fixed; top: var(--hh); left: 0; right: 0; height: 3px; z-index: 300; pointer-events: none; background: rgba(0,87,255,.15); }
+.pbar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--blue3)); transition: width .2s ease; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: var(--left-w) 1fr var(--right-w); height: 100dvh; padding-top: var(--hh); }
+
+/* ── LEFT RAIL ── */
+.rail {
+  border-right: 2px solid var(--bluedk);
+  background: linear-gradient(180deg, #0A1A5C 0%, #0038AA 100%);
+  display: flex; flex-direction: column; padding: 24px 0; overflow: hidden;
+}
+.rail-lbl { font-family: var(--fh); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); padding: 0 18px 16px; border-bottom: 1px solid rgba(255,255,255,.1); margin-bottom: 8px; }
+.sbtn { position: relative; padding: 9px 18px 9px 30px; font-family: var(--fh); font-size: 10px; font-weight: 400; color: rgba(255,255,255,.4); cursor: pointer; border: none; background: none; text-align: left; line-height: 1.4; transition: color .18s; width: 100%; letter-spacing: .3px; }
+.sbtn::before { content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.15); transition: background .18s; }
+.sbtn.done { color: rgba(255,255,255,.25); }
+.sbtn.done::before { background: rgba(255,255,255,.1); }
+.sbtn.active { color: #fff; }
+.sbtn.active::before { background: var(--bluelite); box-shadow: 0 0 0 3px rgba(77,170,255,.25); }
+.sbtn.active::after { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px; background: var(--bluelite); border-radius: 0 2px 2px 0; }
+
+/* ── CONTENT ── */
+.content-col { position: relative; overflow: hidden; background: var(--bg); }
+.swrap { position: relative; width: 100%; height: 100%; }
+.dsec { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 40px 44px 72px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .32s ease, transform .32s ease; }
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--blue); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── TYPOGRAPHY ── */
+.s-num { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: 1.5px; margin-bottom: 10px; }
+.s-num em { color: var(--blue); font-style: normal; font-weight: 700; }
+.s-title { font-family: var(--fh); font-size: clamp(32px, 4vw, 60px); line-height: .95; color: var(--ink); margin-bottom: 6px; letter-spacing: -1px; text-transform: uppercase; }
+.s-sub { font-family: var(--fb); font-size: 13px; font-style: italic; font-weight: 300; color: var(--ink3); margin-bottom: 24px; }
+.s-rule { height: 2px; background: linear-gradient(90deg, var(--bluedk), var(--blue3)); margin: 20px 0; }
+.s-text { font-family: var(--fb); font-size: 14px; font-weight: 400; color: var(--ink2); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+.s-text strong { font-family: var(--fh); color: var(--ink); }
+
+/* ── IMAGE PLACEHOLDERS ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: 1fr 1fr; }
+.igrid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.iph { background: #EBF2FF; border: 2px solid var(--ink); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #8aaadd; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; }
+.iph svg { opacity: .45; }
+.iph.blu { background: #deeaff; border-color: var(--blue); color: #5580bb; }
+.iph.blk { background: #e8eeff; border-color: var(--ink); color: #6080aa; }
+.iph.bold { background: linear-gradient(135deg, var(--ink) 0%, #0038AA 100%); border-color: var(--ink); color: #6699cc; }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── QR VISUAL ── */
+.qr-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 22px; max-width: 260px; }
+.qr-box { aspect-ratio: 1; border: 2px solid var(--ink2); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: var(--ink2); transition: all .12s; }
+.qr-box.b { background: linear-gradient(135deg, var(--blue), var(--blue3)); border-color: var(--blue); color: #fff; }
+.qr-box.dk { background: var(--ink); border-color: var(--ink); color: #fff; }
+.qr-box.warn { background: #fff0f0; border-color: #cc2200; color: #cc2200; }
+
+/* ── TAGS ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag { font-family: var(--fh); font-size: 9px; padding: 4px 10px; border: 2px solid var(--ink); border-radius: 2px; color: var(--ink); letter-spacing: .5px; text-transform: uppercase; }
+.tag.r { border-color: var(--blue); color: var(--blue); }
+.tag.fill { background: var(--ink); color: #fff; border-color: var(--ink); }
+.tag.rfill { background: linear-gradient(135deg, var(--blue), var(--blue3)); color: #fff; border-color: var(--blue); }
+
+/* ── STATS ── */
+.srow { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 28px; padding: 20px 0; border-top: 2px solid var(--bluedk); border-bottom: 2px solid var(--bluedk); }
+.sv { font-family: var(--fh); font-size: 40px; color: var(--ink); line-height: 1; }
+.sv.r { color: var(--blue); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── CALLOUTS ── */
+.alert { background: linear-gradient(135deg, #e8f0ff 0%, #daeaff 100%); border-left: 4px solid var(--blue); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 3px 3px 0; }
+.alert strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--blue); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.alert span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.note { background: #eef3ff; border-left: 4px solid var(--ink); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 3px 3px 0; }
+.note strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.note span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+.success { background: #eef3ff; border: 2px solid var(--bluedk); padding: 16px 18px; margin-bottom: 22px; border-radius: 3px; }
+.success strong { display: block; font-family: var(--fh); font-size: 12px; color: var(--ink); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+.success span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.75; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 30px; color: var(--blue); min-width: 36px; line-height: 1; }
+.steptxt strong { display: block; font-family: var(--fh); font-size: 13px; color: var(--ink); margin-bottom: 5px; letter-spacing: .3px; text-transform: uppercase; }
+.steptxt span { font-size: 13px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+/* ── KPI CARDS ── */
+.kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.kcard { border: 2px solid var(--ink); border-radius: 3px; padding: 16px 18px; background: #fff; }
+.kcard.red { border-color: var(--blue); background: linear-gradient(135deg, #e8f0ff, #dbeaff); }
+.kv { font-family: var(--fh); font-size: 30px; line-height: 1; color: var(--ink); }
+.kv.r { color: var(--blue); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 6px; }
+
+/* ── QUOTES ── */
+.quotes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.quote { background: #eef3ff; border-left: 4px solid var(--blue); padding: 14px 18px; border-radius: 0 3px 3px 0; }
+.quote p { font-family: var(--fb); font-size: 14px; font-style: italic; font-weight: 400; color: var(--ink); line-height: 1.65; }
+.quote cite { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 6px; display: block; }
+
+/* ── CTA ── */
+.cta-block { border: 3px solid var(--bluedk); border-radius: 3px; padding: 32px 28px; text-align: center; margin-top: 10px; background: linear-gradient(135deg, #f0f5ff, #e0ecff); }
+.cta-block h3 { font-family: var(--fh); font-size: 26px; color: var(--ink); margin-bottom: 8px; text-transform: uppercase; letter-spacing: -0.5px; }
+.cta-block p { font-size: 13px; font-weight: 300; color: var(--ink2); margin-bottom: 22px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+.cta-btn { display: inline-block; background: linear-gradient(135deg, var(--blue) 0%, var(--blue3) 100%); color: #fff; font-family: var(--fh); font-size: 14px; letter-spacing: 2px; padding: 14px 40px; border-radius: 3px; text-decoration: none; text-transform: uppercase; border: 2px solid var(--blue); transition: opacity .15s, transform .15s; }
+.cta-btn:hover { opacity: .88; transform: translateY(-2px); }
+.cta-note { font-family: var(--fm); font-size: 10px; color: var(--ink3); margin-top: 14px; letter-spacing: .5px; }
+
+/* ── SCROLL HINT ── */
+.shint { position: absolute; bottom: 16px; left: 44px; font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; opacity: .5; pointer-events: none; }
+.shint::before { content:''; width:24px; height:2px; background: linear-gradient(90deg, var(--blue), var(--blue3)); display:block; }
+
+/* ── RIGHT PANEL ── */
+.cpanel {
+  border-left: 2px solid var(--bluedk);
+  background: linear-gradient(180deg, #0A1A5C 0%, #0038AA 60%, #0066DD 100%);
+  padding: 24px 20px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+}
+.cpanel::-webkit-scrollbar { display: none; }
+.c-img { width: 100%; aspect-ratio: 4/3; background: rgba(0,0,0,.3); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: rgba(255,255,255,.4); margin-bottom: 18px; flex-shrink: 0; font-family: var(--fm); font-size: 9px; letter-spacing: .8px; text-align: center; border: 2px solid rgba(77,170,255,.3); }
+.c-badge { background: linear-gradient(135deg, var(--blue), var(--blue3)); color: #fff; font-family: var(--fh); font-size: 8px; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; display: inline-block; text-transform: uppercase; }
+.c-head { font-family: var(--fh); font-size: 16px; color: #fff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: -.5px; }
+.c-head em { color: var(--bluelite); font-style: normal; }
+.c-brief { font-family: var(--fb); font-size: 11px; font-weight: 300; font-style: italic; color: rgba(255,255,255,.7); line-height: 1.7; border-left: 3px solid var(--bluelite); padding-left: 10px; margin-bottom: 16px; }
+.c-rule { height: 1px; background: rgba(255,255,255,.1); margin: 14px 0; flex-shrink: 0; }
+.c-rule.bold { height: 2px; background: rgba(255,255,255,.2); }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: rgba(255,255,255,.65); line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 2px; }
+.cval { font-family: var(--fh); font-size: 12px; color: #fff; letter-spacing: .3px; }
+.cval.r { color: var(--bluelite); }
+.cvisit { display: block; margin-top: 12px; padding: 12px; text-align: center; font-family: var(--fh); font-size: 10px; letter-spacing: 1.5px; color: var(--ink); background: #fff; border: 2px solid rgba(255,255,255,.5); border-radius: 3px; text-decoration: none; transition: opacity .15s; text-transform: uppercase; }
+.cvisit:hover { opacity: .88; }
+
+/* ── MOBILE ── */
+.mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: linear-gradient(135deg, #0A1A5C, #0057FF); border-top: 2px solid var(--bluedk); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom, 0); }
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn { font-family: var(--fh); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: rgba(255,255,255,.4); padding: 13px 12px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
+.mbtn.active { color: #fff; border-bottom-color: var(--bluelite); }
+.mob-infobtn { display: none; position: fixed; top: calc(var(--hh) + 10px); right: 14px; z-index: 190; font-family: var(--fh); font-size: 9px; letter-spacing: 1px; color: #fff; background: var(--bluedk); border: 2px solid var(--blue); padding: 7px 12px; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
+.mob-infopanel { display: none; position: fixed; top: var(--hh); left: 0; right: 0; bottom: 0; background: linear-gradient(180deg, #0A1A5C, #0038AA); z-index: 180; overflow-y: auto; padding: 20px; transform: translateX(100%); transition: transform .28s ease; }
+.mob-infopanel.open { transform: translateX(0); }
+.mob-infopanel .cpanel { border: none; padding: 0; overflow: visible; background: transparent; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec { position: static; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 30px 22px 56px; border-bottom: 2px solid var(--rule); }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+  .qr-grid { grid-template-columns: repeat(5,1fr); max-width: 100%; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 28px; }
+  .dsec { padding: 22px 18px 60px; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 24px; }
+  .sv { font-size: 30px; }
+  .h-tag { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo">ANTI-QR FRAUD<em>.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">Securing the Last Inch of Digital Payments — Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="cpanel" id="mobConst"></div>
+</div>
+
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Sections</div></aside>
+
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      <!-- 01 OVERVIEW -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 07 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">How Anti-QR Fraud Display Technology eliminates a growing blind spot in digital payments</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Across South Africa and globally, QR-based payments have rapidly become a preferred transaction method. Platforms like SnapScan and Zapper have enabled businesses to move faster, reduce friction, and operate without cash or card dependency. <strong>But within this speed lies a critical vulnerability — the physical display itself.</strong></p>
+        <div class="trow">
+          <span class="tag rfill">South Africa</span>
+          <span class="tag r">QR Payments</span>
+          <span class="tag r">Anti-Fraud</span>
+          <span class="tag fill">Physical Security</span>
+          <span class="tag">SnapScan / Zapper</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 bold">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="1.8"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="1.8"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="1.8"/><rect x="24" y="24" width="4" height="4" rx=".5" fill="#4DAAFF"/><rect x="18" y="18" width="4" height="4" rx=".5" fill="#4DAAFF"/><rect x="18" y="24" width="4" height="4" rx=".5" fill="none" stroke="#4DAAFF" stroke-width="1.2"/><rect x="24" y="18" width="4" height="4" rx=".5" fill="none" stroke="#4DAAFF" stroke-width="1.2"/></svg>
+            Anti-QR Fraud Display — hero product shot
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Legitimate QR display — secure installation
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M8 8l16 16M24 8L8 24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.5"/></svg>
+            Overlay attack — intercepted payment redirect
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 02 THE PROBLEM -->
+      <section class="dsec" id="sec-problem" data-i="1">
+        <div class="s-num">02 <em>/</em> 07 — THE PROBLEM</div>
+        <h2 class="s-title">The Problem</h2>
+        <div class="s-sub">A silent, physical attack on a digital system</div>
+        <div class="s-rule"></div>
+        <p class="s-text">As QR payments scale, so does a new form of fraud: <strong>QR Code Overlay Attacks.</strong> Criminals exploit the physical nature of static QR displays by printing their own codes, pasting them over legitimate business codes, and redirecting payments into their own accounts. No hacking. No software breach. Just timing and access.</p>
+        <div class="alert">
+          <strong>The core vulnerability</strong>
+          <span>In fast-paced environments — cafés, takeaways, retail counters — staff rely on trust and speed. Customers confirm payment, staff move on, and operations continue. Until reconciliation. By the time discrepancies are noticed, transactions are gone, customers are unreachable, and losses are absorbed by the business.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 28l6-6m0 0l4-4m-4 4l4 4m-4-4l-6 6M28 4l-6 6m0 0l-4 4m4-4l-4-4m4 4l6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="11" y="11" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Overlay placement — printed code pasted over real
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M16 10v6M16 20v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Payment redirect — funds reach criminal account
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv r">Silent</div><div class="sl">No digital trace of attack</div></div>
+          <div><div class="sv r">Physical</div><div class="sl">Low-tech, high-impact method</div></div>
+          <div><div class="sv r">Global</div><div class="sl">Interpol-flagged threat rise</div></div>
+          <div><div class="sv r">Delayed</div><div class="sl">Discovery only at reconciliation</div></div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 blk">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            QR fraud growth globally — Interpol data trend
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 03 THE INSIGHT -->
+      <section class="dsec" id="sec-insight" data-i="2">
+        <div class="s-num">03 <em>/</em> 07 — THE INSIGHT</div>
+        <h2 class="s-title">The Insight</h2>
+        <div class="s-sub">The weakest point isn't digital — it's physical</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Payment platforms are secure. Encryption is strong. Systems are reliable. <strong>But the last inch — the physical QR display — is completely exposed.</strong> A printed square on a counter becomes easy to copy, easy to replace, and easy to exploit. The system is digitally secure, but physically vulnerable.</p>
+
+        <!-- QR visual grid -->
+        <div class="qr-grid">
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box warn">!</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box dk">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box warn">!</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box warn">!</div>
+          <div class="qr-box dk">■</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+          <div class="qr-box">·</div>
+          <div class="qr-box b">■</div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Scan → Pay → Leave</strong>
+              <span>For customers, QR payments feel instant and frictionless. No physical card needed. No cash exchange. Just a scan and confirmation on the phone.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>Serve → Trust → Move on</strong>
+              <span>For businesses, speed is the priority. In high-volume environments, staff cannot verify every transaction in real-time. The system is trusted implicitly.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>The gap is exploited</strong>
+              <span>That trust is the attack surface. The physical display — a flat, exposed, replaceable surface — is the only unprotected layer in an otherwise secure payment chain.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l8 8M20 12l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            The exposed layer — flat printable surface
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z" stroke="currentColor" stroke-width="1.5"/><path d="M12 16l3 3 5-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            The solution layer — physical security by design
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 04 THE SOLUTION -->
+      <section class="dsec" id="sec-solution" data-i="3">
+        <div class="s-num">04 <em>/</em> 07 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">Anti-QR Fraud Display Technology — securing payments at the point of interaction</div>
+        <div class="s-rule"></div>
+        <p class="s-text">We designed a system that doesn't rely on software updates or user behaviour. <strong>Instead, it eliminates fraud at the physical layer.</strong> Five core innovations work together to make overlay attacks visually obvious and practically impossible.</p>
+        <div class="kgrid">
+          <div class="kcard red"><div class="kv r">01</div><div class="kl">Non-standard geometry design</div></div>
+          <div class="kcard red"><div class="kv r">02</div><div class="kl">Encapsulated QR window</div></div>
+          <div class="kcard red"><div class="kv r">03</div><div class="kl">Optical distortion layer</div></div>
+          <div class="kcard red"><div class="kv r">04</div><div class="kl">Tamper-evident surface</div></div>
+        </div>
+        <div class="note">
+          <strong>Core innovation: non-standard geometry</strong>
+          <span>Traditional QR displays are flat and predictable. Ours are intentionally uneven and asymmetrical. This breaks the flat surface criminals depend on, makes overlay attempts visibly misaligned, and forces tampering to look "off" instantly.</span>
+        </div>
+        <div class="success">
+          <strong>Brand + shape lock integration</strong>
+          <span>Each unit is custom-integrated with business identity. Non-rectangular QR display zones with embedded branding around the code mean that to successfully fake it, a criminal must replicate branding, match complex shapes, and align perfectly on an uneven surface. The effort outweighs the reward.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 4h10v10H4zM18 4h10v10H18zM4 18h10v10H4z" stroke="currentColor" stroke-width="1.5"/><circle cx="23" cy="23" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M21 23l1.5 1.5L25 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Sealed QR window — zero access surface
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l12 12M22 10L10 22" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity=".5"/><circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5"/></svg>
+            Optical distortion — overlay visibly warped
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 05 PRODUCT ECOSYSTEM -->
+      <section class="dsec" id="sec-ecosystem" data-i="4">
+        <div class="s-num">05 <em>/</em> 07 — PRODUCT ECOSYSTEM</div>
+        <h2 class="s-title">Product Ecosystem</h2>
+        <div class="s-sub">Designed for every business environment</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The Anti-QR Fraud Display system is not a single product — it is a <strong>complete range built for every business context.</strong> From the smallest mobile vendor to the largest shopping mall, every payment point can be secured and branded.</p>
+        <div class="igrid c3">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 28h12M16 24v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Desktop units — cafés, salons, counters
+          </div>
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 12h12M10 16h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Medium displays — retail, fast food
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="10" y="2" width="12" height="28" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M10 22h12M16 27v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Life-size stands — malls, events, traffic
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="8" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M4 12h24" stroke="currentColor" stroke-width="1.5"/></svg>
+            Wall-mounted units — fixed, secure installations
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M12 4h8v4h2a2 2 0 012 2v16a2 2 0 01-2 2H10a2 2 0 01-2-2V10a2 2 0 012-2h2V4z" stroke="currentColor" stroke-width="1.5"/></svg>
+            Portable clip-ons — vendors, mobile business
+          </div>
+        </div>
+        <div class="note">
+          <strong>All units are fully customisable</strong>
+          <span>Every product in the range can be custom-integrated with your business's brand identity. Payment points become secure brand assets — not just functional tools. The display itself communicates trust before a customer even scans.</span>
+        </div>
+        <div class="alert">
+          <strong>Turning the payment point into a trust signal</strong>
+          <span>The display is no longer passive. It actively communicates security, care, and brand sophistication to every customer who approaches the counter.</span>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 06 THE RESULT -->
+      <section class="dsec" id="sec-result" data-i="5">
+        <div class="s-num">06 <em>/</em> 07 — THE RESULT</div>
+        <h2 class="s-title">The Result</h2>
+        <div class="s-sub">From passive display to active trust signal</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Businesses using Anti-QR Fraud Display Technology gain more than fraud protection. <strong>They gain operational confidence, customer trust, and a controlled, secure payment interface that works in their favour every single transaction.</strong></p>
+        <div class="srow">
+          <div><div class="sv r">Instant</div><div class="sl">Tamper visibility on approach</div></div>
+          <div><div class="sv r">Zero</div><div class="sl">Software updates required</div></div>
+          <div><div class="sv r">100%</div><div class="sl">Physical layer coverage</div></div>
+          <div><div class="sv r">↑</div><div class="sl">Customer trust at checkout</div></div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard red"><div class="kv r">Secure</div><div class="kl">Physical QR display layer</div></div>
+          <div class="kcard red"><div class="kv r">Branded</div><div class="kl">Every unit custom to business</div></div>
+          <div class="kcard"><div class="kv">Visible</div><div class="kl">Tampering exposes itself immediately</div></div>
+          <div class="kcard"><div class="kv">Passive</div><div class="kl">No staff training or behaviour change needed</div></div>
+        </div>
+        <div class="quotes">
+          <div class="quote">
+            <p>Security is only as strong as its most overlooked layer.</p>
+            <cite>— Anti-QR Fraud Display Technology core principle</cite>
+          </div>
+          <div class="quote">
+            <p>The payment point is no longer a vulnerability — it becomes a controlled, secure interface.</p>
+            <cite>— Product design philosophy</cite>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l3 9h9l-7.5 5.5 3 9L16 22l-7.5 5.5 3-9L4 13h9z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Trust signal — customer confidence at checkout
+          </div>
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M8 16l5 5 11-10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/></svg>
+            End-to-end protection — digital + physical secured
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- 07 THE BIGGER SHIFT -->
+      <section class="dsec" id="sec-shift" data-i="6">
+        <div class="s-num">07 <em>/</em> 07 — THE BIGGER SHIFT</div>
+        <h2 class="s-title">The Bigger Shift</h2>
+        <div class="s-sub">From digital-only security to end-to-end transaction protection</div>
+        <div class="s-rule"></div>
+        <p class="s-text">This is not just a product. It represents a shift in how we think about payments. <strong>In modern commerce, security is only as strong as its most overlooked layer.</strong> Businesses shouldn't have to choose between speed and security — and now they don't.</p>
+        <div class="igrid c1">
+          <div class="iph r169 bold">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><path d="M16 4l3 9h9l-7.5 5.5 3 9L16 22l-7.5 5.5 3-9L4 13h9z" stroke="#4DAAFF" stroke-width="1.8" stroke-linejoin="round"/><rect x="10" y="10" width="12" height="12" rx="1" stroke="#4DAAFF" stroke-width="1.2" stroke-dasharray="2 2"/></svg>
+            Anti-QR Fraud Display — the complete product range
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv r">End-to-end</div><div class="sl">Digital + physical protection</div></div>
+          <div><div class="sv r">SA</div><div class="sl">Built for local payment culture</div></div>
+          <div><div class="sv r">5</div><div class="sl">Product form factors available</div></div>
+          <div><div class="sv r">Now</div><div class="sl">Deploy immediately — no software</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 blk">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M8 16l5 5 11-10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Deployment — no software or training needed
+          </div>
+          <div class="iph r43 blu">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Full range — desktop to life-size formats
+          </div>
+        </div>
+        <div class="cta-block">
+          <h3>Secure Your Payment Point</h3>
+          <p>In a world moving faster toward cashless transactions, the last inch of every payment should be as secure as the digital infrastructure behind it. Anti-QR Fraud Display Technology ensures it is.</p>
+          <a class="cta-btn" href="#" target="_blank">ENQUIRE NOW →</a>
+          <div class="cta-note">Custom units available for all business types and environments.</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">CASE STUDY 2025</div>
+    <div class="c-img">
+      <svg width="44" height="44" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="2"/><rect x="18" y="4" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="2"/><rect x="4" y="18" width="10" height="10" rx="1" stroke="#4DAAFF" stroke-width="2"/><rect x="20" y="20" width="3" height="3" rx=".4" fill="#4DAAFF"/><rect x="25" y="20" width="3" height="3" rx=".4" fill="#4DAAFF"/><rect x="20" y="25" width="3" height="3" rx=".4" fill="#4DAAFF"/><rect x="25" y="25" width="3" height="3" rx=".4" fill="none" stroke="#4DAAFF" stroke-width="1.2"/></svg>
+      <span style="color:#4DAAFF;font-family:'Archivo Black',sans-serif;font-size:11px;letter-spacing:1px;">ANTI-QR FRAUD</span>
+    </div>
+    <div class="c-head">Display Tech<em>.</em></div>
+    <div class="c-brief">"Security is only as strong as its most overlooked layer." A physical security system that eliminates QR overlay fraud at the point of interaction — without software, training, or behaviour change.</div>
+    <div class="c-rule bold"></div>
+    <div class="c-desc">Anti-QR Fraud Display Technology secures the last inch of every cashless transaction. Five physical innovations working together to make overlay attacks visually obvious and practically impossible.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Technology Type</div><div class="cval r">Physical Anti-Fraud Layer</div></div>
+    <div class="cfield"><div class="ckey">Compatible With</div><div class="cval">SnapScan, Zapper + all QR platforms</div></div>
+    <div class="cfield"><div class="ckey">Market</div><div class="cval">South Africa &amp; Global</div></div>
+    <div class="cfield"><div class="ckey">Products</div><div class="cval r">5 Form Factors</div></div>
+    <div class="cfield"><div class="ckey">Threat Blocked</div><div class="cval r">QR Code Overlay Attacks</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule bold"></div>
+    <div class="cfield"><div class="ckey">Core Principle</div><div class="cval r">"End-to-end transaction protection."</div></div>
+    <a class="cvisit" href="#" target="_blank">ENQUIRE NOW →</a>
+  </aside>
+
+</div>
+
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+const STAGES = [
+  { id:"overview",   label:"Overview"        },
+  { id:"problem",    label:"The Problem"     },
+  { id:"insight",    label:"The Insight"     },
+  { id:"solution",   label:"The Solution"    },
+  { id:"ecosystem",  label:"Ecosystem"       },
+  { id:"result",     label:"The Result"      },
+  { id:"shift",      label:"Bigger Shift"    },
+];
+
+let cur = 0, busy = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rail         = document.getElementById("rail");
+  const mobInner     = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  const mobConst     = document.getElementById("mobConst");
+
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      window.innerWidth <= 960 ? scrollMob(i) : goTo(i);
+    });
+    mobInner.appendChild(mb);
+  });
+
+  const cpanel = document.getElementById("cpanel");
+  if (mobConst) mobConst.innerHTML = cpanel.innerHTML;
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = mobInfoPanel.classList.contains("open") ? "CLOSE" : "INFO";
+    });
+  }
+  setProgress(0);
+});
+
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const sec = document.querySelectorAll(".dsec")[cur];
+  if (!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx) b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Queen — Premium Thinking Interface Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+/* ─────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────── */
+:root {
+  --gold:    #C9A84C;
+  --gold2:   #F0C96A;
+  --dark:    #8B0000;
+  --ink:     #0D0D0D;
+  --ink2:    #444;
+  --ink3:    #888;
+  --bg:      #ffffff;
+  --rule:    #E8E8E8;
+  --left-w:  160px;
+  --right-w: 270px;
+  --hh:      52px;
+  --fh: 'Archivo Black', sans-serif;
+  --fb: 'Archivo', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--gold); color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.h-logo { font-family: var(--fh); font-size: 14px; color: var(--ink); flex-shrink: 0; letter-spacing: .5px; }
+.h-logo em { color: var(--gold); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: var(--rule); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: .8px; flex: 1; }
+.h-cur { font-family: var(--fm); font-size: 10px; color: var(--gold); letter-spacing: .8px; background: rgba(201,168,76,.09); padding: 4px 10px; border-radius: 2px; }
+
+/* ─────────────────────────────────────────
+   PROGRESS
+───────────────────────────────────────── */
+.ptrack { position: fixed; top: var(--hh); left: 0; right: 0; height: 2px; z-index: 300; pointer-events: none; }
+.pbar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--dark)); transition: width .2s ease; }
+
+/* ─────────────────────────────────────────
+   LAYOUT
+───────────────────────────────────────── */
+.layout { display: grid; grid-template-columns: var(--left-w) 1fr var(--right-w); height: 100dvh; padding-top: var(--hh); }
+
+/* ─────────────────────────────────────────
+   LEFT RAIL
+───────────────────────────────────────── */
+.rail { border-right: 1px solid var(--rule); display: flex; flex-direction: column; padding: 24px 0; overflow: hidden; }
+.rail-lbl { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); padding: 0 18px 16px; border-bottom: 1px solid var(--rule); margin-bottom: 8px; }
+.sbtn { position: relative; padding: 9px 18px 9px 30px; font-family: var(--fb); font-size: 11px; font-weight: 400; color: var(--ink3); cursor: pointer; border: none; background: none; text-align: left; line-height: 1.3; transition: color .18s; width: 100%; }
+.sbtn::before { content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--rule); transition: background .18s; }
+.sbtn.done { color: #c0c0c0; }
+.sbtn.done::before { background: #e0e0e0; }
+.sbtn.active { color: var(--ink); font-weight: 500; }
+.sbtn.active::before { background: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,.18); }
+.sbtn.active::after { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 2px; background: var(--gold); border-radius: 0 2px 2px 0; }
+
+/* ─────────────────────────────────────────
+   CONTENT MIDDLE
+───────────────────────────────────────── */
+.content-col { position: relative; overflow: hidden; }
+.swrap { position: relative; width: 100%; height: 100%; }
+.dsec { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 40px 44px 72px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .32s ease, transform .32s ease; }
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--gold); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── Typography ── */
+.s-num { font-family: var(--fm); font-size: 10px; color: var(--ink3); letter-spacing: 1.5px; margin-bottom: 10px; }
+.s-num em { color: var(--gold); font-style: normal; }
+.s-title { font-family: var(--fh); font-size: clamp(28px, 3.5vw, 54px); line-height: 1; color: var(--ink); margin-bottom: 5px; letter-spacing: -.5px; }
+.s-sub { font-family: var(--fb); font-size: 12px; font-style: italic; font-weight: 300; color: var(--ink3); margin-bottom: 24px; }
+.s-rule { height: 1px; background: var(--rule); margin: 20px 0; }
+.s-text { font-family: var(--fb); font-size: 14px; font-weight: 300; color: var(--ink2); line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+
+/* ── Image placeholders ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: 1fr 1fr; }
+.igrid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.iph { background: #F7F7F7; border: 1px solid #EDEDED; border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #C0C0C0; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; }
+.iph svg { opacity: .5; }
+.iph.gold { background: #fdf8ed; border-color: rgba(201,168,76,.22); color: #b8963a; }
+.iph.dark { background: #fdf0f0; border-color: rgba(139,0,0,.15); color: #c07070; }
+.iph.warm { background: #fafaf5; border-color: rgba(80,60,20,.12); color: #9a8c6a; }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── Tags ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag { font-family: var(--fm); font-size: 10px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 2px; color: var(--ink2); }
+.tag.g { border-color: rgba(201,168,76,.45); color: var(--gold); }
+.tag.d { border-color: rgba(139,0,0,.35); color: var(--dark); }
+
+/* ── Stats bar ── */
+.srow { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 28px; padding: 20px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.sv { font-family: var(--fh); font-size: 36px; color: var(--ink); line-height: 1; }
+.sv.g { color: var(--gold); }
+.sv.d { color: var(--dark); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── Callouts ── */
+.alert { background: #fff8f2; border-left: 3px solid var(--dark); padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0; }
+.alert strong { display: block; font-size: 12px; color: var(--dark); margin-bottom: 5px; }
+.alert span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+.note { background: #fdf8ed; border-left: 3px solid var(--gold); padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0; }
+.note strong { display: block; font-size: 12px; color: var(--gold); margin-bottom: 5px; }
+.note span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+.success { background: #f5f5f0; border-left: 3px solid #555; padding: 14px 18px; margin-bottom: 22px; border-radius: 0 5px 5px 0; }
+.success strong { display: block; font-size: 12px; color: #333; margin-bottom: 5px; }
+.success span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.7; }
+
+/* ── Process steps ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 16px; padding: 15px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 26px; color: var(--gold); min-width: 32px; line-height: 1; }
+.steptxt strong { display: block; font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.steptxt span { font-size: 12px; font-weight: 300; color: var(--ink2); line-height: 1.65; }
+
+/* ── KPI cards ── */
+.kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+.kcard { background: #FAFAFA; border: 1px solid var(--rule); border-radius: 5px; padding: 16px 18px; }
+.kv { font-family: var(--fh); font-size: 30px; line-height: 1; }
+.kv.g { color: var(--gold); }
+.kv.d { color: var(--dark); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; margin-top: 5px; }
+
+/* ── Quote blocks ── */
+.quotes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.quote { background: #fafafa; border: 1px solid var(--rule); border-radius: 5px; padding: 14px 18px; position: relative; }
+.quote::before { content: '"'; font-family: var(--fh); font-size: 42px; color: var(--gold); opacity: .25; position: absolute; top: -4px; left: 12px; line-height: 1; }
+.quote p { font-family: var(--fb); font-size: 13px; font-style: italic; font-weight: 300; color: var(--ink2); line-height: 1.65; padding-left: 18px; }
+
+/* ── Comparison tables ── */
+.ctable { width: 100%; border-collapse: collapse; margin-bottom: 22px; font-size: 12px; }
+.ctable thead tr { border-bottom: 2px solid var(--gold); }
+.ctable thead th { font-family: var(--fm); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink3); padding: 10px 12px; text-align: left; font-weight: 400; }
+.ctable tbody tr { border-bottom: 1px solid var(--rule); }
+.ctable tbody tr:last-child { border-bottom: none; }
+.ctable tbody td { padding: 10px 12px; color: var(--ink2); font-weight: 300; line-height: 1.5; vertical-align: top; }
+.ctable tbody td:first-child { font-family: var(--fm); font-size: 10px; color: var(--ink); font-weight: 400; white-space: nowrap; }
+.ctable .queen-col { color: var(--gold) !important; font-weight: 500 !important; font-family: var(--fb) !important; }
+.ctable thead .queen-head { color: var(--gold); }
+.ctable-title { font-family: var(--fh); font-size: 13px; color: var(--ink); margin-bottom: 10px; }
+
+/* ── Phase cards ── */
+.phases { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.phase { background: #FAFAFA; border: 1px solid var(--rule); border-radius: 5px; padding: 14px 16px; }
+.phase-num { font-family: var(--fm); font-size: 9px; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 6px; }
+.phase-title { font-family: var(--fh); font-size: 13px; color: var(--ink); margin-bottom: 6px; }
+.phase-desc { font-size: 11px; font-weight: 300; color: var(--ink2); line-height: 1.6; }
+
+/* ── Scroll hint ── */
+.shint { position: absolute; bottom: 16px; left: 44px; font-family: var(--fm); font-size: 9px; color: var(--ink3); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; opacity: .5; pointer-events: none; }
+.shint::before { content:''; width:24px; height:1px; background: var(--gold); display:block; }
+
+/* ─────────────────────────────────────────
+   RIGHT PANEL
+───────────────────────────────────────── */
+.cpanel { border-left: 1px solid var(--rule); padding: 24px 20px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; }
+.cpanel::-webkit-scrollbar { display: none; }
+.c-img { width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, #fdf8ed 0%, #fff8f2 100%); border: 1px solid rgba(201,168,76,.22); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #b8963a; margin-bottom: 18px; flex-shrink: 0; font-family: var(--fm); font-size: 9px; letter-spacing: .8px; text-align: center; }
+.c-badge { background: rgba(201,168,76,.12); color: var(--gold); font-family: var(--fm); font-size: 8px; letter-spacing: 1.5px; padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; display: inline-block; }
+.c-head { font-family: var(--fh); font-size: 14px; color: var(--ink); margin-bottom: 8px; }
+.c-head em { color: var(--gold); font-style: normal; }
+.c-brief { font-family: var(--fb); font-size: 11px; font-weight: 300; font-style: italic; color: var(--ink2); line-height: 1.7; border-left: 2px solid var(--gold); padding-left: 10px; margin-bottom: 16px; }
+.c-rule { height: 1px; background: var(--rule); margin: 14px 0; flex-shrink: 0; }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: var(--ink2); line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink3); margin-bottom: 2px; }
+.cval { font-family: var(--fb); font-size: 12px; font-weight: 500; color: var(--ink); }
+.cval.g { color: var(--gold); }
+.cval.d { color: var(--dark); }
+.cvisit { display: block; margin-top: 12px; padding: 11px; text-align: center; font-family: var(--fm); font-size: 10px; letter-spacing: 1.5px; color: var(--gold); border: 1px solid rgba(201,168,76,.3); border-radius: 3px; text-decoration: none; transition: background .15s; }
+.cvisit:hover { background: rgba(201,168,76,.06); }
+
+/* ─────────────────────────────────────────
+   MOBILE
+───────────────────────────────────────── */
+.mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: #fff; border-top: 1px solid var(--rule); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom, 0); }
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn { font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: var(--ink3); padding: 13px 12px; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
+.mbtn.active { color: var(--ink); border-bottom-color: var(--gold); }
+.mob-infobtn { display: none; position: fixed; top: calc(var(--hh) + 10px); right: 14px; z-index: 190; font-family: var(--fm); font-size: 9px; letter-spacing: 1px; color: var(--ink2); background: #fff; border: 1px solid var(--rule); padding: 7px 12px; border-radius: 3px; cursor: pointer; }
+.mob-infopanel { display: none; position: fixed; top: var(--hh); left: 0; right: 0; bottom: 0; background: #fff; z-index: 180; overflow-y: auto; padding: 20px; transform: translateX(100%); transition: transform .28s ease; }
+.mob-infopanel.open { transform: translateX(0); }
+.mob-infopanel .cpanel { border: none; padding: 0; overflow: visible; }
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec { position: static; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 30px 22px 56px; border-bottom: 1px solid var(--rule); }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+  .phases { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+  .phases { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 26px; }
+  .dsec { padding: 22px 18px 60px; }
+  .ctable { font-size: 11px; }
+  .ctable tbody td { padding: 8px; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 22px; }
+  .sv { font-size: 28px; }
+  .kv { font-size: 24px; }
+  .h-tag { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-logo">QUEEN<em>.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">Premium Physical Thinking Interface — Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="cpanel" id="mobConst"></div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Process</div></aside>
+
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      <!-- ══════════════════════
+           01 — OVERVIEW
+      ══════════════════════ -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 10 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">Never lose a good idea again</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen is a premium chess queen-shaped desk device that delivers instant, zero-friction voice capture. One press of the crown records thoughts immediately — no phone, no apps, no interruptions. Queen is not just a recorder device. Queen is a physical interface for thinking.</p>
+        <div class="note">
+          <strong>Core premise</strong>
+          <span>Built for idea-bursting founders, idea-clustered creatives, and idea-driven professionals, Queen eliminates the gap between having an idea and capturing it. Recordings stay on a local microSD card (black-box mode) and auto-upload securely to the user's private encrypted cloud storage when on trusted Wi-Fi.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Queen device — hero desk shot
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M16 10v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Crown press interaction — 1:17 AM scenario
+          </div>
+        </div>
+        <div class="trow">
+          <span class="tag g">Voice Capture</span>
+          <span class="tag g">Zero Friction</span>
+          <span class="tag g">Local-First</span>
+          <span class="tag d">Hardware Product</span>
+          <span class="tag d">Privacy-First</span>
+          <span class="tag">South Africa</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 gold">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Queen — premium chess queen desk device, full lifestyle hero image
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           02 — THE PROBLEM
+      ══════════════════════ -->
+      <section class="dsec" id="sec-problem" data-i="1">
+        <div class="s-num">02 <em>/</em> 10 — THE PROBLEM</div>
+        <h2 class="s-title">The Problem</h2>
+        <div class="s-sub">Ideas are lost in friction</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Even the best digital tools introduce costly delays at the moment of inspiration. Unlocking a phone, opening Notion or Obsidian, navigating folders, and hitting record breaks creative flow — and causes ideas to vanish before they are ever captured.</p>
+        <div class="alert">
+          <strong>The friction chain</strong>
+          <span>Unlock phone → Find app → Open app → Navigate to new note → Tap record → Speak. By step three, the idea is already degrading. The tool designed to save ideas is the reason they're lost.</span>
+        </div>
+        <div class="srow">
+          <div><div class="sv d">6+</div><div class="sl">Taps to record on phone</div></div>
+          <div><div class="sv d">High</div><div class="sl">Cognitive interruption</div></div>
+          <div><div class="sv d">18–45</div><div class="sl">Target age range</div></div>
+          <div><div class="sv d">$2.2B</div><div class="sl">Market size (2025)</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 dark">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M13 6h6M16 26v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Phone friction — multi-step capture process
+          </div>
+          <div class="iph r43 dark">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M12 12l8 8M20 12l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Lost idea — the moment of friction failure
+          </div>
+        </div>
+        <p class="s-text">The global digital voice recorder market was valued at approximately USD 1.9–2.2 billion in 2025 and is projected to grow at a CAGR of 6.5–10.3% through 2030–2032, driven by demand for portable, high-quality, and increasingly intelligent capture tools.</p>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           03 — THE SOLUTION
+      ══════════════════════ -->
+      <section class="dsec" id="sec-solution" data-i="2">
+        <div class="s-num">03 <em>/</em> 10 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">One press. Zero friction.</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen reduces idea capture to its absolute essence. No screen. No notifications. No distractions. Just the most direct path from thought to preservation ever designed into a desk object.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Think</strong>
+              <span>An idea arrives — at 1:17 AM, in the shower, mid-meeting, or mid-run. The moment is fleeting.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>Press the Queen's crown</strong>
+              <span>One tactile press on the crown — no unlock, no navigation, no app. Recording begins instantly.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>Speak</strong>
+              <span>The INMP441 MEMS microphone captures your voice with clarity. The idea is recorded locally to microSD — immediately and privately.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">4</div>
+            <div class="steptxt">
+              <strong>Done — auto-upload on trusted Wi-Fi</strong>
+              <span>When connected to your trusted Wi-Fi network, Queen securely auto-uploads recordings to your private encrypted cloud storage. Your ideas, your server, your control.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Crown press — tactile moment of capture
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><ellipse cx="16" cy="20" rx="8" ry="4" stroke="currentColor" stroke-width="1.5"/><path d="M12 12c0-2.209 1.791-4 4-4s4 1.791 4 4v8" stroke="currentColor" stroke-width="1.5"/><path d="M8 16c0 4.418 3.582 8 8 8s8-3.582 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M16 28v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            MEMS mic — local recording in action
+          </div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 gold">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Product flow — think → press → speak → done
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           04 — TARGET USERS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-users" data-i="3">
+        <div class="s-num">04 <em>/</em> 10 — TARGET USERS</div>
+        <h2 class="s-title">Target Users</h2>
+        <div class="s-sub">Who Queen is built for</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen is designed for the 18–45 age group who generate ideas constantly but lose them to friction. Three distinct user archetypes share a common problem and are uniquely served by Queen's form and function.</p>
+        <div class="igrid c3">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Founders & Builders
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 28V8l12-4 12 4v20" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="12" y="18" width="8" height="10" stroke="currentColor" stroke-width="1.5"/></svg>
+            Creatives & Makers
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="10" height="10" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="4" width="10" height="10" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="18" width="10" height="10" stroke="currentColor" stroke-width="1.5"/><rect x="18" y="18" width="10" height="10" stroke="currentColor" stroke-width="1.5"/></svg>
+            Strategic Thinkers
+          </div>
+        </div>
+        <div class="note">
+          <strong>Founders & Builders (18–45)</strong>
+          <span>Late-night thinkers with a constantly generating mind. Already use tools like Notion. Queen represents intelligence, control, and precision in both form and function — something their tools rarely do.</span>
+        </div>
+        <div class="note">
+          <strong>Creatives — Designers, Writers, Filmmakers</strong>
+          <span>Operate in deep flow states and are sensitive to interruptions. Value aesthetic, meaningful tools. Queen preserves momentum while doubling as a symbolic desk presence — capturing ideas without breaking the state.</span>
+        </div>
+        <div class="note">
+          <strong>Strategic Thinkers & Chess Enthusiasts</strong>
+          <span>Analytical mindset. Appreciate symbolic, functional design. Queen represents intelligence, control, and precision — a physical manifestation of how they already think.</span>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 warm">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Target user — desk environment lifestyle shot (Johannesburg / Cape Town)
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           05 — VALIDATION
+      ══════════════════════ -->
+      <section class="dsec" id="sec-validation" data-i="4">
+        <div class="s-num">05 <em>/</em> 10 — VALIDATION</div>
+        <h2 class="s-title">Validation</h2>
+        <div class="s-sub">Early testing & real feedback</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Prototype testing with target users in Johannesburg and Cape Town showed strong resonance with the zero-friction promise. Users consistently reported that the tactile crown press felt more intentional and less "work-like" than phone-based recording.</p>
+        <div class="srow">
+          <div><div class="sv g">88%</div><div class="sl">Preferred Queen over phone capture</div></div>
+          <div><div class="sv g">8×</div><div class="sl">More ideas captured per day</div></div>
+          <div><div class="sv g">100%</div><div class="sl">Reported reduced friction</div></div>
+          <div><div class="sv g">High</div><div class="sl">Aesthetic delight scores</div></div>
+        </div>
+        <div class="quotes">
+          <div class="quote"><p>I didn't realise how many ideas I was losing until this.</p></div>
+          <div class="quote"><p>It feels powerful... like I'm catching thoughts before they disappear.</p></div>
+          <div class="quote"><p>My phone makes everything feel like work. This doesn't.</p></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            User test session — Johannesburg
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Capture frequency — before vs after chart
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           06 — COMPETITIVE
+      ══════════════════════ -->
+      <section class="dsec" id="sec-competitive" data-i="5">
+        <div class="s-num">06 <em>/</em> 10 — COMPETITIVE ANALYSIS</div>
+        <h2 class="s-title">Why Queen Wins</h2>
+        <div class="s-sub">Competitive comparison</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen occupies a unique category: premium aesthetic thinking tool rather than another gadget. No competitor combines near-zero friction, local-first privacy, and premium desk presence.</p>
+
+        <div class="ctable-title">Comparison Table 1 — Friction & Experience</div>
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Smartphone Voice Notes</th>
+              <th>Traditional Recorders (Sony, Olympus)</th>
+              <th>AI Note-Takers (Plaud, etc.)</th>
+              <th class="queen-head">Queen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Capture Friction</td><td>High (unlock + app)</td><td>Medium (button + menus)</td><td>Medium (app-dependent)</td><td class="queen-col">Near-zero (1 crown press)</td></tr>
+            <tr><td>Always-Listening</td><td>Often yes</td><td>No</td><td>Usually yes</td><td class="queen-col">No</td></tr>
+            <tr><td>Privacy</td><td>Cloud-dependent</td><td>High (local)</td><td>Varies (often cloud AI)</td><td class="queen-col">Local-first + user-controlled cloud</td></tr>
+            <tr><td>Aesthetic / Desk Fit</td><td>Poor</td><td>Functional but plain</td><td>Varies</td><td class="queen-col">Premium chess queen object</td></tr>
+            <tr><td>Flow-State Preservation</td><td>Low</td><td>Medium</td><td>Medium</td><td class="queen-col">High</td></tr>
+            <tr><td>Emergency Black-Box</td><td>No</td><td>Limited</td><td>No</td><td class="queen-col">Yes (SD card survives)</td></tr>
+          </tbody>
+        </table>
+
+        <div class="ctable-title" style="margin-top:20px;">Comparison Table 2 — Key Differentiators vs Market Leaders (2026)</div>
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Sony UX560 (Top Traditional)</th>
+              <th>Plaud Note / AI Recorders</th>
+              <th class="queen-head">Queen</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Form Factor</td><td>Pocket device</td><td>Compact clip-on / pad</td><td class="queen-col">Elegant desk chess queen</td></tr>
+            <tr><td>Instant Capture</td><td>Button press</td><td>Button or voice wake</td><td class="queen-col">Crown press (tactile ritual)</td></tr>
+            <tr><td>Storage & Upload</td><td>Local + manual transfer</td><td>Cloud-heavy AI</td><td class="queen-col">Local SD + optional private encrypted cloud</td></tr>
+            <tr><td>Privacy Control</td><td>High</td><td>Medium (AI processing)</td><td class="queen-col">Highest (user-owned storage)</td></tr>
+            <tr><td>Emotional / Symbolic Value</td><td>Low</td><td>Low</td><td class="queen-col">High (intelligence & strategy)</td></tr>
+            <tr><td>Target User Feeling</td><td>Tool</td><td>Smart assistant</td><td class="queen-col">Physical extension of thinking</td></tr>
+          </tbody>
+        </table>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           07 — HARDWARE & TECH
+      ══════════════════════ -->
+      <section class="dsec" id="sec-hardware" data-i="6">
+        <div class="s-num">07 <em>/</em> 10 — HARDWARE & TECHNOLOGY</div>
+        <h2 class="s-title">Hardware</h2>
+        <div class="s-sub">Technical architecture & product identity</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Designed to fit inside standard chess queen dimensions. Every component serves the single goal of near-zero friction capture with local-first privacy and optional secure cloud sync.</p>
+        <div class="kgrid">
+          <div class="kcard"><div class="kv g">85mm</div><div class="kl">Standard chess queen height</div></div>
+          <div class="kcard"><div class="kv g">ESP32S3</div><div class="kl">Seeed XIAO core processor</div></div>
+          <div class="kcard"><div class="kv g">300–500</div><div class="kl">mAh LiPo battery capacity</div></div>
+          <div class="kcard"><div class="kv g">INMP441</div><div class="kl">MEMS microphone module</div></div>
+        </div>
+        <div class="note">
+          <strong>Local-first architecture</strong>
+          <span>Core: Seeed XIAO ESP32S3 + INMP441 MEMS mic + microSD storage. Power: 300–500 mAh LiPo with TP4056 charging circuit + optional Qi wireless charging. Recordings stay on-device at all times. Auto-upload only occurs on trusted Wi-Fi, to the user's own private encrypted cloud storage — never to third-party servers.</span>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 gold">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect x="4" y="4" width="24" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 10h12M10 16h8M10 22h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            ESP32S3 core board
+          </div>
+          <div class="iph r11 gold">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><ellipse cx="16" cy="20" rx="8" ry="4" stroke="currentColor" stroke-width="1.5"/><path d="M12 12c0-2.209 1.791-4 4-4s4 1.791 4 4v8" stroke="currentColor" stroke-width="1.5"/></svg>
+            INMP441 MEMS microphone
+          </div>
+          <div class="iph r11 gold">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><rect x="8" y="6" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 12h8M12 16h8M12 20h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            microSD local storage
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Internal component layout — exploded view
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M16 8v4M16 20v4M8 16h4M20 16h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Qi wireless charging base — optional
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           08 — PRIVACY
+      ══════════════════════ -->
+      <section class="dsec" id="sec-privacy" data-i="7">
+        <div class="s-num">08 <em>/</em> 10 — PRIVACY & CONTROL</div>
+        <h2 class="s-title">Privacy</h2>
+        <div class="s-sub">Your ideas, your storage, your rules</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen rejects the always-listening surveillance model. In a world of cloud-dependent tools and AI processors that treat user data as a product, Queen takes the opposite position: your ideas never leave your control unless you choose otherwise.</p>
+        <div class="success">
+          <strong>Privacy-first architecture</strong>
+          <span>Recordings remain on the local microSD card at all times. Upload only triggers when connected to a Wi-Fi network the user has explicitly marked as trusted. The destination is the user's own private encrypted cloud storage — not a shared service, not a third-party AI processor.</span>
+        </div>
+        <div class="kgrid">
+          <div class="kcard"><div class="kv g">Local</div><div class="kl">Default storage — always on-device</div></div>
+          <div class="kcard"><div class="kv g">User-owned</div><div class="kl">Private encrypted cloud destination</div></div>
+          <div class="kcard"><div class="kv g">Zero</div><div class="kl">Always-on listening or background mic access</div></div>
+          <div class="kcard"><div class="kv g">Signed</div><div class="kl">URLs for optional secure sharing</div></div>
+        </div>
+        <div class="note">
+          <strong>Idea Buckets — cloud app</strong>
+          <span>When recordings upload, they land in the user's cloud app organised into "Buckets / Rooms." Users can sort ideas, optionally add transcription extensions and APIs, invite other members to shared idea rooms, and extend functionality — all within their own privately controlled environment.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 warm">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M6 20a8 8 0 1116 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 20h20v6a2 2 0 01-2 2H8a2 2 0 01-2-2v-6z" stroke="currentColor" stroke-width="1.5"/></svg>
+            Private cloud storage — secure destination
+          </div>
+          <div class="iph r43 warm">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="4" y="10" width="24" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M10 10V8a6 6 0 1112 0v2" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="19" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+            Idea Buckets — rooms & organisation app
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           09 — PRICING & MFG
+      ══════════════════════ -->
+      <section class="dsec" id="sec-pricing" data-i="8">
+        <div class="s-num">09 <em>/</em> 10 — PRICING & MANUFACTURING</div>
+        <h2 class="s-title">Pricing & Manufacturing</h2>
+        <div class="s-sub">Premium positioning & phased production</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Positioned as a premium desk accessory at a price point that reflects quality, intentionality, and exclusivity — while remaining accessible to early adopters and creator communities.</p>
+        <div class="srow">
+          <div><div class="sv g">R1,499</div><div class="sl">SA launch price (low)</div></div>
+          <div><div class="sv g">R1,999</div><div class="sl">SA launch price (high)</div></div>
+          <div><div class="sv g">$89</div><div class="sl">Global entry (USD)</div></div>
+          <div><div class="sv g">$129</div><div class="sl">Global high (USD)</div></div>
+        </div>
+        <div class="note">
+          <strong>Revenue streams</strong>
+          <span>Hardware device sales · Qi charging bases · Custom engravings · Future limited-edition metallic versions · Optional cloud transcription extensions</span>
+        </div>
+        <div class="phases">
+          <div class="phase">
+            <div class="phase-num">PHASE 01</div>
+            <div class="phase-title">Resin / PETG</div>
+            <div class="phase-desc">High-quality 3D printing for small batches. Validates form factor and community demand before scaling.</div>
+          </div>
+          <div class="phase">
+            <div class="phase-num">PHASE 02</div>
+            <div class="phase-title">Injection Moulding</div>
+            <div class="phase-desc">Injection moulding for scale with improved consistency, tighter tolerances, and reduced per-unit cost.</div>
+          </div>
+          <div class="phase">
+            <div class="phase-num">PHASE 03</div>
+            <div class="phase-title">CNC Metal Editions</div>
+            <div class="phase-desc">CNC-machined aluminium and stainless steel limited editions. Premium finishes, higher margins, collector appeal.</div>
+          </div>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 warm">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Phase 1 — resin print
+          </div>
+          <div class="iph r11 warm">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Phase 2 — injection mould
+          </div>
+          <div class="iph r11 gold">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Phase 3 — CNC metal edition
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           10 — GO-TO-MARKET
+      ══════════════════════ -->
+      <section class="dsec" id="sec-gtm" data-i="9">
+        <div class="s-num">10 <em>/</em> 10 — GO-TO-MARKET</div>
+        <h2 class="s-title">Go-to-Market</h2>
+        <div class="s-sub">Launch strategy & key insight</div>
+        <div class="s-rule"></div>
+        <p class="s-text">Queen launches where its users already gather — in founder communities, creative studios, and startup events — before expanding globally into cities where premium cognitive tools are already valued and purchased.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Phase 1 — South Africa (Direct-to-consumer)</strong>
+              <span>Launch via founder and creator communities and startup events in Johannesburg and Cape Town. Core messaging: "Never lose a good idea again." D2C channels, tight community seeding, earned word-of-mouth.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>Phase 2 — Global expansion</strong>
+              <span>Online expansion into San Francisco, London, and other creative and tech hub cities. Premium positioning with global creative and founder audiences who already spend on meaningful desk objects.</span>
+            </div>
+          </div>
+        </div>
+        <div class="alert">
+          <strong>Key insight</strong>
+          <span>Queen shifts idea capture from digital friction to physical intention. In a noisy world of apps and notifications, it wins by being immediate, beautiful, and intentionally simple. Queen transforms an ancient symbol of power into a modern cognitive tool that people love to keep on their desk.</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M12 4L4 8v20l8-4 8 4 8-4V4l-8 4-8-4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M12 4v20M20 8v20" stroke="currentColor" stroke-width="1.5"/></svg>
+            Launch event — Johannesburg / Cape Town
+          </div>
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="M4 16h24M16 4c-4 4-6 8-6 12s2 8 6 12M16 4c4 4 6 8 6 12s-2 8-6 12" stroke="currentColor" stroke-width="1.5"/></svg>
+            Global phase — San Francisco, London expansion
+          </div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 gold">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            Queen — final product, desk lifestyle shot. A physical extension of cognition.
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /swrap -->
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">CASE STUDY 2025</div>
+    <div class="c-img">
+      <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><path d="M16 4l2 6h6l-5 4 2 6-5-3-5 3 2-6-5-4h6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="8" y="24" width="16" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+      QUEEN DEVICE
+    </div>
+    <div class="c-head">Thinking Interface<em>.</em></div>
+    <div class="c-brief">A premium chess queen-shaped desk device that eliminates the gap between having an idea and capturing it. One press of the crown. Zero friction. Local-first. Private by design.</div>
+    <div class="c-rule"></div>
+    <div class="c-desc">Queen is not just a recorder. It is a physical interface for thinking — combining elegant design, privacy-first architecture, and reliable local-to-cloud workflow to create a lovable, talk-worthy product.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Designer</div><div class="cval g">Ndinga Dyongo</div></div>
+    <div class="cfield"><div class="ckey">Product Type</div><div class="cval">Premium Hardware Device</div></div>
+    <div class="cfield"><div class="ckey">Market</div><div class="cval">South Africa → Global</div></div>
+    <div class="cfield"><div class="ckey">Launch Price</div><div class="cval g">R1,499 – R1,999</div></div>
+    <div class="cfield"><div class="ckey">Global Tier</div><div class="cval">$89 – $129 USD</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Tagline</div><div class="cval d">"Never lose a good idea again."</div></div>
+  </aside>
+
+</div><!-- /layout -->
+
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+const STAGES = [
+  { id:"overview",    label:"Overview"      },
+  { id:"problem",     label:"The Problem"   },
+  { id:"solution",    label:"The Solution"  },
+  { id:"users",       label:"Target Users"  },
+  { id:"validation",  label:"Validation"    },
+  { id:"competitive", label:"Competitive"   },
+  { id:"hardware",    label:"Hardware"      },
+  { id:"privacy",     label:"Privacy"       },
+  { id:"pricing",     label:"Pricing & Mfg" },
+  { id:"gtm",         label:"Go-to-Market"  },
+];
+
+let cur = 0, busy = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rail     = document.getElementById("rail");
+  const mobInner = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  const mobConst     = document.getElementById("mobConst");
+
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      if (window.innerWidth <= 960) scrollMob(i);
+      else goTo(i);
+    });
+    mobInner.appendChild(mb);
+  });
+
+  const cpanel = document.getElementById("cpanel");
+  if (mobConst) mobConst.innerHTML = cpanel.innerHTML;
+
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = mobInfoPanel.classList.contains("open") ? "CLOSE" : "INFO";
+    });
+  }
+
+  setProgress(0);
+});
+
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const secs = document.querySelectorAll(".dsec");
+  const sec  = secs[cur];
+  if (!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx)  b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+
+</body>
+</html>

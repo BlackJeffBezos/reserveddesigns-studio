@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DIKETO — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --navy:    #0A0A1A;
+  --navy2:   #10101F;
+  --navy3:   #16162A;
+  --gold:    #F5A800;
+  --gold2:   #FFD050;
+  --cyan:    #00E5FF;
+  --orange:  #FF6B00;
+  --pink:    #FF2D9B;
+  --white:   #F0F0F0;
+  --muted:   #8888AA;
+  --rule:    #2A2A40;
+  --left-w:  160px;
+  --right-w: 270px;
+  --hh:      52px;
+  --fh: 'Archivo Black', sans-serif;
+  --fb: 'Archivo', sans-serif;
+  --fm: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--navy);
+  color: var(--white);
+  font-family: var(--fb);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100dvh;
+}
+::selection { background: var(--gold); color: var(--navy); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: var(--hh);
+  background: var(--navy2);
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center;
+  padding: 0 24px;
+}
+.h-logo { font-family: var(--fh); font-size: 16px; color: var(--gold); flex-shrink: 0; letter-spacing: 2px; text-transform: uppercase; }
+.h-logo em { color: var(--cyan); font-style: normal; }
+.h-sep { width: 1px; height: 18px; background: var(--rule); margin: 0 18px; flex-shrink: 0; }
+.h-tag { font-family: var(--fm); font-size: 10px; color: var(--muted); letter-spacing: .8px; flex: 1; }
+.h-cur { font-family: var(--fm); font-size: 10px; color: var(--navy); letter-spacing: 1px; background: var(--gold); padding: 5px 12px; border-radius: 2px; font-weight: 700; }
+
+/* ── PROGRESS ── */
+.ptrack { position: fixed; top: var(--hh); left: 0; right: 0; height: 2px; z-index: 300; pointer-events: none; background: var(--rule); }
+.pbar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--cyan)); transition: width .2s ease; }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: var(--left-w) 1fr var(--right-w); height: 100dvh; padding-top: var(--hh); }
+
+/* ── LEFT RAIL ── */
+.rail { border-right: 1px solid var(--rule); display: flex; flex-direction: column; padding: 24px 0; overflow: hidden; background: var(--navy2); }
+.rail-lbl { font-family: var(--fm); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0 18px 16px; border-bottom: 1px solid var(--rule); margin-bottom: 8px; }
+.sbtn { position: relative; padding: 9px 18px 9px 30px; font-family: var(--fb); font-size: 11px; font-weight: 400; color: var(--muted); cursor: pointer; border: none; background: none; text-align: left; line-height: 1.3; transition: color .18s; width: 100%; }
+.sbtn::before { content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 5px; height: 5px; border-radius: 50%; background: var(--rule); transition: background .18s; }
+.sbtn.done { color: #44445A; }
+.sbtn.done::before { background: #2A2A40; }
+.sbtn.active { color: var(--white); font-weight: 500; }
+.sbtn.active::before { background: var(--gold); box-shadow: 0 0 0 3px rgba(245,168,0,.2); }
+.sbtn.active::after { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 3px; background: var(--gold); border-radius: 0 2px 2px 0; }
+
+/* ── CONTENT ── */
+.content-col { position: relative; overflow: hidden; background: var(--navy); }
+.swrap { position: relative; width: 100%; height: 100%; }
+.dsec { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; padding: 40px 44px 72px; opacity: 0; pointer-events: none; transform: translateY(20px); transition: opacity .32s ease, transform .32s ease; }
+.dsec::-webkit-scrollbar { width: 3px; }
+.dsec::-webkit-scrollbar-thumb { background: var(--gold); }
+.dsec.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.dsec.exiting { opacity: 0; transform: translateY(-20px); pointer-events: none; transition: opacity .22s ease, transform .22s ease; }
+
+/* ── TYPOGRAPHY ── */
+.s-num { font-family: var(--fm); font-size: 10px; color: var(--muted); letter-spacing: 1.5px; margin-bottom: 10px; }
+.s-num em { color: var(--gold); font-style: normal; }
+.s-title { font-family: var(--fh); font-size: clamp(32px, 4vw, 58px); line-height: .95; color: var(--gold); margin-bottom: 6px; letter-spacing: -1px; text-transform: uppercase; }
+.s-sub { font-family: var(--fb); font-size: 13px; font-style: italic; font-weight: 300; color: var(--muted); margin-bottom: 24px; }
+.s-rule { height: 1px; background: var(--rule); margin: 20px 0; }
+.s-rule.glow { background: linear-gradient(90deg, var(--gold), var(--cyan), transparent); height: 1px; }
+.s-text { font-family: var(--fb); font-size: 14px; font-weight: 300; color: #CCCCDD; line-height: 1.8; max-width: 620px; margin-bottom: 28px; }
+.s-text strong { font-family: var(--fh); color: var(--white); font-weight: 900; }
+
+/* ── IMAGE PLACEHOLDERS ── */
+.igrid { display: grid; gap: 10px; margin-bottom: 22px; }
+.igrid.c1 { grid-template-columns: 1fr; }
+.igrid.c2 { grid-template-columns: 1fr 1fr; }
+.igrid.c3 { grid-template-columns: 1fr 1fr 1fr; }
+.iph { background: var(--navy3); border: 1px solid var(--rule); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: #44445A; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; }
+.iph svg { opacity: .5; }
+.iph.gold { background: rgba(245,168,0,.07); border-color: rgba(245,168,0,.3); color: var(--gold); }
+.iph.cyan { background: rgba(0,229,255,.06); border-color: rgba(0,229,255,.25); color: var(--cyan); }
+.iph.orange { background: rgba(255,107,0,.07); border-color: rgba(255,107,0,.3); color: var(--orange); }
+.iph.pink { background: rgba(255,45,155,.07); border-color: rgba(255,45,155,.25); color: var(--pink); }
+.r169 { aspect-ratio: 16/9; }
+.r43  { aspect-ratio: 4/3; }
+.r11  { aspect-ratio: 1; }
+.r32  { aspect-ratio: 3/2; }
+
+/* ── TAGS ── */
+.trow { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+.tag { font-family: var(--fm); font-size: 10px; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 2px; color: var(--muted); }
+.tag.g { border-color: rgba(245,168,0,.5); color: var(--gold); }
+.tag.c { border-color: rgba(0,229,255,.4); color: var(--cyan); }
+.tag.o { border-color: rgba(255,107,0,.4); color: var(--orange); }
+.tag.p { border-color: rgba(255,45,155,.4); color: var(--pink); }
+.tag.gfill { background: var(--gold); color: var(--navy); border-color: var(--gold); font-family: var(--fh); }
+.tag.cfill { background: var(--cyan); color: var(--navy); border-color: var(--cyan); font-family: var(--fh); }
+
+/* ── STATS ── */
+.srow { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 28px; padding: 20px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.sv { font-family: var(--fh); font-size: 38px; color: var(--gold); line-height: 1; }
+.sv.c { color: var(--cyan); }
+.sv.o { color: var(--orange); }
+.sv.p { color: var(--pink); }
+.sl { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 4px; }
+
+/* ── CALLOUTS ── */
+.alert { background: rgba(255,107,0,.08); border-left: 3px solid var(--orange); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 4px 4px 0; }
+.alert strong { display: block; font-family: var(--fh); font-size: 11px; color: var(--orange); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+.alert span { font-size: 13px; font-weight: 300; color: #CCCCDD; line-height: 1.75; }
+
+.note { background: rgba(245,168,0,.07); border-left: 3px solid var(--gold); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 4px 4px 0; }
+.note strong { display: block; font-family: var(--fh); font-size: 11px; color: var(--gold); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+.note span { font-size: 13px; font-weight: 300; color: #CCCCDD; line-height: 1.75; }
+
+.highlight { background: rgba(0,229,255,.06); border-left: 3px solid var(--cyan); padding: 16px 18px; margin-bottom: 22px; border-radius: 0 4px 4px 0; }
+.highlight strong { display: block; font-family: var(--fh); font-size: 11px; color: var(--cyan); margin-bottom: 6px; letter-spacing: 1px; text-transform: uppercase; }
+.highlight span { font-size: 13px; font-weight: 300; color: #CCCCDD; line-height: 1.75; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; margin-bottom: 28px; }
+.step { display: flex; gap: 18px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.step:last-child { border-bottom: none; }
+.stepnum { font-family: var(--fh); font-size: 30px; color: var(--gold); min-width: 36px; line-height: 1; }
+.steptxt strong { display: block; font-family: var(--fh); font-size: 13px; color: var(--white); margin-bottom: 5px; letter-spacing: .3px; text-transform: uppercase; }
+.steptxt span { font-size: 13px; font-weight: 300; color: #CCCCDD; line-height: 1.7; }
+
+/* ── KPI CARDS ── */
+.kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 22px; }
+.kcard { border: 1px solid var(--rule); border-radius: 4px; padding: 16px 18px; background: var(--navy3); }
+.kcard.g { border-color: rgba(245,168,0,.35); background: rgba(245,168,0,.05); }
+.kcard.c { border-color: rgba(0,229,255,.25); background: rgba(0,229,255,.04); }
+.kcard.o { border-color: rgba(255,107,0,.3); background: rgba(255,107,0,.05); }
+.kcard.p { border-color: rgba(255,45,155,.25); background: rgba(255,45,155,.04); }
+.kv { font-family: var(--fh); font-size: 28px; line-height: 1; color: var(--white); }
+.kv.g { color: var(--gold); }
+.kv.c { color: var(--cyan); }
+.kv.o { color: var(--orange); }
+.kl { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-top: 6px; }
+
+/* ── STONE VISUAL ── */
+.stones { display: flex; gap: 12px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+.stone { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--fh); font-size: 14px; color: var(--navy); font-weight: 900; }
+.stone.s1 { background: var(--gold); box-shadow: 0 0 16px rgba(245,168,0,.5); }
+.stone.s2 { background: var(--cyan); box-shadow: 0 0 16px rgba(0,229,255,.5); }
+.stone.s3 { background: var(--orange); box-shadow: 0 0 16px rgba(255,107,0,.5); }
+.stone.s4 { background: var(--pink); box-shadow: 0 0 16px rgba(255,45,155,.5); }
+.stone.s5 { background: #44EEBB; box-shadow: 0 0 16px rgba(68,238,187,.5); }
+.stone.s6 { background: #AA44FF; box-shadow: 0 0 16px rgba(170,68,255,.5); }
+.stone-label { font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: .8px; margin-left: 6px; }
+
+/* ── EDITION CARDS ── */
+.editions { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 14px; margin-bottom: 22px; align-items: stretch; }
+.edition { border: 1px solid var(--rule); border-radius: 6px; padding: 0; background: var(--navy3); overflow: hidden; display: flex; flex-direction: column; min-width: 0; width: 100%; }
+.edition.stone { border-color: rgba(245,168,0,.4); }
+.edition.glow { border-color: rgba(0,229,255,.4); }
+.ed-img { width: 100%; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-align: center; padding: 14px; flex-shrink: 0; }
+.edition.stone .ed-img { background: rgba(245,168,0,.07); color: var(--gold); }
+.edition.glow .ed-img { background: rgba(0,229,255,.06); color: var(--cyan); }
+.ed-img svg { opacity: .55; flex-shrink: 0; }
+.ed-body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 0; flex: 1; min-width: 0; }
+.ed-label { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.ed-title { font-family: var(--fh); font-size: 15px; margin-bottom: 10px; text-transform: uppercase; line-height: 1.1; word-break: break-word; }
+.edition.stone .ed-title { color: var(--gold); }
+.edition.glow .ed-title { color: var(--cyan); }
+.ed-rule { height: 1px; background: var(--rule); margin-bottom: 12px; flex-shrink: 0; }
+.ed-desc { font-size: 12px; font-weight: 300; color: #AAAABB; line-height: 1.7; }
+.ed-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
+.ed-tag { font-family: var(--fm); font-size: 9px; padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+.edition.stone .ed-tag { border: 1px solid rgba(245,168,0,.3); color: var(--gold); }
+.edition.glow .ed-tag { border: 1px solid rgba(0,229,255,.25); color: var(--cyan); }
+
+/* ── CTA ── */
+.cta-block { border: 1px solid rgba(245,168,0,.4); border-radius: 6px; padding: 36px 28px; text-align: center; margin-top: 10px; background: rgba(245,168,0,.05); }
+.cta-block h3 { font-family: var(--fh); font-size: 24px; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; letter-spacing: -.5px; }
+.cta-block p { font-size: 13px; font-weight: 300; color: #CCCCDD; margin-bottom: 22px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.75; }
+.cta-meta { font-family: var(--fm); font-size: 10px; color: var(--cyan); letter-spacing: 1px; margin-bottom: 18px; }
+.cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.cta-btn { display: inline-block; background: var(--gold); color: var(--navy); font-family: var(--fh); font-size: 13px; letter-spacing: 1.5px; padding: 13px 32px; border-radius: 3px; text-decoration: none; text-transform: uppercase; transition: opacity .15s, transform .15s; }
+.cta-btn:hover { opacity: .88; transform: translateY(-2px); }
+.cta-btn.alt { background: transparent; color: var(--cyan); border: 1px solid var(--cyan); }
+.cta-note { font-family: var(--fm); font-size: 10px; color: var(--muted); margin-top: 14px; letter-spacing: .5px; }
+
+/* ── SCROLL HINT ── */
+.shint { position: absolute; bottom: 16px; left: 44px; font-family: var(--fm); font-size: 9px; color: var(--muted); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; opacity: .5; pointer-events: none; }
+.shint::before { content:''; width:24px; height:1px; background: var(--gold); display:block; }
+
+/* ── RIGHT PANEL ── */
+.cpanel { border-left: 1px solid var(--rule); padding: 24px 20px; display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; background: var(--navy2); }
+.cpanel::-webkit-scrollbar { display: none; }
+.c-img { width: 100%; aspect-ratio: 4/3; background: var(--navy3); border: 1px solid rgba(245,168,0,.25); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; flex-shrink: 0; font-family: var(--fm); font-size: 9px; letter-spacing: .8px; text-align: center; color: var(--gold); }
+.c-badge { background: var(--gold); color: var(--navy); font-family: var(--fh); font-size: 8px; letter-spacing: 2px; padding: 4px 10px; border-radius: 2px; margin-bottom: 8px; display: inline-block; text-transform: uppercase; }
+.c-head { font-family: var(--fh); font-size: 16px; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+.c-head em { color: var(--cyan); font-style: normal; }
+.c-brief { font-family: var(--fb); font-size: 11px; font-weight: 300; font-style: italic; color: #AAAABB; line-height: 1.7; border-left: 2px solid var(--gold); padding-left: 10px; margin-bottom: 16px; }
+.c-rule { height: 1px; background: var(--rule); margin: 14px 0; flex-shrink: 0; }
+.c-desc { font-family: var(--fb); font-size: 11px; font-weight: 300; color: #AAAABB; line-height: 1.65; margin-bottom: 14px; }
+.cfield { margin-bottom: 12px; }
+.ckey { font-family: var(--fm); font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.cval { font-family: var(--fb); font-size: 12px; font-weight: 500; color: var(--white); }
+.cval.g { color: var(--gold); }
+.cval.c { color: var(--cyan); }
+.cval.o { color: var(--orange); }
+.cvisit { display: block; margin-top: 12px; padding: 12px; text-align: center; font-family: var(--fh); font-size: 10px; letter-spacing: 1.5px; color: var(--navy); background: var(--gold); border: 1px solid var(--gold); border-radius: 3px; text-decoration: none; transition: opacity .15s; text-transform: uppercase; }
+.cvisit:hover { opacity: .88; }
+
+/* ── MOBILE ── */
+.mob-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--navy2); border-top: 1px solid var(--rule); overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: env(safe-area-inset-bottom, 0); }
+.mob-nav::-webkit-scrollbar { display: none; }
+.mob-inner { display: flex; min-width: max-content; padding: 0 8px; }
+.mbtn { font-family: var(--fm); font-size: 9px; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 13px 12px; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s; }
+.mbtn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.mob-infobtn { display: none; position: fixed; top: calc(var(--hh) + 10px); right: 14px; z-index: 190; font-family: var(--fh); font-size: 9px; letter-spacing: 1px; color: var(--navy); background: var(--gold); border: none; padding: 7px 12px; border-radius: 3px; cursor: pointer; text-transform: uppercase; }
+.mob-infopanel { display: none; position: fixed; top: var(--hh); left: 0; right: 0; bottom: 0; background: var(--navy); z-index: 180; overflow-y: auto; padding: 20px; transform: translateX(100%); transition: transform .28s ease; }
+.mob-infopanel.open { transform: translateX(0); }
+.mob-infopanel .cpanel { border: none; padding: 0; overflow: visible; background: transparent; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  body { overflow: auto; }
+  .layout { display: block; height: auto; padding-top: var(--hh); }
+  .rail, .cpanel { display: none; }
+  .content-col { overflow: visible; height: auto; }
+  .swrap { position: static; height: auto; }
+  .dsec { position: static; opacity: 1 !important; transform: none !important; pointer-events: auto !important; padding: 30px 22px 56px; border-bottom: 1px solid var(--rule); }
+  .shint { display: none; }
+  .mob-nav { display: block; }
+  .mob-infobtn { display: block; }
+  .mob-infopanel { display: block; }
+  .editions { grid-template-columns: 1fr; }
+  .ed-img { aspect-ratio: 16/9; }
+}
+@media (max-width: 768px) {
+  .igrid.c3 { grid-template-columns: 1fr 1fr; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  :root { --hh: 46px; }
+  .igrid.c2, .igrid.c3 { grid-template-columns: 1fr; }
+  .s-title { font-size: 28px; }
+  .dsec { padding: 22px 18px 60px; }
+  .kgrid { grid-template-columns: 1fr 1fr; }
+  .cta-btns { flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .s-title { font-size: 24px; }
+  .sv { font-size: 30px; }
+  .h-tag { display: none; }
+  .kgrid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo">DIKETO<em>.</em></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">The Glowing Stone Challenge — Case Study</div>
+  <div class="h-cur" id="hCur">OVERVIEW</div>
+</header>
+
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+
+<button class="mob-infobtn" id="mobInfoBtn">INFO</button>
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="cpanel" id="mobConst"></div>
+</div>
+
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Sections</div></aside>
+
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+
+      <!-- ══════════════════════
+           01 — OVERVIEW
+      ══════════════════════ -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 07 — OVERVIEW</div>
+        <h2 class="s-title">DIKETO</h2>
+        <div class="s-sub">Reviving a South African Classic for the Next Generation</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">DIKETO modernises the classic South African stone-tossing game without removing its soul. <strong>Glow-in-the-dark stones. Premium feel. Pure African heritage.</strong> Designed for both relaxed family play and energetic social settings.</p>
+
+        <!-- Stone visual -->
+        <div class="stones">
+          <div class="stone s1">◉</div>
+          <div class="stone s2">◉</div>
+          <div class="stone s3">◉</div>
+          <div class="stone s4">◉</div>
+          <div class="stone s5">◉</div>
+          <div class="stone s6">◉</div>
+          <div class="stone-label">— Glow Stone Collection</div>
+        </div>
+
+        <div class="trow">
+          <span class="tag gfill">South Africa</span>
+          <span class="tag cfill">Glow Stone Game</span>
+          <span class="tag g">Indigenous Heritage</span>
+          <span class="tag c">Family & Friends</span>
+          <span class="tag o">Ages 8+</span>
+          <span class="tag">2–6 Players</span>
+          <span class="tag">20–30 min</span>
+        </div>
+
+        <div class="igrid c1">
+          <div class="iph r169 gold">
+            <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><circle cx="8" cy="22" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="22" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 19l5-4 5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            DIKETO — product box hero shot (use provided mockup image)
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 cyan">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+            Glow stone gameplay — night setting
+          </div>
+          <div class="iph r43 orange">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Family gameplay — generational moment
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           02 — THE CHALLENGE
+      ══════════════════════ -->
+      <section class="dsec" id="sec-challenge" data-i="1">
+        <div class="s-num">02 <em>/</em> 07 — THE CHALLENGE</div>
+        <h2 class="s-title">The Challenge</h2>
+        <div class="s-sub">Tradition fading in the age of screens</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">In many South African homes today, <strong>traditional indigenous games are slowly disappearing.</strong> Children are growing up surrounded by smartphones, tablets, and global entertainment, while the rich cultural games their parents and grandparents once played are fading into memory.</p>
+        <div class="alert">
+          <strong>The core tension</strong>
+          <span>Parents want their children to stay connected to their African heritage — but they also want experiences that feel exciting, modern, and relevant in today's fast-moving world — not something that feels "old-school" or only for the village.</span>
+        </div>
+        <div class="srow">
+          <div><div class="sv o">Fading</div><div class="sl">Indigenous games in urban homes</div></div>
+          <div><div class="sv o">High</div><div class="sl">Screen time replacing play</div></div>
+          <div><div class="sv o">Gap</div><div class="sl">Tradition vs modern relevance</div></div>
+          <div><div class="sv o">Now</div><div class="sl">Critical preservation moment</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 orange">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M13 6h6M16 26v0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Screen-first generation — passive play
+          </div>
+          <div class="iph r43 orange">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4c6.627 0 12 5.373 12 12s-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4z" stroke="currentColor" stroke-width="1.5"/><path d="M16 10v6M16 20v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Heritage at risk — the disappearing game
+          </div>
+        </div>
+        <div class="highlight">
+          <strong>The design question</strong>
+          <span>How do you preserve tradition without making it feel outdated? How do you make an ancient stone-tossing game feel at home on a modern table, in a modern home, played by a modern child?</span>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           03 — THE SOLUTION
+      ══════════════════════ -->
+      <section class="dsec" id="sec-solution" data-i="2">
+        <div class="s-num">03 <em>/</em> 07 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">Preserving the soul. Upgrading the form.</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">DIKETO was created with one clear purpose: <strong>to preserve African indigenous games and successfully pass them on to the next generation.</strong> By modernising the classic stone-tossing game without removing its soul, DIKETO brings new life to a beloved tradition.</p>
+        <div class="note">
+          <strong>The core gameplay remains unchanged</strong>
+          <span>Still built on hand-eye coordination, rhythm, and skill — the original magic is intact. What changed is the material, the glow, and the feel. Throw · Scoop · Catch · Repeat.</span>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Throw</strong>
+              <span>Toss a glow stone into the air and scatter the remaining stones in the same motion. Hand-eye coordination begins immediately.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>Scoop</strong>
+              <span>Before the thrown stone lands — scoop the target number of stones from the mat. Rhythm and precision are everything.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>Catch</strong>
+              <span>Catch the falling stone in the same hand. Miss it, drop a stone, or move too slow — and your turn ends.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">4</div>
+            <div class="steptxt">
+              <strong>Repeat — and level up</strong>
+              <span>Levels increase the number of stones to scoop per throw. The player with the most stones when the round ends wins.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 cyan">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+            Glow stones in play — low-light setting
+          </div>
+          <div class="iph r43 cyan">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M16 4l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Folding game mat — layout setup
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           04 — THE EDITIONS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-editions" data-i="3">
+        <div class="s-num">04 <em>/</em> 07 — THE EDITIONS</div>
+        <h2 class="s-title">Two Editions</h2>
+        <div class="s-sub">Traditional roots. Modern choice.</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">To suit different preferences and settings, DIKETO is available in two versions — each honouring the same game at its core, with a different material experience and visual character.</p>
+        <div class="editions">
+
+          <!-- Edition 01 -->
+          <div class="edition stone">
+            <div class="ed-img">
+              <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="6" stroke="currentColor" stroke-width="1" opacity=".5"/><circle cx="16" cy="16" r="3" fill="currentColor" opacity=".5"/></svg>
+              Polished Stone Edition — product photo
+            </div>
+            <div class="ed-body">
+              <div class="ed-label">Edition 01</div>
+              <div class="ed-title">Polished Stone</div>
+              <div class="ed-rule"></div>
+              <div class="ed-desc">A more traditional, tactile experience rooted in authenticity. Real polished stones that carry the weight and feel of the original game — connecting players to the version their grandparents knew.</div>
+              <div class="ed-tags">
+                <span class="ed-tag">Traditional</span>
+                <span class="ed-tag">Tactile</span>
+                <span class="ed-tag">Authentic</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edition 02 -->
+          <div class="edition glow">
+            <div class="ed-img">
+              <svg width="36" height="36" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="7" stroke="currentColor" stroke-width="1" opacity=".6"/><circle cx="16" cy="16" r="3" fill="currentColor" opacity=".7"/><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1"/><circle cx="24" cy="8" r="2.5" stroke="currentColor" stroke-width="1"/><circle cx="24" cy="24" r="2.5" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="24" r="2.5" stroke="currentColor" stroke-width="1"/></svg>
+              Glow Stone Edition — night play photo
+            </div>
+            <div class="ed-body">
+              <div class="ed-label">Edition 02</div>
+              <div class="ed-title">Non-Toxic Glow Stone</div>
+              <div class="ed-rule"></div>
+              <div class="ed-desc">A modern, visually engaging version designed for night play and social environments. Glow stones transform the game table into something otherworldly — perfect for house parties, game cafés, and events.</div>
+              <div class="ed-tags">
+                <span class="ed-tag">Night Play</span>
+                <span class="ed-tag">Social</span>
+                <span class="ed-tag">Non-Toxic</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           05 — EARLY RESULTS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-results" data-i="4">
+        <div class="s-num">05 <em>/</em> 07 — EARLY RESULTS</div>
+        <h2 class="s-title">Early Results</h2>
+        <div class="s-sub">From hesitation to competition — every time</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">Across early use in multiple households and small group settings in Tsakane, Johannesburg, a clear pattern emerged. <strong>That transition — from hesitation to competition — became consistent.</strong></p>
+        <div class="highlight">
+          <strong>First household test — Tsakane, Johannesburg</strong>
+          <span>The first round was chaotic — players overwhelmed by the new redefinition of the game, others who didn't even know it growing interest in the moment, rules being clarified in real time. Within minutes: focused, competing, correcting each other, and asking for "one more round."</span>
+        </div>
+        <div class="srow">
+          <div><div class="sv">45–90</div><div class="sl">Minutes per session — naturally</div></div>
+          <div><div class="sv c">↑</div><div class="sl">Repeat-play behaviour</div></div>
+          <div><div class="sv c">Screens</div><div class="sl">Abandoned voluntarily</div></div>
+          <div><div class="sv c">High</div><div class="sl">Group engagement rate</div></div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard g"><div class="kv g">45–90min</div><div class="kl">Session length — no prompting needed</div></div>
+          <div class="kcard c"><div class="kv c">Voluntary</div><div class="kl">Children chose to replay over screens</div></div>
+          <div class="kcard o"><div class="kv o">Social</div><div class="kl">Engagement spiked in group settings</div></div>
+          <div class="kcard p"><div class="kv" style="color:var(--pink)">Repeat</div><div class="kl">Play behaviour — once rhythm is felt</div></div>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Household session — Tsakane test
+          </div>
+          <div class="iph r43 cyan">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 24l7-8 5 6 5-10 7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 28h24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Session length — before vs after engagement
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           06 — WHY IT MATTERS
+      ══════════════════════ -->
+      <section class="dsec" id="sec-why" data-i="5">
+        <div class="s-num">06 <em>/</em> 07 — WHY IT MATTERS</div>
+        <h2 class="s-title">Why It Matters</h2>
+        <div class="s-sub">Heritage that evolves — and a generation that owns it</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">DIKETO is more than just a game. It represents a broader movement: <strong>to preserve and celebrate African indigenous games by giving them a modern identity that fits today's world.</strong></p>
+        <div class="kgrid">
+          <div class="kcard g"><div class="kv g">Own</div><div class="kl">African children get a game they can truly own & feel proud of</div></div>
+          <div class="kcard c"><div class="kv c">Prove</div><div class="kl">African games can be just as exciting as any modern alternative</div></div>
+          <div class="kcard o"><div class="kv o">Bridge</div><div class="kl">Grandparents recognise it, parents engage, children are drawn in</div></div>
+          <div class="kcard p"><div class="kv" style="color:var(--pink)">Preserve</div><div class="kl">Cultural heritage not lost to the digital age</div></div>
+        </div>
+        <div class="note">
+          <strong>Rooted. Relevant. Adaptable.</strong>
+          <span>Rather than replacing tradition, DIKETO shows that heritage can evolve — retaining its meaning while adapting its form. It allows African children to play something rooted in their culture, relevant to their present, and adaptable to their future.</span>
+        </div>
+        <div class="igrid c3">
+          <div class="iph r11 gold">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Grandparent — recognition
+          </div>
+          <div class="iph r11 cyan">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Parent & child — play together
+          </div>
+          <div class="iph r11 orange">
+            <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 28c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Child — new generation owner
+          </div>
+        </div>
+        <div class="igrid c1">
+          <div class="iph r169 cyan">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none"><circle cx="10" cy="10" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M2 26c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="23" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M19 26c0-3.314 1.79-6 4-6s4 2.686 4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Three generations — one game, one table, one cultural moment
+          </div>
+        </div>
+        <div class="shint">scroll for next</div>
+      </section>
+
+      <!-- ══════════════════════
+           07 — BRING IT HOME
+      ══════════════════════ -->
+      <section class="dsec" id="sec-cta" data-i="6">
+        <div class="s-num">07 <em>/</em> 07 — BRING IT HOME</div>
+        <h2 class="s-title">Be Part of the Revival</h2>
+        <div class="s-sub">What was once at risk of being forgotten is now being reintroduced</div>
+        <div class="s-rule glow"></div>
+        <p class="s-text">DIKETO doesn't rely on screens, batteries, or complexity. <strong>It relies on something simpler — skill, rhythm, and shared moments.</strong> And that's exactly why it works.</p>
+        <div class="igrid c1">
+          <div class="iph r169 gold">
+            <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><circle cx="8" cy="22" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/><circle cx="24" cy="22" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M8 17v5M16 7v5M24 17v5" stroke="currentColor" stroke-width="1" opacity=".5"/></svg>
+            DIKETO — full product lifestyle hero image
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv">Ages 8+</div><div class="sl">Recommended age range</div></div>
+          <div><div class="sv c">2–6</div><div class="sl">Players per game</div></div>
+          <div><div class="sv c">20–30</div><div class="sl">Minutes per session</div></div>
+          <div><div class="sv g">2</div><div class="sl">Editions available</div></div>
+        </div>
+        <div class="highlight">
+          <strong>What's in the box</strong>
+          <span>6 Glow Throwing Stones · 60 Glowing Scooping Stones · 1 Folding Game Mat · 1 Instruction Guide<br><br>Perfect for: House Parties · Family Fun · Game Cafés · Events</span>
+        </div>
+        <div class="igrid c2">
+          <div class="iph r43 gold">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M4 4h24v24H4z" stroke="currentColor" stroke-width="1.5"/><path d="M4 12h24M12 4v8" stroke="currentColor" stroke-width="1.5"/></svg>
+            Polished Stone Edition — order now
+          </div>
+          <div class="iph r43 cyan">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1" opacity=".6"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg>
+            Non-Toxic Glow Stone Edition — order now
+          </div>
+        </div>
+        <div class="cta-block">
+          <h3>Bring Home DIKETO</h3>
+          <p>The modern glow stone game that honours the past while lighting up the future. Not nostalgia — a living experience that belongs to every generation.</p>
+          <div class="cta-meta">DIKETO — Modern Glow Stone Fun for Family & Friends</div>
+          <div class="cta-btns">
+            <a class="cta-btn" href="#" target="_blank">ORDER NOW →</a>
+            <a class="cta-btn alt" href="#" target="_blank">LEARN MORE</a>
+          </div>
+          <div class="cta-note">Designed in South Africa · Polished Stone Edition | Non-Toxic Glow Stone Edition</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">Case Study 2025</div>
+    <div class="c-img">
+      <svg width="42" height="42" viewBox="0 0 32 32" fill="none">
+        <circle cx="8" cy="22" r="5" stroke="#F5A800" stroke-width="1.5"/>
+        <circle cx="16" cy="12" r="5" stroke="#00E5FF" stroke-width="1.5"/>
+        <circle cx="24" cy="22" r="5" stroke="#FF6B00" stroke-width="1.5"/>
+      </svg>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;color:#F5A800;">THROW · SCOOP · CATCH · REPEAT</span>
+    </div>
+    <div class="c-head">Glow Stone<em>.</em></div>
+    <div class="c-brief">A modern upgrade to the classic South African stone-tossing game — preserving African indigenous heritage through thoughtful design, glow stones, and cross-generational play.</div>
+    <div class="c-rule"></div>
+    <div class="c-desc">DIKETO proves that African games can be just as exciting and relevant as any modern alternative — without losing what made them special.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Designer</div><div class="cval g">Ndinga Dyongo</div></div>
+    <div class="cfield"><div class="ckey">Category</div><div class="cval">Physical Board Game</div></div>
+    <div class="cfield"><div class="ckey">Heritage</div><div class="cval c">South African / Xhosa-rooted</div></div>
+    <div class="cfield"><div class="ckey">Players</div><div class="cval">2–6 Players · Ages 8+</div></div>
+    <div class="cfield"><div class="ckey">Session Time</div><div class="cval o">20–30 Minutes</div></div>
+    <div class="cfield"><div class="ckey">Editions</div><div class="cval">Polished Stone | Glow Stone</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Tagline</div><div class="cval g">"Rooted. Relevant. Adaptable."</div></div>
+    <a class="cvisit" href="#" target="_blank">ORDER DIKETO →</a>
+  </aside>
+
+</div>
+
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+
+<script>
+const STAGES = [
+  { id:"overview",   label:"Overview"      },
+  { id:"challenge",  label:"The Challenge" },
+  { id:"solution",   label:"The Solution"  },
+  { id:"editions",   label:"Two Editions"  },
+  { id:"results",    label:"Early Results" },
+  { id:"why",        label:"Why It Matters"},
+  { id:"cta",        label:"Bring It Home" },
+];
+
+let cur = 0, busy = false;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rail         = document.getElementById("rail");
+  const mobInner     = document.getElementById("mobInner");
+  const mobInfoBtn   = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  const mobConst     = document.getElementById("mobConst");
+
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      window.innerWidth <= 960 ? scrollMob(i) : goTo(i);
+    });
+    mobInner.appendChild(mb);
+  });
+
+  const cpanel = document.getElementById("cpanel");
+  if (mobConst) mobConst.innerHTML = cpanel.innerHTML;
+  document.getElementById("hCur").textContent = STAGES[0].label.toUpperCase();
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+
+  if (mobInfoBtn) {
+    mobInfoBtn.addEventListener("click", () => {
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = mobInfoPanel.classList.contains("open") ? "CLOSE" : "INFO";
+    });
+  }
+  setProgress(0);
+});
+
+function goTo(idx) {
+  if (busy || idx === cur || window.innerWidth <= 960) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 260);
+}
+
+function scrollMob(idx) {
+  const s = document.getElementById("sec-" + STAGES[idx].id);
+  if (s) s.scrollIntoView({ behavior: "smooth" });
+}
+
+function onInnerScroll(e) {
+  if (window.innerWidth <= 960) return;
+  const sec = document.querySelectorAll(".dsec")[cur];
+  if (!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 8;
+  if (atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+
+let winTick = false;
+function onWinScroll() {
+  if (window.innerWidth > 960) return;
+  if (winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if (s.getBoundingClientRect().top <= window.innerHeight * 0.38) active = i;
+    });
+    if (active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if (mb) mb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active", "done");
+    if (i < idx) b.classList.add("done");
+    if (i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) =>
+    b.classList.toggle("active", i === idx)
+  );
+  const hCur = document.getElementById("hCur");
+  if (hCur) hCur.textContent = STAGES[idx].label.toUpperCase();
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+</script>
+</body>
+</html>

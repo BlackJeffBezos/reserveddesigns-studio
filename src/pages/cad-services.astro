@@ -1,0 +1,282 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const serviceTitle = "CAD";
+const serviceSubtitle = "SENSATIONS";
+const heroImage = "/images/reserved-designs-computer-aided-design-cad-services.avif";
+const serviceDescription = "We provide professional CAD services tailored to your needs, we deliver precision and efficiency.";
+const excellenceRating = "★★★★★";
+const stats = [
+  { number: "25+", label: "PROJECTS COMPLETED" },
+  { number: "12+", label: "HAPPY CLIENTS" },
+  { number: "5+", label: "YEARS EXPERIENCE" },
+  { number: "10+", label: "DAILY INQUIRIES" },
+];
+const portfolioItems = [
+  { title: "DESK CAD DESIGN", image: "/images/reserved-designs-desk-design-2.avif" },
+  { title: "WATERBOTTLE CAD DESIGN & RENDER", image: "/images/reserved-designs-cad-bottle.avif" },
+  { title: "CAD MODEL", image: "/images/reserved-designs-cad-modelling.avif" },];
+---
+
+<MainLayout 
+  title="CAD Services - Precision Design to Turn Ideas into Loved Products"
+  description="Our CAD services deliver precision and efficiency, transforming ideas into accurate, functional products people love. Have a CAD project? We're here for you."
+>
+
+  <!-- Back link -->
+  <div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <a href="/services" class="inline-flex items-center text-gray-600 hover:text-primary-pink transition-colors text-sm font-medium">
+      ← ALL SERVICES
+    </a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Text + CTA -->
+        <div class="space-y-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-600 text-white text-3xl font-bold shadow-lg">
+            <span>🖥️</span>
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight uppercase">
+            {serviceTitle}<br />
+            <span class="text-primary-pink">{serviceSubtitle}</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-gray-700 max-w-2xl">
+            {serviceDescription}
+          </p>
+
+          <div class="pt-4">
+            <a 
+              href="/IntakeAnyService"
+              class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold uppercase px-10 py-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+            >
+              START YOUR PROJECT
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Image + Excellence Badge -->
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+          <img 
+            src={heroImage}
+            alt="Engineer working on CAD design in advanced lab"
+            class="w-full h-full object-cover aspect-[4/3] lg:aspect-square"
+            loading="lazy"
+          />
+
+          <!-- Floating Excellence Badge -->
+          <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border border-gray-200 max-w-[220px]">
+            <p class="text-xs md:text-sm font-bold uppercase text-gray-700 mb-2">SERVICE EXCELLENCE</p>
+            <div class="flex text-yellow-400 text-xl md:text-2xl">
+              {excellenceRating}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Capabilities -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 uppercase">
+        CORE <span class="text-primary-pink">CAPABILITIES</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <!-- 3D Modelling -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🖥️
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              3D MODELLING
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+              High-quality 3D models for products, prototypes and creative projects.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/cad-modelling.html" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Engineering Drawings -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              📐
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              ENGINEERING DRAWINGS
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+              Accurate technical drawings for manufacturing and construction.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/engineering-drawings.html" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Reverse Engineering -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🔄
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              REVERSE ENGINEERING
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+              Recreate accurate CAD data from existing physical objects.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/reverse-engineering.html" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- House Plans -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🏠
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              HOUSE PLANS
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+              Personalized CAD models designed to match your vision.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/house-plans.html" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Design Drawings -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              📝
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              PRODUCT DESIGN
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+             Functional CAD designs & Visualizations for various industries.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/physical-product-design.html" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+
+        <!-- Furniture Design -->
+        <div class="bg-blue-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+          <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+            <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+              🪑
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+              FURNITURE DESIGN
+            </h3>
+            <p class="text-blue-100 text-base md:text-lg leading-relaxed">
+              Detailed CAD models for furniture production and visualization.
+            </p>
+          </div>
+          <div class="p-8 border-t border-blue-700 mt-auto">
+            <a href="/services/furniture-design" class="block bg-white text-blue-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        {stats.map(stat => (
+          <div key={stat.label}>
+            <p class="text-5xl md:text-6xl font-bold text-primary-pink mb-2">{stat.number}</p>
+            <p class="text-gray-600 font-medium uppercase text-sm md:text-base tracking-wide">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Teaser -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <h2 class="text-4xl md:text-5xl font-bold uppercase">
+          VIEW OUR<br />
+          <span class="text-primary-blue">PROOF OF</span><br />
+          TRANSFORMATION
+        </h2>
+
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center gap-2 text-primary-blue font-bold hover:text-primary-pink transition-colors text-lg whitespace-nowrap"
+        >
+          VIEW FULL PORTFOLIO →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {portfolioItems.map(item => (
+          <div key={item.title} class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+            <img 
+              src={item.image}
+              alt={item.title}
+              class="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+              <h3 class="text-white text-xl md:text-2xl font-bold">{item.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight">
+        READY TO CREATE A<br />
+        <span class="text-primary-pink">SENSATION</span>?
+      </h2>
+
+      <p class="text-xl md:text-2xl opacity-90 mb-12 max-w-3xl mx-auto">
+        OUR STUDIO IS OPTIMIZED FOR RAPID EXECUTION AND ELITE DESIGN STANDARDS.<br />
+        LET'S TALK ABOUT YOUR PROJECT TODAY.
+      </p>
+
+      <a 
+        href="/IntakeAnyService"
+        class="inline-block bg-primary-pink hover:bg-pink-600 text-white font-bold uppercase px-12 py-6 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+      >
+        START PROJECT
+      </a>
+    </div>
+  </section>
+
+</MainLayout>

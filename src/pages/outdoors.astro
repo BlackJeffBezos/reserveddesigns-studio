@@ -1,0 +1,255 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const serviceTitle = "OUTDOORS";
+const serviceSubtitle = "SENSATIONS";
+const heroImage = "/images/reserved-designs-public-art-services.avif";
+const serviceDescription = "We create impactful outdoor installations that transform spaces and protect communities";
+const excellenceRating = "★★★★★";
+const stats = [
+  { number: "25+", label: "PROJECTS COMPLETED" },
+  { number: "12+", label: "HAPPY CLIENTS" },
+  { number: "5+", label: "YEARS EXPERIENCE" },
+  { number: "10+", label: "DAILY INQUIRIES" },
+];
+const portfolioItems = [
+  { title: "BOLLARDS", image: "/images/reserved-designs-custom-designed-bollards.avif" },
+  { title: "SEATING AREAS & BINS", image: "/images/reserved-designs-outdoor-patio-sitting-&-dining-furniture-in-south-africa.avif" },
+  { title: "PLAYGROUND & GYM EQUIPMENT", image: "/images/reserved-designs-designed-a-home-backyard-gym-&-playground.avif" },
+];
+---
+
+<MainLayout 
+  title="Outdoor Installation Services - Turn Ideas into Loved Public Spaces"
+  description="We create impactful outdoor installations that turn into crowns of urban spaces that people interact with daily. Have an idea for an outdoor installation? let's hear your vision."
+>
+
+  <!-- Back link -->
+  <div class="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <a href="/services" class="inline-flex items-center text-gray-600 hover:text-primary-pink transition-colors text-sm font-medium">
+      ← ALL SERVICES
+    </a>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <!-- Left: Text + CTA -->
+        <div class="space-y-8">
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-purple-600 text-white text-3xl font-bold shadow-lg">
+            <span>🏞️</span>
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight uppercase">
+            {serviceTitle}<br />
+            <span class="text-primary-pink">{serviceSubtitle}</span>
+          </h1>
+
+          <p class="text-xl md:text-2xl text-gray-700 max-w-2xl">
+            {serviceDescription}
+          </p>
+
+          <div class="pt-4">
+            <a 
+              href="/IntakeAnyService" 
+              class="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold uppercase px-10 py-5 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+            >
+              START YOUR PROJECT
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Image + Excellence Badge -->
+        <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+          <img 
+            src={heroImage}
+            alt="Artist creating large-scale public art installation"
+            class="w-full h-full object-contain bg-gray-100 aspect-[4/3] lg:aspect-square"
+            loading="lazy"
+          />
+
+          <!-- Floating Excellence Badge -->
+          <div class="absolute bottom-6 right-6 bg-white/95 backdrop-blur-sm rounded-xl p-5 shadow-xl border border-gray-200 max-w-[220px]">
+            <p class="text-xs md:text-sm font-bold uppercase text-gray-700 mb-2">SERVICE EXCELLENCE</p>
+            <div class="flex text-yellow-400 text-xl md:text-2xl">
+              {excellenceRating}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Capabilities -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-4xl md:text-5xl font-bold mb-16 uppercase">
+        CORE <span class="text-primary-pink">CAPABILITIES</span>
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+<!-- BOLLARDS -->
+<div class="bg-purple-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+  <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+    <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+      🗿
+    </div>
+    <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+      BOLLARDS
+    </h3>
+    <p class="text-purple-100 text-base md:text-lg leading-relaxed">
+      Durable, high-strength concrete and steel bollards designed to protect communities and properties while elevating spaces with a refined, artistic finish.
+    </p>
+
+    <ul>
+      <li class="mt-4 text-purple-200 text-sm md:text-base">
+        <strong>Origami & Geometric Designs:</strong> Precision-crafted forms that combine structure with visual impact.
+      </li>
+      <li class="mt-2 text-purple-200 text-sm md:text-base">
+        <strong>Chess Piece Bollards:</strong> Iconic, statement-driven designs that blend functionality with character.
+      </li>
+      <li class="mt-2 text-purple-200 text-sm md:text-base">
+        <strong>Freeform Concrete:</strong> Custom shapes inspired by your vision, built on uncompromising durability.
+      </li>
+    </ul>
+  </div>
+  <div class="p-8 border-t border-purple-700 mt-auto">
+    <a href="/contact" class="block bg-white text-purple-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+      Learn More
+    </a>
+  </div>
+</div>
+
+<!-- OUTDOOR FURNITURE & WASTE MANAGEMENT -->
+<div class="bg-purple-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+  <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+    <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+      🪑
+    </div>
+    <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+      OUTDOOR FURNITURE & WASTE MANAGEMENT
+    </h3>
+    <p class="text-purple-100 text-base md:text-lg leading-relaxed">
+      Robust outdoor furniture and waste solutions designed to define spaces, enhance usability, and stand the test of time.
+    </p>
+
+    <ul>
+      <li class="mt-4 text-purple-200 text-sm md:text-base">
+        <strong>Seating, Tables & Chairs:</strong> Weather-resistant solutions built for comfort and long-term use.
+      </li>
+      <li class="mt-2 text-purple-200 text-sm md:text-base">
+        <strong>Waste Bins:</strong> Durable concrete and steel units designed for high-traffic environments.
+      </li>
+    </ul>
+  </div>
+  <div class="p-8 border-t border-purple-700 mt-auto">
+    <a href="/contact" class="block bg-white text-purple-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+      Learn More
+    </a>
+  </div>
+</div>
+
+<!-- RECREATIONAL -->
+<div class="bg-purple-600 text-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 flex flex-col h-full">
+  <div class="p-10 md:p-12 flex-grow flex flex-col items-center text-center">
+    <div class="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mb-8 text-4xl">
+      🛝
+    </div>
+    <h3 class="text-2xl md:text-3xl font-bold mb-6 uppercase">
+      RECREATIONAL
+    </h3>
+    <p class="text-purple-100 text-base md:text-lg leading-relaxed">
+      Recreational installations and infrastructure that transform environments into engaging, functional spaces for all.
+    </p>
+
+    <ul>
+      <li class="mt-4 text-purple-200 text-sm md:text-base">
+        <strong>Bicycle Shelters & Racks:</strong> Secure, practical solutions for modern mobility needs.
+      </li>
+      <li class="mt-2 text-purple-200 text-sm md:text-base">
+        <strong>Outdoor Gym Equipment:</strong> Built to endure outdoor conditions while maintaining a clean, modern aesthetic.
+      </li>
+      <li class="mt-2 text-purple-200 text-sm md:text-base">
+        <strong>Children’s Play Areas:</strong> Safe, engaging environments designed for creativity and active play.
+      </li>
+    </ul>
+  </div>
+  <div class="p-8 border-t border-purple-700 mt-auto">
+    <a href="/contact" class="block bg-white text-purple-600 font-bold uppercase text-center py-4 rounded-xl hover:bg-gray-100 transition-colors">
+      Learn More
+    </a>
+  </div>
+</div>
+</div>
+
+      <!-- Stats -->
+      <div class="mt-20 grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        {stats.map(stat => (
+          <div key={stat.label}>
+            <p class="text-5xl md:text-6xl font-bold text-primary-pink mb-2">{stat.number}</p>
+            <p class="text-gray-600 font-medium uppercase text-sm md:text-base tracking-wide">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Teaser -->
+  <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <h2 class="text-4xl md:text-5xl font-bold uppercase">
+          VIEW OUR<br />
+          <span class="text-primary-blue">PROOF OF</span><br />
+          TRANSFORMATION
+        </h2>
+
+        <a 
+          href="/portfolio" 
+          class="inline-flex items-center gap-2 text-primary-blue font-bold hover:text-primary-pink transition-colors text-lg whitespace-nowrap"
+        >
+          VIEW FULL PORTFOLIO →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {portfolioItems.map(item => (
+          <div key={item.title} class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+            <img 
+              src={item.image}
+              alt={item.title}
+              class="w-full aspect-[4/3] object-contain transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+              <h3 class="text-white text-xl md:text-2xl font-bold">{item.title}</h3>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="py-20 px-4 sm:px-6 lg:px-8 bg-black text-white">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl md:text-6xl font-bold uppercase mb-8 leading-tight">
+        READY TO CREATE A<br />
+        <span class="text-primary-pink">SENSATION</span>?
+      </h2>
+
+      <p class="text-xl md:text-2xl opacity-90 mb-12 max-w-3xl mx-auto">
+        OUR STUDIO IS OPTIMIZED FOR RAPID EXECUTION AND ELITE DESIGN STANDARDS.<br />
+        LET'S TALK ABOUT YOUR PROJECT TODAY.
+      </p>
+
+      <a 
+        href="/IntakeAnyService" 
+        class="inline-block bg-primary-pink hover:bg-pink-600 text-white font-bold uppercase px-12 py-6 rounded-xl text-xl shadow-2xl hover:shadow-3xl transition-all duration-300"
+      >
+        START PROJECT
+      </a>
+    </div>
+  </section>
+</MainLayout>

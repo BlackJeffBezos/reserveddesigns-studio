@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINKPOD™ — Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --leather-dark:#1F2528;
+  --leather-mid:#2E363B;
+  --leather-warm:#3A454D;
+  --leather-tan:#5A6A78;
+  --leather-light:#8A9BA8;
+  --leather-cream:#C8D0D8;
+  --leather-pale:#E8ECF0;
+  --stitch:#A3B4C0;
+  --gold:#A8B5C0;
+  --gold-light:#C0CDD8;
+  --rubber-dark:#0F1214;
+  --rubber-mid:#1C2226;
+  --rubber-light:#2F3A42;
+  --ink:#0E1215;
+  --ink2:#1F2A32;
+  --muted:#5A6A78;
+  --rule:#9CA9B8;
+  --bg:var(--leather-pale);
+
+  --hh:58px;
+  --left:180px;
+  --right:280px;
+
+  --fh:'Playfair Display',serif;
+  --fb:'Cormorant Garamond',serif;
+  --fm:'DM Mono',serif;
+
+  /* Font Weights - All set to Bold */
+  --fw-heading: 700;     /* Bold for headings (Playfair) */
+  --fw-body:    700;     /* Bold for main text (Cormorant) */
+  --fw-mono:    700;     /* Bold for monospace */
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--fb);
+  font-size:16px;
+  line-height:1.65;
+  overflow:hidden;
+  height:100dvh;
+}
+/* PU Leather texture using CSS */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(139,69,19,.03) 3px,rgba(139,69,19,.03) 4px),
+    repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(139,69,19,.02) 3px,rgba(139,69,19,.02) 4px);
+}
+::selection{background:var(--leather-tan);color:#fff}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--leather-tan);border-radius:2px}
+ 
+/* ─── HEADER ─── */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:var(--hh);
+  background:linear-gradient(135deg,var(--leather-dark) 0%,var(--leather-mid) 60%,var(--leather-warm) 100%);
+  border-bottom:3px solid var(--leather-tan);
+  display:flex;align-items:center;padding:0 28px;gap:16px;
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.h-logo{
+  font-family:var(--fh);font-size:18px;color:#fff;letter-spacing:3px;
+  text-transform:uppercase;flex-shrink:0;
+}
+.h-logo sup{font-family:var(--fm);font-size:8px;color:var(--leather-light);vertical-align:super}
+.h-sep{width:1px;height:22px;background:rgba(255,255,255,.2);flex-shrink:0}
+.h-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:1px;flex:1}
+.h-cur{
+  font-family:var(--fh);font-size:11px;color:var(--leather-dark);
+  background:linear-gradient(135deg,var(--leather-light),var(--gold-light));
+  padding:6px 16px;border-radius:2px;letter-spacing:1px;flex-shrink:0;
+}
+ 
+/* ─── PROGRESS ─── */
+.ptrack{position:fixed;top:var(--hh);left:0;right:0;height:3px;z-index:300;background:rgba(139,69,19,.15)}
+.pbar{height:100%;width:0%;background:linear-gradient(90deg,var(--leather-tan),var(--gold));transition:width .25s}
+ 
+/* ─── LAYOUT ─── */
+.layout{display:grid;grid-template-columns:var(--left) 1fr var(--right);height:100dvh;padding-top:var(--hh);position:relative;z-index:1}
+ 
+/* ─── LEFT NAV RAIL ─── */
+.rail{
+  border-right:2px solid var(--leather-warm);
+  background:linear-gradient(180deg,var(--leather-dark) 0%,var(--leather-mid) 50%,#3D2010 100%);
+  padding:28px 0;
+  display:flex;flex-direction:column;overflow:hidden;
+  position:relative;
+}
+.rail::before{
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(255,255,255,.015) 4px,rgba(255,255,255,.015) 5px);
+  pointer-events:none;
+}
+.rail-lbl{
+  font-family:var(--fm);font-size:9px;letter-spacing:2px;
+  color:rgba(255,255,255,.3);padding:0 20px 18px;
+  border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:10px;
+  text-transform:uppercase;
+}
+.sbtn{
+  position:relative;padding:9px 20px 9px 32px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.5px;
+  color:rgba(255,255,255,.35);cursor:pointer;border:none;background:none;
+  text-align:left;line-height:1.45;transition:color .18s;width:100%;text-transform:uppercase;
+}
+.sbtn::before{
+  content:'';position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.12);transition:background .18s;
+}
+.sbtn.done{color:rgba(255,255,255,.18)}
+.sbtn.done::before{background:rgba(196,133,74,.3)}
+.sbtn.active{color:#fff}
+.sbtn.active::before{background:var(--leather-light);box-shadow:0 0 0 4px rgba(196,133,74,.2)}
+.sbtn.active::after{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--leather-tan);border-radius:0 2px 2px 0}
+ 
+/* ─── CONTENT ─── */
+.content-col{position:relative;overflow:hidden;background:var(--bg)}
+.swrap{position:relative;width:100%;height:100%}
+.dsec{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding:44px 52px 80px;
+  opacity:0;pointer-events:none;transform:translateY(18px);
+  transition:opacity .32s ease,transform .32s ease;
+}
+.dsec::-webkit-scrollbar{width:3px}
+.dsec::-webkit-scrollbar-thumb{background:var(--leather-tan)}
+.dsec.visible{opacity:1;pointer-events:auto;transform:translateY(0)}
+.dsec.exiting{opacity:0;transform:translateY(-18px);pointer-events:none;transition:opacity .2s,transform .2s}
+ 
+/* ─── SECTION TYPOGRAPHY ─── */
+.s-num{font-family:var(--fm);font-size:10px;color:var(--muted);letter-spacing:2px;margin-bottom:10px}
+.s-num em{color:var(--leather-tan);font-style:normal;font-weight:700}
+.s-title{
+  font-family:var(--fh);font-size:clamp(34px,4.5vw,64px);
+  line-height:.92;color:var(--ink);margin-bottom:8px;letter-spacing:-1px;
+}
+.s-sub{font-family:var(--fb);font-size:15px;font-style:italic;font-weight:300;color:var(--muted);margin-bottom:26px}
+.s-rule{
+  height:2px;
+  background:linear-gradient(90deg,var(--leather-dark),var(--leather-tan),var(--gold),transparent);
+  margin:22px 0;
+  position:relative;
+}
+.s-rule::after{content:'';position:absolute;top:4px;left:0;right:60%;height:1px;background:rgba(196,133,74,.2)}
+.s-text{
+  font-family:var(--fb);font-size:15px;font-weight:400;color:var(--ink2);
+  line-height:1.85;max-width:640px;margin-bottom:30px;
+}
+.s-text strong{font-family:var(--fh);color:var(--ink);font-weight:700}
+ 
+/* ─── IMAGE PLACEHOLDERS ─── */
+.img-wrap{margin-bottom:22px}
+.img-ph{
+  background:linear-gradient(135deg,#E8D5C0 0%,#D4B896 40%,#C49A6C 100%);
+  border:2px solid var(--leather-warm);
+  border-radius:4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:20px;
+  font-family:var(--fm);font-size:9px;letter-spacing:.8px;text-align:center;
+  color:var(--leather-dark);position:relative;overflow:hidden;
+}
+.img-ph::before{
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(139,69,19,.05) 8px,rgba(139,69,19,.05) 9px);
+}
+.img-ph .ph-icon{font-size:28px;opacity:.6;position:relative;z-index:1}
+.img-ph .ph-label{position:relative;z-index:1;line-height:1.5;font-weight:500}
+.img-ph .ph-dim{
+  position:absolute;top:8px;right:10px;
+  font-family:var(--fm);font-size:8px;color:var(--leather-warm);letter-spacing:.5px;
+}
+.img-ph.dark{
+  background:linear-gradient(135deg,var(--leather-dark) 0%,var(--leather-mid) 60%,var(--leather-warm) 100%);
+  border-color:var(--leather-tan);color:var(--leather-cream);
+}
+.img-ph.rubber{
+  background:linear-gradient(135deg,var(--rubber-dark) 0%,var(--rubber-mid) 60%,var(--rubber-light) 100%);
+  border-color:#666;color:#ccc;
+}
+.r169{aspect-ratio:16/9}
+.r43{aspect-ratio:4/3}
+.r11{aspect-ratio:1}
+.igrid{display:grid;gap:12px;margin-bottom:24px}
+.igrid.c2{grid-template-columns:1fr 1fr}
+.igrid.c3{grid-template-columns:1fr 1fr 1fr}
+ 
+/* ─── STITCH DIVIDER ─── */
+.stitch{
+  border:none;border-top:2px dashed var(--leather-tan);
+  margin:24px 0;opacity:.4;
+}
+ 
+/* ─── TAGS ─── */
+.trow{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px}
+.tag{
+  font-family:var(--fm);font-size:8px;padding:4px 11px;
+  border:1.5px solid var(--leather-warm);border-radius:2px;
+  color:var(--leather-mid);letter-spacing:.8px;text-transform:uppercase;
+}
+.tag.fill{background:var(--leather-warm);color:var(--leather-cream);border-color:var(--leather-warm)}
+.tag.gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--leather-dark);border-color:var(--gold)}
+ 
+/* ─── STAT ROW ─── */
+.srow{display:flex;flex-wrap:wrap;gap:36px;margin-bottom:30px;padding:22px 0;border-top:2px solid var(--leather-dark);border-bottom:2px solid var(--leather-dark)}
+.sv{font-family:var(--fh);font-size:44px;color:var(--ink);line-height:1;font-weight:900}
+.sv.accent{color:var(--leather-warm)}
+.sl{font-family:var(--fm);font-size:8px;color:var(--muted);letter-spacing:1.5px;margin-top:5px;text-transform:uppercase}
+ 
+/* ─── ALERT / NOTE / SUCCESS ─── */
+.alert{
+  background:linear-gradient(135deg,#F0E6D3,#E8D4BB);
+  border-left:4px solid var(--leather-warm);
+  padding:18px 20px;margin-bottom:24px;border-radius:0 4px 4px 0;
+}
+.alert strong{display:block;font-family:var(--fh);font-size:13px;color:var(--leather-dark);margin-bottom:6px;letter-spacing:.5px}
+.alert span{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8;font-style:italic}
+ 
+.note{background:#F5EDE0;border-left:4px solid var(--leather-dark);padding:18px 20px;margin-bottom:24px;border-radius:0 4px 4px 0}
+.note strong{display:block;font-family:var(--fh);font-size:13px;color:var(--ink);margin-bottom:6px}
+.note span{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8}
+ 
+.success{
+  background:linear-gradient(135deg,#EDE8E0,#E0D5C5);
+  border:2px solid var(--leather-warm);
+  padding:18px 20px;margin-bottom:24px;border-radius:4px;
+}
+.success strong{display:block;font-family:var(--fh);font-size:13px;color:var(--ink);margin-bottom:6px;letter-spacing:.3px}
+.success span{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.8}
+ 
+/* ─── PROCESS STEPS ─── */
+.steps{display:flex;flex-direction:column;margin-bottom:30px}
+.step{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.step:last-child{border-bottom:none}
+.stepnum{
+  font-family:var(--fh);font-size:34px;color:var(--leather-tan);
+  min-width:42px;line-height:1;font-weight:900;
+}
+.steptxt strong{display:block;font-family:var(--fh);font-size:14px;color:var(--ink);margin-bottom:5px;letter-spacing:.3px}
+.steptxt span{font-size:14px;font-weight:300;color:var(--ink2);line-height:1.75;font-style:italic}
+ 
+/* ─── BEFORE/AFTER ─── */
+.batable{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px}
+.bacol{border:2px solid var(--leather-warm);border-radius:4px;padding:18px}
+.bacol.before{background:linear-gradient(135deg,#EDD5C8,#E0C0A8);border-color:#8B4020}
+.bacol.after{background:linear-gradient(135deg,#E8DDC8,#D4C4A0);border-color:var(--leather-warm)}
+.bacol-head{font-family:var(--fh);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.bacol.before .bacol-head{color:#8B4020}
+.bacol.after .bacol-head{color:var(--leather-dark)}
+.baitem{display:flex;gap:10px;font-size:13px;font-weight:300;color:var(--ink2);line-height:1.65;margin-bottom:7px;font-style:italic}
+.baitem::before{content:'—';font-family:var(--fh);font-size:11px;flex-shrink:0;margin-top:2px}
+.bacol.before .baitem::before{color:#8B4020}
+.bacol.after .baitem::before{color:var(--leather-warm)}
+ 
+/* ─── KPI CARDS ─── */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.kcard{
+  border:2px solid var(--leather-warm);border-radius:4px;padding:18px 20px;
+  background:linear-gradient(135deg,#F5EDD8,#EAD9BE);
+}
+.kcard.accent{
+  background:linear-gradient(135deg,var(--leather-dark),var(--leather-mid));
+  border-color:var(--leather-tan);
+}
+.kv{font-family:var(--fh);font-size:32px;line-height:1;color:var(--ink);font-weight:900}
+.kv.light{color:var(--leather-light)}
+.kl{font-family:var(--fm);font-size:8px;color:var(--muted);letter-spacing:1.5px;margin-top:7px;text-transform:uppercase}
+.kl.light{color:rgba(212,165,116,.7)}
+ 
+/* ─── 8M TABLE ─── */
+.m8grid{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.mrow{
+  display:grid;grid-template-columns:140px 1fr;
+  border:2px solid var(--leather-warm);border-radius:4px;overflow:hidden;
+}
+.mkey{
+  background:linear-gradient(135deg,var(--leather-dark),var(--leather-mid));
+  padding:14px 16px;display:flex;flex-direction:column;justify-content:center;
+}
+.mkey-label{font-family:var(--fh);font-size:12px;color:var(--leather-light);letter-spacing:.5px}
+.mkey-sub{font-family:var(--fm);font-size:8px;color:rgba(196,133,74,.6);letter-spacing:1px;margin-top:3px;text-transform:uppercase}
+.mval{
+  background:linear-gradient(135deg,#F5EDD8,#EAD9BE);
+  padding:14px 18px;
+  font-size:13px;font-weight:300;color:var(--ink2);line-height:1.7;font-style:italic;
+}
+.mval strong{font-family:var(--fh);font-size:13px;color:var(--ink);font-style:normal}
+ 
+/* ─── PRODUCT VARIATIONS ─── */
+.varGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.varCard{border:2px solid var(--leather-warm);border-radius:6px;overflow:hidden}
+.varCard.mag{border-color:var(--leather-tan)}
+.varCard.grip{border-color:#666}
+.varHead{padding:14px 18px;display:flex;align-items:center;gap:12px}
+.varHead.mag{background:linear-gradient(135deg,var(--leather-dark),var(--leather-warm))}
+.varHead.grip{background:linear-gradient(135deg,var(--rubber-dark),var(--rubber-mid))}
+.varTitle{font-family:var(--fh);font-size:16px;color:#fff;font-weight:700}
+.varBadge{
+  font-family:var(--fm);font-size:7px;padding:3px 8px;border-radius:2px;letter-spacing:.8px;text-transform:uppercase;
+  background:rgba(255,255,255,.15);color:rgba(255,255,255,.8);margin-left:auto;
+}
+.varBody{padding:14px 18px;background:linear-gradient(135deg,#F5EDD8,#EAD9BE)}
+.varBody.dark{background:linear-gradient(135deg,#1F1F1F,#2A2A2A)}
+.varItem{display:flex;gap:8px;font-size:13px;font-weight:300;color:var(--ink2);margin-bottom:6px;font-style:italic;line-height:1.6}
+.varItem.light{color:#bbb}
+.varItem::before{content:'▸';font-size:9px;color:var(--leather-tan);flex-shrink:0;margin-top:3px}
+.varItem.light::before{color:#888}
+ 
+/* ─── FINISH CARDS ─── */
+.finishGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.finCard{border:2px solid var(--leather-warm);border-radius:4px;overflow:hidden}
+.finHead{padding:12px 16px;font-family:var(--fh);font-size:14px;font-weight:700}
+.finHead.leather{background:linear-gradient(135deg,var(--leather-mid),var(--leather-warm));color:var(--leather-cream)}
+.finHead.matte{background:linear-gradient(135deg,var(--rubber-dark),var(--rubber-mid));color:#ddd}
+.finBody{padding:14px 16px;background:linear-gradient(135deg,#F5EDD8,#EAD9BE)}
+.finBody.dark{background:#222}
+.finRow{font-size:12px;font-weight:300;font-style:italic;color:var(--ink2);margin-bottom:5px;padding-left:12px;border-left:2px solid var(--leather-tan)}
+.finRow.light{color:#aaa;border-left-color:#555}
+ 
+/* ─── ORDER SECTION ─── */
+.orderWrap{border:3px solid var(--leather-dark);border-radius:6px;overflow:hidden;margin-bottom:28px}
+.orderHead{
+  background:linear-gradient(135deg,var(--leather-dark) 0%,var(--leather-mid) 60%,var(--leather-warm) 100%);
+  padding:24px 28px;
+}
+.orderHead h3{font-family:var(--fh);font-size:28px;color:#fff;font-weight:900;letter-spacing:-0.5px}
+.orderHead p{font-family:var(--fb);font-size:13px;color:rgba(255,255,255,.65);font-style:italic;margin-top:6px}
+.orderBody{padding:26px 28px;background:linear-gradient(135deg,var(--leather-pale),var(--leather-cream))}
+.orderGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px}
+.orderCard{
+  border:2px solid var(--leather-warm);border-radius:4px;padding:16px;
+  background:linear-gradient(135deg,#FFF9F0,#F5EDD8);cursor:pointer;
+  transition:border-color .18s,transform .15s;
+}
+.orderCard:hover{border-color:var(--leather-tan);transform:translateY(-2px)}
+.orderCard.selected{border-color:var(--leather-dark);background:linear-gradient(135deg,var(--leather-dark),var(--leather-mid))}
+.orderCard-title{font-family:var(--fh);font-size:15px;color:var(--ink);margin-bottom:5px}
+.orderCard.selected .orderCard-title{color:#fff}
+.orderCard-desc{font-family:var(--fb);font-size:12px;font-style:italic;color:var(--muted);line-height:1.6}
+.orderCard.selected .orderCard-desc{color:rgba(212,165,116,.8)}
+.orderCard-price{font-family:var(--fh);font-size:22px;color:var(--leather-warm);margin-top:10px;font-weight:900}
+.orderCard.selected .orderCard-price{color:var(--leather-light)}
+.orderFields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.orderField{display:flex;flex-direction:column;gap:5px}
+.orderField label{font-family:var(--fm);font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
+.orderField select,.orderField input{
+  background:linear-gradient(135deg,#FFF9F0,#F5EDD8);
+  border:1.5px solid var(--leather-warm);border-radius:3px;
+  padding:9px 12px;font-family:var(--fb);font-size:14px;color:var(--ink);
+  outline:none;transition:border-color .15s;cursor:pointer;
+}
+.orderField select:focus,.orderField input:focus{border-color:var(--leather-dark)}
+.orderBtn{
+  width:100%;padding:16px;
+  background:linear-gradient(135deg,var(--leather-dark) 0%,var(--leather-warm) 60%,var(--gold) 100%);
+  color:#fff;font-family:var(--fh);font-size:16px;letter-spacing:2px;text-transform:uppercase;
+  border:none;border-radius:4px;cursor:pointer;transition:opacity .15s,transform .15s;
+  position:relative;overflow:hidden;
+}
+.orderBtn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.1) 50%,transparent 100%);
+  transform:translateX(-100%);transition:transform .4s;
+}
+.orderBtn:hover::after{transform:translateX(100%)}
+.orderBtn:hover{opacity:.92;transform:translateY(-2px)}
+.orderNote{font-family:var(--fm);font-size:9px;color:var(--muted);text-align:center;margin-top:12px;letter-spacing:.5px}
+ 
+/* ─── MEASUREMENT TABLE ─── */
+.measTable{width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px}
+.measTable th{
+  background:linear-gradient(135deg,var(--leather-dark),var(--leather-mid));
+  color:var(--leather-cream);font-family:var(--fh);font-size:12px;
+  padding:10px 14px;text-align:left;letter-spacing:.5px;border:1px solid var(--leather-warm);
+}
+.measTable td{
+  padding:10px 14px;border:1px solid var(--rule);font-family:var(--fb);
+  font-style:italic;font-size:13px;color:var(--ink2);background:linear-gradient(135deg,#F9F3E8,#F0E6D3);
+}
+.measTable tr:nth-child(even) td{background:linear-gradient(135deg,#F0E6D3,#E8D9BF)}
+.measTable td:first-child{font-family:var(--fh);font-style:normal;font-weight:700;color:var(--ink);font-size:12px}
+.measTable td:nth-child(2){font-family:var(--fm);font-size:11px;color:var(--leather-warm);font-style:normal}
+ 
+/* ─── QUOTES ─── */
+.quotes{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.quote{
+  background:linear-gradient(135deg,#F5EDD8,#EAD9BE);
+  border-left:4px solid var(--leather-tan);
+  padding:16px 20px;border-radius:0 4px 4px 0;
+}
+.quote p{font-family:var(--fb);font-size:15px;font-style:italic;color:var(--ink);line-height:1.7}
+.quote cite{font-family:var(--fm);font-size:9px;color:var(--muted);margin-top:7px;display:block;letter-spacing:1px}
+ 
+/* ─── SCROLL HINT ─── */
+.shint{
+  position:absolute;bottom:18px;left:52px;
+  font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:1.5px;
+  display:flex;align-items:center;gap:10px;opacity:.5;pointer-events:none;text-transform:uppercase;
+}
+.shint::before{content:'';width:28px;height:1.5px;background:linear-gradient(90deg,var(--leather-tan),var(--gold))}
+ 
+/* ─── RIGHT PANEL ─── */
+.cpanel{
+  border-left:2px solid var(--leather-warm);
+  background:linear-gradient(180deg,var(--leather-dark) 0%,var(--leather-mid) 40%,#3D2010 75%,var(--leather-warm) 100%);
+  padding:24px 20px;display:flex;flex-direction:column;overflow-y:auto;
+  position:relative;
+}
+.cpanel::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 5px,rgba(255,255,255,.015) 5px,rgba(255,255,255,.015) 6px);
+}
+.cpanel > *{position:relative;z-index:1}
+.cpanel::-webkit-scrollbar{width:3px}
+.cpanel::-webkit-scrollbar-thumb{background:var(--leather-tan)}
+.c-badge{
+  background:linear-gradient(135deg,var(--leather-light),var(--gold-light));
+  color:var(--leather-dark);font-family:var(--fm);font-size:8px;letter-spacing:2px;
+  padding:5px 12px;border-radius:2px;margin-bottom:12px;display:inline-block;text-transform:uppercase;
+}
+.c-img{
+  width:100%;aspect-ratio:4/3;
+  background:linear-gradient(135deg,rgba(196,133,74,.2),rgba(184,134,11,.1));
+  border-radius:4px;margin-bottom:18px;flex-shrink:0;
+  border:2px solid rgba(196,133,74,.4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;
+}
+.c-img::before{
+  content:'';position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(196,133,74,.06) 6px,rgba(196,133,74,.06) 7px);
+}
+.c-img-label{font-family:var(--fh);font-size:13px;color:var(--leather-light);letter-spacing:2px;z-index:1}
+.c-img-sub{font-family:var(--fm);font-size:9px;color:rgba(196,133,74,.6);z-index:1;letter-spacing:.5px}
+.c-head{font-family:var(--fh);font-size:18px;color:#fff;margin-bottom:8px;letter-spacing:-.5px;font-weight:700}
+.c-head em{color:var(--leather-light);font-style:normal}
+.c-brief{
+  font-family:var(--fb);font-size:12px;font-style:italic;color:rgba(255,255,255,.6);
+  line-height:1.7;border-left:2px solid var(--leather-tan);padding-left:10px;margin-bottom:16px;
+}
+.c-rule{height:1px;background:rgba(255,255,255,.1);margin:14px 0}
+.c-rule.bold{height:2px;background:rgba(196,133,74,.3)}
+.c-desc{font-family:var(--fb);font-size:11px;font-style:italic;color:rgba(255,255,255,.55);line-height:1.65;margin-bottom:14px}
+.cfield{margin-bottom:11px}
+.ckey{font-family:var(--fm);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(196,133,74,.5);margin-bottom:3px}
+.cval{font-family:var(--fh);font-size:12px;color:#fff;letter-spacing:.3px}
+.cval.r{color:var(--leather-light)}
+.cvisit{
+  display:block;margin-top:14px;padding:13px;text-align:center;
+  font-family:var(--fh);font-size:11px;letter-spacing:2px;color:var(--leather-dark);
+  background:linear-gradient(135deg,var(--leather-light),var(--gold-light));
+  border:none;border-radius:3px;text-decoration:none;transition:opacity .15s;text-transform:uppercase;
+  cursor:pointer;
+}
+.cvisit:hover{opacity:.88}
+ 
+/* ─── MOBILE NAV ─── */
+.mob-nav{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(135deg,var(--leather-dark),var(--leather-mid));
+  border-top:2px solid var(--leather-warm);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:env(safe-area-inset-bottom,0);
+}
+.mob-nav::-webkit-scrollbar{display:none}
+.mob-inner{display:flex;min-width:max-content;padding:0 8px}
+.mbtn{
+  font-family:var(--fm);font-size:8px;letter-spacing:.8px;text-transform:uppercase;
+  color:rgba(255,255,255,.35);padding:13px 12px;background:none;border:none;
+  border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;
+  transition:color .15s,border-color .15s;
+}
+.mbtn.active{color:#fff;border-bottom-color:var(--leather-tan)}
+ 
+/* ─── MOBILE INFO BUTTON ─── */
+.mob-infobtn{
+  display:none;position:fixed;top:calc(var(--hh) + 10px);right:14px;z-index:300;
+  font-family:var(--fm);font-size:8px;letter-spacing:1px;color:var(--leather-dark);
+  background:linear-gradient(135deg,var(--leather-light),var(--gold-light));
+  border:none;padding:8px 14px;border-radius:3px;cursor:pointer;text-transform:uppercase;
+}
+ 
+/* ─── MOBILE INFO PANEL — FIXED ─── */
+.mob-infopanel{
+  display:none;
+  position:fixed;top:var(--hh);left:0;right:0;bottom:0;
+  background:linear-gradient(180deg,var(--leather-dark) 0%,var(--leather-mid) 40%,#3D2010 80%);
+  z-index:250;overflow-y:auto;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+  padding:24px 20px 80px;
+}
+.mob-infopanel.open{transform:translateX(0)}
+.mob-infopanel .c-badge{display:inline-block}
+.mob-infopanel .c-head{font-size:22px}
+.mob-infopanel .c-brief{font-size:13px}
+.mob-infopanel .c-img{aspect-ratio:16/9}
+ 
+/* RESPONSIVE */
+@media(max-width:1060px){:root{--right:240px;--left:160px}}
+@media(max-width:960px){
+  body{overflow:auto}
+  .layout{display:block;height:auto;padding-top:var(--hh)}
+  .rail,.cpanel{display:none}
+  .content-col{overflow:visible;height:auto}
+  .swrap{position:static;height:auto}
+  .dsec{position:static;opacity:1!important;transform:none!important;pointer-events:auto!important;padding:30px 24px 60px;border-bottom:2px solid var(--rule)}
+  .shint{display:none}
+  .mob-nav{display:block}
+  .mob-infobtn{display:block}
+  .mob-infopanel{display:block}
+}
+@media(max-width:768px){
+  .igrid.c3{grid-template-columns:1fr 1fr}
+  .kgrid,.batable,.varGrid,.finishGrid,.orderGrid{grid-template-columns:1fr}
+  .mrow{grid-template-columns:110px 1fr}
+  .orderFields{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  :root{--hh:50px}
+  .igrid.c2,.igrid.c3{grid-template-columns:1fr}
+  .s-title{font-size:28px}
+  .dsec{padding:20px 16px 56px}
+}
+@media(max-width:480px){.s-title{font-size:24px}.sv{font-size:32px}.h-tag{display:none}}
+</style>
+</head>
+<body>
+ 
+<header>
+  <div class="h-logo">LINKPOD<sup>™</sup></div>
+  <div class="h-sep"></div>
+  <div class="h-tag">2-in-1 Magnetic MiFi &amp; Phone Carry System — Product Case Study</div>
+  <div class="h-cur" id="hCur">Overview</div>
+</header>
+ 
+<div class="ptrack"><div class="pbar" id="pbar"></div></div>
+ 
+<button class="mob-infobtn" id="mobInfoBtn">INFO ▸</button>
+ 
+<!-- MOBILE INFO PANEL -->
+<div class="mob-infopanel" id="mobInfoPanel">
+  <div class="c-badge">Case Study 2025</div>
+  <div class="c-img">
+    <svg width="52" height="44" viewBox="0 0 60 44" fill="none" style="position:relative;z-index:1">
+      <rect x="3" y="5" width="15" height="32" rx="3" stroke="#C4854A" stroke-width="2"/>
+      <path d="M7 11h7M11 35v0" stroke="#C4854A" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M18 21h10" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 1.5"/>
+      <circle cx="28" cy="21" r="2.5" fill="#D4A574"/>
+      <rect x="30" y="13" width="20" height="18" rx="2.5" stroke="#C4854A" stroke-width="2"/>
+      <path d="M35 18h10M35 22h7M35 26h8" stroke="#C4854A" stroke-width="1.3" stroke-linecap="round"/>
+      <path d="M49 11c2.5 2 4 5.5 4 9s-1.5 7-4 9" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <span class="c-img-label">LINKPOD™</span>
+    <span class="c-img-sub">2-in-1 Carry System</span>
+  </div>
+  <div class="c-head">MiFi Carry<em>.</em></div>
+  <div class="c-brief">"Your internet, finally attached." A 2-in-1 magnetic MiFi pouch and phone stand — two devices, one unified carry experience.</div>
+  <div class="c-rule bold"></div>
+  <div class="c-desc">LINKPOD™ solves system integration — not just storage. Two product variations, two premium finishes. Handcrafted for low volume, manufactured for scale.</div>
+  <div class="c-rule"></div>
+  <div class="cfield"><div class="ckey">Product Type</div><div class="cval r">2-in-1 Magnetic Carry System</div></div>
+  <div class="cfield"><div class="ckey">Variations</div><div class="cval">Magnetic Snap + Rubber Corner Grip</div></div>
+  <div class="cfield"><div class="ckey">Finishes</div><div class="cval r">PU Leather + Matte Rubber</div></div>
+  <div class="cfield"><div class="ckey">Production</div><div class="cval">Manual Cast + Manufacturer</div></div>
+  <div class="cfield"><div class="ckey">Sizing</div><div class="cval r">One Size Fits All</div></div>
+  <div class="cfield"><div class="ckey">Target</div><div class="cval">Remote, mobile, travel, field</div></div>
+  <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+  <div class="c-rule bold"></div>
+  <div class="cfield"><div class="ckey">Tagline</div><div class="cval r">"A connected object that lives with your phone."</div></div>
+  <a class="cvisit" href="#sec-order-mob" onclick="document.getElementById('mobInfoPanel').classList.remove('open');document.getElementById('mobInfoBtn').textContent='INFO ▸';return false;">ORDER NOW →</a>
+</div>
+ 
+<div class="layout">
+  <aside class="rail" id="rail"><div class="rail-lbl">Sections</div></aside>
+ 
+  <main class="content-col">
+    <div class="swrap" id="swrap">
+ 
+      <!-- ═══════════════════════════════════════
+           01 OVERVIEW
+      ════════════════════════════════════════ -->
+      <section class="dsec visible" id="sec-overview" data-i="0">
+        <div class="s-num">01 <em>/</em> 10 — OVERVIEW</div>
+        <h2 class="s-title">Overview</h2>
+        <div class="s-sub">The 2-in-1 Magnetic MiFi Router Pouch + Phone Integration Stand System</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ is a premium 2-in-1 carry system that unifies your MiFi router and smartphone into one intentional ecosystem. <strong>It transforms the MiFi from a loose, forgotten device into a structured daily companion — physically attached, purposefully designed, and beautifully finished in PU leather or matte rubber.</strong></p>
+        <div class="trow">
+          <span class="tag gold">2-in-1 System</span>
+          <span class="tag fill">PU Leather</span>
+          <span class="tag fill">Matte Rubber</span>
+          <span class="tag">Magnetic Snap</span>
+          <span class="tag">Corner Grip</span>
+          <span class="tag">Universal Fit</span>
+          <span class="tag">2025</span>
+        </div>
+        <div class="igrid c1 img-wrap">
+          <div class="img-ph r169 dark">
+            <div class="ph-dim">1600 × 900</div>
+            <svg width="56" height="44" viewBox="0 0 60 44" fill="none">
+              <rect x="3" y="5" width="15" height="32" rx="3" stroke="#C4854A" stroke-width="2"/>
+              <path d="M7 11h7M11 35v0" stroke="#C4854A" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M18 21h10" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 1.5"/>
+              <circle cx="28" cy="21" r="2.5" fill="#D4A574"/>
+              <rect x="30" y="13" width="20" height="18" rx="2.5" stroke="#C4854A" stroke-width="2"/>
+              <path d="M35 18h10M35 22h7M35 26h8" stroke="#C4854A" stroke-width="1.3" stroke-linecap="round"/>
+              <path d="M49 11c2.5 2 4 5.5 4 9s-1.5 7-4 9" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <div class="ph-label">HERO IMAGE — LINKPOD™ MAGNETIC ATTACHED TO PHONE<br>PU LEATHER FINISH — BOTH VARIATIONS SIDE BY SIDE</div>
+          </div>
+        </div>
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">📱</div>
+            <div class="ph-label">CARRY MODE — MIFI LOCKED<br>TO PHONE AS ONE SYSTEM</div>
+          </div>
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🖥</div>
+            <div class="ph-label">STAND MODE — DESKTOP ANGLE<br>VENTILATED + VISIBLE</div>
+          </div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           02 THE PROBLEM
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-problem" data-i="1">
+        <div class="s-num">02 <em>/</em> 10 — THE PROBLEM</div>
+        <h2 class="s-title">The Problem</h2>
+        <div class="s-sub">A disconnected digital life — the MiFi has no home in your ecosystem</div>
+        <div class="s-rule"></div>
+        <p class="s-text">In a world that runs on constant connectivity, the MiFi router remains strangely isolated. <strong>Users rely on it daily, yet it floats loosely in bags, pockets, and desks — treated like a temporary tool, not a daily essential.</strong> Meanwhile, the smartphone is always anchored, visible, and intentionally designed around.</p>
+        <div class="alert">
+          <strong>The silent friction</strong>
+          <span>"My internet is with me... but never together with me." The MiFi has no defined place in the user's ecosystem — no anchor, no position, no intentional carry relationship with the device it feeds most.</span>
+        </div>
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">😤</div>
+            <div class="ph-label">USER PAIN POINT — MIFI LOST<br>IN BAG, BURIED UNDER ITEMS</div>
+          </div>
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">📦</div>
+            <div class="ph-label">NO DEFINED CARRY PLACE —<br>FLOATING LOOSE DAILY</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div><div class="sv accent">Loose</div><div class="sl">No anchor in carry</div></div>
+          <div><div class="sv accent">Lost</div><div class="sl">Frequently misplaced</div></div>
+          <div><div class="sv accent">Awkward</div><div class="sl">No in-use positioning</div></div>
+          <div><div class="sv accent">Apart</div><div class="sl">Separated from phone</div></div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           03 THE INSIGHT
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-insight" data-i="2">
+        <div class="s-num">03 <em>/</em> 10 — THE INSIGHT</div>
+        <h2 class="s-title">The Insight</h2>
+        <div class="s-sub">Connectivity should be physical — not just digital</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The breakthrough came from one observation: <strong>if your phone is your digital hub, why is your internet source still treated like a separate object?</strong> MiFi routers were designed for connectivity — but not for integration, visibility, or mobility harmony. The problem wasn't the device. It was the absence of a physical ecosystem.</p>
+        <div class="quotes">
+          <div class="quote">
+            <p>If your phone is your digital hub, why is your internet source still treated like a separate object?</p>
+            <cite>— The core LINKPOD™ insight</cite>
+          </div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Phone = Interface</strong>
+              <span>The smartphone is the anchor of modern digital life — always present, always intentional, always in hand. It is the primary interface for everything you do.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>MiFi = Connectivity Engine</strong>
+              <span>The MiFi provides the data the phone depends on — yet it lives separately, floating in a bag, with no relationship to the device it feeds daily.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>LINKPOD™ = The Physical Bridge</strong>
+              <span>Not an accessory — a system. A way to physically unify two dependent devices into one intentional, structured carry experience that lives with your phone.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c1 img-wrap">
+          <div class="img-ph r169">
+            <div class="ph-dim">1600 × 900</div>
+            <div class="ph-icon">🔗</div>
+            <div class="ph-label">DIAGRAM — PHONE + LINKPOD™ + MIFI SYSTEM UNIFICATION<br>PHYSICAL BRIDGE CONCEPT ILLUSTRATION</div>
+          </div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           04 PRODUCT DEVELOPMENT PROCESS
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-process" data-i="3">
+        <div class="s-num">04 <em>/</em> 10 — PRODUCT DEVELOPMENT</div>
+        <h2 class="s-title">Dev Process</h2>
+        <div class="s-sub">Industry-standard new product development — from insight to market</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ was developed using a structured <strong>Stage-Gate NPD (New Product Development) process</strong> — a proven industry framework that ensures quality, feasibility, and market alignment at every phase before committing to the next stage of investment.</p>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">01</div>
+            <div class="steptxt">
+              <strong>Idea Generation &amp; Opportunity Screening</strong>
+              <span>Problem identification through user observation: MiFi routers lack physical integration with smartphones. Opportunity assessed against market gap, technical feasibility, and commercial viability using a weighted scoring matrix (technical fit 40%, market attractiveness 35%, strategic alignment 25%).</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">02</div>
+            <div class="steptxt">
+              <strong>Concept Development &amp; Testing</strong>
+              <span>Three concepts developed: (A) adhesive pouch, (B) magnetic snap system, (C) rubber corner-grip system. Concept tests conducted with 40 target users across remote worker, student, and traveller segments. Magnetic and grip concepts advanced based on preference scores and usability ratings ≥7/10.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">03</div>
+            <div class="steptxt">
+              <strong>Business &amp; Technical Feasibility Analysis</strong>
+              <span>Material selection — PU leather (premium feel, durability, weatherproof) vs matte rubber (tactile grip, everyday resilience). BOM costing, margin analysis, MOQ break-even modelling, and manufacturing pathway assessment: manual cast for ≤50 units, factory tooling for 500+ units.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">04</div>
+            <div class="steptxt">
+              <strong>Prototype Development (Iterative)</strong>
+              <span>Three prototype rounds (P1: foam mock, P2: 3D-printed ABS with PU wrap, P3: cast silicone with final material). Key iterations: magnet strength calibration (N45 neodymium, 1.2 kg pull force), corner grip durometer testing (Shore 60A rubber), vent channel spacing for thermal clearance ≥2mm.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">05</div>
+            <div class="steptxt">
+              <strong>Testing, Validation &amp; Quality Gates</strong>
+              <span>Drop test: 1.5m onto concrete (pass threshold: no functional damage after 10 drops). Magnet retention: ≥800g lateral force before detach. Grip adhesion: zero slip at 45° incline with 300g load. Dimensional tolerance: ±0.5mm. Thermal: surface temp ≤42°C at 1-hour MiFi operation in stand mode.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">06</div>
+            <div class="steptxt">
+              <strong>Market Launch &amp; Commercialisation</strong>
+              <span>DTC (direct-to-consumer) online launch via e-commerce platform. Low-volume (≤50 units): handcast by artisan team, QC inspected individually. High-volume (500+ units): injected PU and moulded rubber via certified manufacturer, batch QC sampling per AQL 2.5 standard.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🏭</div>
+            <div class="ph-label">PROTOTYPE PROGRESSION —<br>P1 FOAM → P2 3D-PRINT → P3 CAST</div>
+          </div>
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🔬</div>
+            <div class="ph-label">QUALITY GATE TESTING —<br>DROP + MAGNET + THERMAL</div>
+          </div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           05 PRODUCT VARIATIONS
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-variations" data-i="4">
+        <div class="s-num">05 <em>/</em> 10 — PRODUCT VARIATIONS</div>
+        <h2 class="s-title">Two Variations</h2>
+        <div class="s-sub">Magnetic Snap or Rubber Corner Grip — two philosophies, one standard of quality</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ is available in two configurations, designed for different carry philosophies. <strong>Both share the same one-size-fits-all dimensional standard, the same dual Pouch + Stand functionality, and both are available in PU Leather or Matte Rubber finishes.</strong></p>
+        <div class="varGrid">
+          <div class="varCard mag">
+            <div class="varHead mag">
+              <div class="varTitle">V1 — Magnetic</div>
+              <div class="varBadge">Snap System</div>
+            </div>
+            <div class="varBody">
+              <div class="varItem">N45 neodymium magnet array — 1.2 kg pull force</div>
+              <div class="varItem">Instant snap-on / snap-off — one hand, zero friction</div>
+              <div class="varItem">Works with MagSafe-compatible phones natively</div>
+              <div class="varItem">Magnetic ring adapter included for non-magnetic phones</div>
+              <div class="varItem">Adhesive mount patch also included as fallback</div>
+              <div class="varItem">Also attaches to metal surfaces, bags, dashboards</div>
+              <div class="varItem">Ideal for users who value speed and seamless daily carry</div>
+            </div>
+          </div>
+          <div class="varCard grip">
+            <div class="varHead grip">
+              <div class="varTitle">V2 — Rubber Grip</div>
+              <div class="varBadge">Corner Hook</div>
+            </div>
+            <div class="varBody dark">
+              <div class="varItem light">Shore 60A rubber corner hooks — mechanical grip</div>
+              <div class="varItem light">Four corner hooks grip phone edges universally</div>
+              <div class="varItem light">No magnets, no adhesive — pure mechanical attachment</div>
+              <div class="varItem light">Works on all phone sizes via flexible hook geometry</div>
+              <div class="varItem light">Tool-free attachment and removal — seconds</div>
+              <div class="varItem light">Anti-slip rubber surface contact — zero scratch risk</div>
+              <div class="varItem light">Ideal for heavy-duty users or MagSafe-free phones</div>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43 dark">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🧲</div>
+            <div class="ph-label">V1 MAGNETIC — SNAP ATTACHMENT<br>PU LEATHER FINISH CLOSE-UP</div>
+          </div>
+          <div class="img-ph r43 rubber">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🤝</div>
+            <div class="ph-label">V2 RUBBER GRIP — CORNER HOOKS<br>MATTE RUBBER FINISH CLOSE-UP</div>
+          </div>
+        </div>
+ 
+        <p class="s-text" style="margin-top:16px"><strong>Finishes — Two Premium Materials</strong></p>
+        <div class="finishGrid">
+          <div class="finCard">
+            <div class="finHead leather">PU Leather Finish</div>
+            <div class="finBody">
+              <div class="finRow" style="margin-bottom:8px">Synthetic PU leather exterior — premium tactile feel</div>
+              <div class="finRow" style="margin-bottom:8px">Water-resistant, scratch-resistant outer surface</div>
+              <div class="finRow" style="margin-bottom:8px">Microfibre interior lining — MiFi scratch protection</div>
+              <div class="finRow" style="margin-bottom:8px">Hand-stitched edge detail on low-volume units</div>
+              <div class="finRow" style="margin-bottom:8px">Available: Cognac Tan, Jet Black, Espresso Brown</div>
+              <div class="finRow">Premium positioning — ideal for professional carry</div>
+            </div>
+          </div>
+          <div class="finCard">
+            <div class="finHead matte">Matte Rubber Finish</div>
+            <div class="finBody dark">
+              <div class="finRow light" style="margin-bottom:8px">Matte-finish vulcanised rubber exterior</div>
+              <div class="finRow light" style="margin-bottom:8px">Non-slip grip surface — confident one-hand use</div>
+              <div class="finRow light" style="margin-bottom:8px">High impact resistance — drop-hardened profile</div>
+              <div class="finRow light" style="margin-bottom:8px">Sweat-resistant, UV-stable outdoor use</div>
+              <div class="finRow light" style="margin-bottom:8px">Available: Stealth Black, Slate Grey, Forest Green</div>
+              <div class="finRow light">Everyday-tough — ideal for field and active carry</div>
+            </div>
+          </div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           06 THE SOLUTION
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-solution" data-i="5">
+        <div class="s-num">06 <em>/</em> 10 — THE SOLUTION</div>
+        <h2 class="s-title">The Solution</h2>
+        <div class="s-sub">Four core innovations that unify portable connectivity</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ doesn't just carry your MiFi — <strong>it integrates it into your phone's ecosystem through a magnetic or mechanical interface, dual-mode function, universal one-size compatibility, and ergonomics engineered around real daily behaviour.</strong></p>
+        <div class="steps">
+          <div class="step">
+            <div class="stepnum">1</div>
+            <div class="steptxt">
+              <strong>Magnetic / Mechanical Ecosystem Lock-In</strong>
+              <span>V1: magnetic array allows instant phone attachment, bag mounting, and surface docking. V2: rubber corner hooks grip any phone mechanically. Both designs achieve zero-separation carry — the MiFi becomes part of your carry system, not apart from it.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">2</div>
+            <div class="steptxt">
+              <strong>2-in-1 Function: Pouch + Stand</strong>
+              <span>Carry Mode: secure protective pouch — prevents loss, scratches, and loose movement. Stand Mode: stable desktop positioning at an optimised 65° viewing angle for signal monitoring, battery status, and button access — ventilation channel maintains ≤42°C surface temperature.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">3</div>
+            <div class="steptxt">
+              <strong>Universal One-Size-Fits-All Design</strong>
+              <span>Internal cavity designed to accommodate 95% of MiFi routers globally (dimensions: up to 115mm × 75mm × 25mm). The flexible microfibre lining self-adjusts to device shape. No adapters or inserts required. True universal fit — one product, any MiFi.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="stepnum">4</div>
+            <div class="steptxt">
+              <strong>Everyday Ergonomics Engineering</strong>
+              <span>One-hand attachment (V1: snap in 0.8s, V2: hook in 2.1s average). Desk-stable angle. Heat-aware airflow spacing (2mm vent channel). Button visibility access window. Weighs 38g (leather) / 42g (rubber) — imperceptible in daily carry.</span>
+            </div>
+          </div>
+        </div>
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">📐</div>
+            <div class="ph-label">DIMENSION DIAGRAM — UNIVERSAL<br>FIT CAVITY 115×75×25MM</div>
+          </div>
+          <div class="img-ph r43 dark">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🌡</div>
+            <div class="ph-label">THERMAL VIEW — VENT CHANNELS<br>≤42°C SURFACE TEMP TEST</div>
+          </div>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           07 TARGET USERS
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-users" data-i="6">
+        <div class="s-num">07 <em>/</em> 10 — TARGET USERS</div>
+        <h2 class="s-title">Who It's For</h2>
+        <div class="s-sub">Every person whose daily life runs on portable connectivity</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ is designed for anyone whose mobile data connection is central to daily workflow — <strong>people who need their MiFi to be as reliable, accessible, and integrated as their phone already is.</strong></p>
+ 
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:26px">
+          <div class="img-ph r11">
+            <div class="ph-icon">💻</div>
+            <div class="ph-label" style="font-size:8px">REMOTE WORKER</div>
+          </div>
+          <div class="img-ph r11">
+            <div class="ph-icon">🎓</div>
+            <div class="ph-label" style="font-size:8px">STUDENT</div>
+          </div>
+          <div class="img-ph r11">
+            <div class="ph-icon">🎥</div>
+            <div class="ph-label" style="font-size:8px">CREATOR</div>
+          </div>
+          <div class="img-ph r11">
+            <div class="ph-icon">🌍</div>
+            <div class="ph-label" style="font-size:8px">TRAVELLER</div>
+          </div>
+          <div class="img-ph r11">
+            <div class="ph-icon">📡</div>
+            <div class="ph-label" style="font-size:8px">MOBILE-FIRST</div>
+          </div>
+          <div class="img-ph r11">
+            <div class="ph-icon">🏢</div>
+            <div class="ph-label" style="font-size:8px">FIELD WORKER</div>
+          </div>
+        </div>
+ 
+        <div class="note">
+          <strong>The common thread</strong>
+          <span>Every target user carries their MiFi daily — but none of them have a system that makes it feel intentional. LINKPOD™ gives their connectivity hardware the same design consideration and daily respect their phone already receives.</span>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           08 8M'S FRAMEWORK
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-8ms" data-i="7">
+        <div class="s-num">08 <em>/</em> 10 — 8M'S FRAMEWORK</div>
+        <h2 class="s-title">8M's Analysis</h2>
+        <div class="s-sub">Systematic root-cause and operational framework for LINKPOD™ production</div>
+        <div class="s-rule"></div>
+        <p class="s-text">The <strong>8M's Framework</strong> (an extension of the Ishikawa cause-and-effect methodology) provides a structured lens across all operational dimensions — ensuring quality, consistency, and scalability whether producing 10 units by hand or 10,000 units at a manufacturing facility.</p>
+ 
+        <div class="m8grid">
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Manpower</div>
+              <div class="mkey-sub">(Man)</div>
+            </div>
+            <div class="mval">
+              <strong>Low volume:</strong> Artisan cast team — 2–3 skilled craftspeople trained in PU leather wrap, silicone casting, and quality inspection. Each unit hand-finished, individually QC'd.<br>
+              <strong>High volume:</strong> Factory operators per standard work instructions (SWI). Operator certification required for injection moulding and PU lamination. QA inspector ratio 1:50 units minimum.<br>
+              <strong>Training:</strong> Onboarding via visual work instructions (VWI); competency assessed before production clearance.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Machine</div>
+              <div class="mkey-sub">(Equipment)</div>
+            </div>
+            <div class="mval">
+              <strong>Low volume:</strong> Silicone casting molds (CNC-machined aluminium), heat press for PU leather bonding, ultrasonic welding pen for seam finishing.<br>
+              <strong>High volume:</strong> Injection moulding press (clamping force 120T min), CNC router for mould tooling, automated PU lamination line.<br>
+              <strong>Calibration:</strong> Press temperature calibrated ±2°C; mold wear inspected every 500 cycles. Magnet insertion jig ensures positional accuracy ±0.3mm.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Material</div>
+              <div class="mkey-sub">(Inputs)</div>
+            </div>
+            <div class="mval">
+              <strong>PU Leather:</strong> 1.2mm PU-coated microfibre, REACH-compliant, UV-stable, minimum 50,000 Martindale rub cycles.<br>
+              <strong>Rubber:</strong> Shore 60A vulcanised rubber, RoHS-compliant, minimum 200% elongation at break (ASTM D412).<br>
+              <strong>Magnets:</strong> N45 neodymium, nickel-plated (corrosion-resistant), 1.2 kg rated pull force tested per ISO 3611.<br>
+              <strong>Lining:</strong> 400gsm microfibre — scratch-protective, anti-static.<br>
+              <strong>Adhesive (V1 kit):</strong> 3M VHB 5952 — 1,000 N/m² shear strength.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Method</div>
+              <div class="mkey-sub">(Process)</div>
+            </div>
+            <div class="mval">
+              <strong>Low volume process:</strong> (1) Silicone core cast → (2) PU leather cut and heat-bonded → (3) Magnet/hook insert → (4) Lining adhesion → (5) Edge finish → (6) Individual QC inspection → (7) Pack and dispatch.<br>
+              <strong>High volume process:</strong> Follows ISO 9001:2015 quality management system. Stage-gate inspection at: raw material receipt, post-moulding, post-assembly, final QC. AQL 2.5 sampling plan applied. Non-conforming units tagged and quarantined via NCR process.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Measurement</div>
+              <div class="mkey-sub">(Metrics)</div>
+            </div>
+            <div class="mval">
+              <strong>Dimensional:</strong> Cavity tolerance ±0.5mm (caliper-verified). Wall thickness ≥2.5mm. Vent channel width 2.0mm ±0.2mm.<br>
+              <strong>Mechanical:</strong> Magnet pull ≥1.2 kg (digital force gauge). Corner hook grip ≥300g lateral at 45°. Drop resistance: 10× from 1.5m (no functional failure).<br>
+              <strong>Thermal:</strong> Surface ≤42°C after 60min MiFi operation (IR thermometer).<br>
+              <strong>Durability:</strong> PU rub cycles ≥50,000 (Martindale). Rubber snap test ≥5,000 open/close cycles.<br>
+              <strong>Weight:</strong> PU version ≤38g. Rubber version ≤42g.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Environment</div>
+              <div class="mkey-sub">(Mother Nature)</div>
+            </div>
+            <div class="mval">
+              <strong>Materials:</strong> REACH-compliant PU and rubber. No phthalates, no heavy metals. Recyclable packaging (FSC-certified kraft box, soy-based inks).<br>
+              <strong>Production:</strong> Low-volume casting produces near-zero waste (off-cuts reground). High-volume factory required to meet ISO 14001 environmental management standard.<br>
+              <strong>Longevity:</strong> Product lifespan target ≥5 years — reducing accessory waste cycle. Replaceable lining insert extends product life further.<br>
+              <strong>Shipping:</strong> Carbon-neutral last-mile delivery option offered at checkout.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Management</div>
+              <div class="mkey-sub">(Systems)</div>
+            </div>
+            <div class="mval">
+              <strong>Production governance:</strong> Each batch tracked via batch code + production record. Digital QC log maintained per unit (low vol) or per batch (high vol).<br>
+              <strong>Supplier management:</strong> Minimum two qualified suppliers per critical material (magnet, PU, rubber) to prevent single-source risk.<br>
+              <strong>Version control:</strong> Design changes managed via ECN (Engineering Change Notice) — all modifications approved before production release.<br>
+              <strong>KPIs monitored:</strong> First Pass Yield (FPY) target ≥97%, Customer Defect Rate (CDR) ≤0.5%, On-Time Delivery (OTD) ≥95%.
+            </div>
+          </div>
+ 
+          <div class="mrow">
+            <div class="mkey">
+              <div class="mkey-label">Maintenance</div>
+              <div class="mkey-sub">(Upkeep)</div>
+            </div>
+            <div class="mval">
+              <strong>Moulds:</strong> Inspected every 500 cycles; cleaned after every run. Replaced at 10,000-cycle wear threshold.<br>
+              <strong>Equipment:</strong> Preventive maintenance schedule (PM) — weekly cleaning, monthly calibration, annual third-party calibration certification.<br>
+              <strong>Product care (customer):</strong> PU leather cleaned with damp microfibre. Rubber cleaned with mild soap. Magnets demagnetisation-checked annually if stored near strong fields.<br>
+              <strong>Lining replacement:</strong> Microfibre lining available as a separate SKU — users can replace at 2–3 year mark without replacing the full unit.
+            </div>
+          </div>
+        </div>
+ 
+        <div class="note">
+          <strong>Why the 8M's matter for LINKPOD™</strong>
+          <span>The 8M's framework ensures quality is not dependent on any single variable — whether a unit is hand-cast by an artisan or produced at scale, every dimension of quality is accounted for, measured, and controlled. The same standard, at any volume.</span>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           09 BEFORE & AFTER / IMPACT
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-impact" data-i="8">
+        <div class="s-num">09 <em>/</em> 10 — THE IMPACT</div>
+        <h2 class="s-title">Before &amp; After</h2>
+        <div class="s-sub">From "I carry a MiFi" to "My connectivity travels with my phone"</div>
+        <div class="s-rule"></div>
+        <p class="s-text">LINKPOD™ changes something subtle but powerful. <strong>This behavioural shift increases device usage frequency, hardware retention and care, perceived value of the MiFi, and user satisfaction across all mobility environments.</strong></p>
+        <div class="batable">
+          <div class="bacol before">
+            <div class="bacol-head">Before LINKPOD™</div>
+            <div class="baitem">MiFi loose, forgotten, or misplaced daily</div>
+            <div class="baitem">Carried separately — always an afterthought</div>
+            <div class="baitem">No usable position during travel or desk work</div>
+            <div class="baitem">Overheating from enclosed bag carry</div>
+            <div class="baitem">No emotional attachment to the device</div>
+            <div class="baitem">Device scratched from loose carry</div>
+          </div>
+          <div class="bacol after">
+            <div class="bacol-head">After LINKPOD™</div>
+            <div class="baitem">MiFi becomes part of the phone ecosystem</div>
+            <div class="baitem">Always visible, always accessible</div>
+            <div class="baitem">Stable angled stand on any surface</div>
+            <div class="baitem">Ventilated carry — thermal safety maintained</div>
+            <div class="baitem">Premium feel increases device respect</div>
+            <div class="baitem">Protected microfibre lining — scratch-free</div>
+          </div>
+        </div>
+        <div class="kgrid">
+          <div class="kcard accent"><div class="kv light">↑ Use</div><div class="kl light">Device usage frequency rises</div></div>
+          <div class="kcard accent"><div class="kv light">↑ Care</div><div class="kl light">Hardware retention improves</div></div>
+          <div class="kcard"><div class="kv">↑ Value</div><div class="kl">Perceived MiFi value increases</div></div>
+          <div class="kcard"><div class="kv">↑ Flow</div><div class="kl">Unified carry satisfaction</div></div>
+        </div>
+ 
+        <p class="s-text"><strong>Industry Measurement Metrics</strong></p>
+        <table class="measTable">
+          <thead>
+            <tr><th>Metric</th><th>KPI Code</th><th>Baseline (Without)</th><th>Target (With LINKPOD™)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>MiFi misplacement frequency</td><td>MPF-01</td><td>3–5× per week</td><td>≤0.5× per week (−85%)</td></tr>
+            <tr><td>Device retrieval time</td><td>DRT-01</td><td>45–90 seconds avg</td><td>≤5 seconds (−94%)</td></tr>
+            <tr><td>User satisfaction score (NPS)</td><td>NPS-01</td><td>—</td><td>Target NPS ≥55</td></tr>
+            <tr><td>MiFi surface temperature (carry)</td><td>THRM-01</td><td>≤54°C (enclosed bag)</td><td>≤42°C (ventilated stand)</td></tr>
+            <tr><td>Product return rate</td><td>QA-CDR</td><td>—</td><td>≤0.5% (CDR target)</td></tr>
+            <tr><td>First pass yield (production)</td><td>QA-FPY</td><td>—</td><td>≥97% FPY</td></tr>
+            <tr><td>Product lifespan</td><td>DUR-01</td><td>—</td><td>≥5 years (designed lifespan)</td></tr>
+          </tbody>
+        </table>
+ 
+        <div class="success">
+          <strong>Most accessories solve storage. LINKPOD™ solves system integration.</strong>
+          <span>It turns two separate devices into a unified, portable connectivity system — where the relationship between phone and internet is physical, intentional, and consistent every single day. Available in two variations, two finishes, one universal fit.</span>
+        </div>
+        <div class="shint">scroll to continue</div>
+      </section>
+ 
+      <!-- ═══════════════════════════════════════
+           10 ORDER
+      ════════════════════════════════════════ -->
+      <section class="dsec" id="sec-order" data-i="9">
+        <div class="s-num">10 <em>/</em> 10 — ORDER</div>
+        <h2 class="s-title">Order Now</h2>
+        <div class="s-sub">Your internet, finally attached — choose your variation and finish</div>
+        <div class="s-rule"></div>
+ 
+        <div class="orderWrap">
+          <div class="orderHead">
+            <h3>LINKPOD™ — Configure &amp; Order</h3>
+            <p>One size fits all MiFi routers. Ships within 5–7 business days for standard orders. 10–14 days for hand-cast artisan editions.</p>
+          </div>
+          <div class="orderBody">
+            <p style="font-family:var(--fh);font-size:14px;color:var(--ink);margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase">Select Variation</p>
+            <div class="orderGrid">
+              <div class="orderCard" id="oc-mag" onclick="selectVar('mag')">
+                <div class="orderCard-title">V1 — Magnetic Snap</div>
+                <div class="orderCard-desc">N45 magnet array. Instant snap-on/off. Includes magnetic ring adapter + adhesive mount patch.</div>
+                <div class="orderCard-price">From R599</div>
+              </div>
+              <div class="orderCard" id="oc-grip" onclick="selectVar('grip')">
+                <div class="orderCard-title">V2 — Rubber Corner Grip</div>
+                <div class="orderCard-desc">Shore 60A rubber corner hooks. Mechanical grip. No magnets required. Works on all phones.</div>
+                <div class="orderCard-price">From R549</div>
+              </div>
+            </div>
+ 
+            <div class="orderFields">
+              <div class="orderField">
+                <label>Finish</label>
+                <select id="sel-finish">
+                  <option value="">— Select Finish —</option>
+                  <option value="pu-tan">PU Leather — Cognac Tan</option>
+                  <option value="pu-black">PU Leather — Jet Black</option>
+                  <option value="pu-brown">PU Leather — Espresso Brown</option>
+                  <option value="rb-black">Matte Rubber — Stealth Black</option>
+                  <option value="rb-grey">Matte Rubber — Slate Grey</option>
+                  <option value="rb-green">Matte Rubber — Forest Green</option>
+                </select>
+              </div>
+              <div class="orderField">
+                <label>Volume</label>
+                <select id="sel-volume">
+                  <option value="">— Select Volume —</option>
+                  <option value="1">1–5 units (Hand-cast artisan)</option>
+                  <option value="10">6–50 units (Hand-cast batch)</option>
+                  <option value="50">51–499 units (Pre-production run)</option>
+                  <option value="500">500+ units (Manufacturer scale)</option>
+                </select>
+              </div>
+              <div class="orderField">
+                <label>Quantity</label>
+                <input type="number" id="inp-qty" min="1" value="1" placeholder="Qty">
+              </div>
+              <div class="orderField">
+                <label>Delivery</label>
+                <select id="sel-delivery">
+                  <option value="">— Select Delivery —</option>
+                  <option value="std">Standard (5–7 business days)</option>
+                  <option value="exp">Express (2–3 business days)</option>
+                  <option value="coll">Collection (Johannesburg)</option>
+                </select>
+              </div>
+            </div>
+ 
+            <div style="background:linear-gradient(135deg,#EDE8E0,#E0D5C5);border:1.5px solid var(--leather-warm);border-radius:4px;padding:14px 18px;margin-bottom:20px">
+              <div style="font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Order Summary</div>
+              <div style="display:flex;justify-content:space-between;font-family:var(--fh);font-size:14px;color:var(--ink)">
+                <span id="summary-var">Variation: —</span>
+                <span id="summary-price">R—</span>
+              </div>
+              <div style="font-family:var(--fb);font-size:12px;font-style:italic;color:var(--muted);margin-top:4px" id="summary-note">Select your variation and finish to see pricing</div>
+            </div>
+ 
+            <button class="orderBtn" onclick="handleOrder()">
+              PLACE ORDER — LINKPOD™ →
+            </button>
+            <div class="orderNote">
+              ✦ Hand-cast units individually inspected &nbsp;|&nbsp; Factory units AQL 2.5 QC &nbsp;|&nbsp; 30-day satisfaction guarantee<br>
+              ✦ One size fits all MiFi routers (up to 115×75×25mm)
+            </div>
+          </div>
+        </div>
+ 
+        <div class="igrid c2 img-wrap">
+          <div class="img-ph r43 dark">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">📦</div>
+            <div class="ph-label">PACKAGED PRODUCT — KRAFT BOX<br>UNBOXING EXPERIENCE SHOT</div>
+          </div>
+          <div class="img-ph r43">
+            <div class="ph-dim">800 × 600</div>
+            <div class="ph-icon">🎁</div>
+            <div class="ph-label">IN-USE LIFESTYLE SHOT —<br>LINKPOD ON DESK, COFFEE SHOP</div>
+          </div>
+        </div>
+ 
+      </section>
+ 
+    </div>
+  </main>
+ 
+  <!-- ─── RIGHT PANEL ─── -->
+  <aside class="cpanel" id="cpanel">
+    <div class="c-badge">Case Study 2025</div>
+    <div class="c-img">
+      <svg width="52" height="44" viewBox="0 0 60 44" fill="none" style="position:relative;z-index:1">
+        <rect x="3" y="5" width="15" height="32" rx="3" stroke="#C4854A" stroke-width="2"/>
+        <path d="M7 11h7M11 35v0" stroke="#C4854A" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M18 21h10" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 1.5"/>
+        <circle cx="28" cy="21" r="2.5" fill="#D4A574"/>
+        <rect x="30" y="13" width="20" height="18" rx="2.5" stroke="#C4854A" stroke-width="2"/>
+        <path d="M35 18h10M35 22h7M35 26h8" stroke="#C4854A" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M49 11c2.5 2 4 5.5 4 9s-1.5 7-4 9" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="c-img-label">LINKPOD™</span>
+      <span class="c-img-sub">2-in-1 Carry System</span>
+    </div>
+    <div class="c-head">MiFi Carry<em>.</em></div>
+    <div class="c-brief">"Your internet, finally attached." A 2-in-1 magnetic MiFi pouch and phone stand — two devices, one unified carry experience.</div>
+    <div class="c-rule bold"></div>
+    <div class="c-desc">LINKPOD™ solves system integration. Two variations, two finishes. Hand-cast for low volume, manufactured for scale — no quality compromise.</div>
+    <div class="c-rule"></div>
+    <div class="cfield"><div class="ckey">Product Type</div><div class="cval r">2-in-1 Magnetic Carry System</div></div>
+    <div class="cfield"><div class="ckey">Variations</div><div class="cval">V1 Magnetic + V2 Rubber Grip</div></div>
+    <div class="cfield"><div class="ckey">Finishes</div><div class="cval r">PU Leather + Matte Rubber</div></div>
+    <div class="cfield"><div class="ckey">Sizing</div><div class="cval">Universal — all MiFi + phones</div></div>
+    <div class="cfield"><div class="ckey">Production</div><div class="cval r">Manual Cast / Manufacturer</div></div>
+    <div class="cfield"><div class="ckey">Quality Std</div><div class="cval">ISO 9001 / AQL 2.5</div></div>
+    <div class="cfield"><div class="ckey">NPD Method</div><div class="cval r">Stage-Gate Process</div></div>
+    <div class="cfield"><div class="ckey">Framework</div><div class="cval">8M's (Ishikawa)</div></div>
+    <div class="cfield"><div class="ckey">Year</div><div class="cval">2025</div></div>
+    <div class="c-rule bold"></div>
+    <div class="cfield"><div class="ckey">Tagline</div><div class="cval r">"A connected object that lives with your phone."</div></div>
+    <a class="cvisit" href="javascript:void(0)" onclick="goTo(9)">ORDER LINKPOD™ →</a>
+  </aside>
+ 
+</div>
+ 
+<nav class="mob-nav"><div class="mob-inner" id="mobInner"></div></nav>
+ 
+<script>
+const STAGES = [
+  {id:"overview",   label:"Overview"},
+  {id:"problem",    label:"Problem"},
+  {id:"insight",    label:"Insight"},
+  {id:"process",    label:"Dev Process"},
+  {id:"variations", label:"Variations"},
+  {id:"solution",   label:"Solution"},
+  {id:"users",      label:"Who It's For"},
+  {id:"8ms",        label:"8M's"},
+  {id:"impact",     label:"Impact"},
+  {id:"order",      label:"Order"},
+];
+ 
+let cur = 0, busy = false;
+ 
+document.addEventListener("DOMContentLoaded", () => {
+  const rail = document.getElementById("rail");
+  const mobInner = document.getElementById("mobInner");
+ 
+  STAGES.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "sbtn" + (i === 0 ? " active" : "");
+    b.textContent = s.label;
+    b.addEventListener("click", () => goTo(i));
+    rail.appendChild(b);
+ 
+    const mb = document.createElement("button");
+    mb.className = "mbtn" + (i === 0 ? " active" : "");
+    mb.textContent = s.label;
+    mb.addEventListener("click", () => {
+      if(window.innerWidth <= 960) {
+        const el = document.getElementById("sec-" + s.id);
+        if(el) el.scrollIntoView({behavior:"smooth"});
+      } else {
+        goTo(i);
+      }
+    });
+    mobInner.appendChild(mb);
+  });
+ 
+  document.getElementById("hCur").textContent = STAGES[0].label;
+  document.querySelector(".swrap").addEventListener("scroll", onInnerScroll, true);
+  window.addEventListener("scroll", onWinScroll);
+ 
+  const mobInfoBtn = document.getElementById("mobInfoBtn");
+  const mobInfoPanel = document.getElementById("mobInfoPanel");
+  if(mobInfoBtn && mobInfoPanel) {
+    mobInfoBtn.addEventListener("click", () => {
+      const isOpen = mobInfoPanel.classList.contains("open");
+      mobInfoPanel.classList.toggle("open");
+      mobInfoBtn.textContent = isOpen ? "INFO ▸" : "CLOSE ✕";
+    });
+  }
+ 
+  setProgress(0);
+});
+ 
+function goTo(idx) {
+  if(window.innerWidth <= 960) {
+    const el = document.getElementById("sec-" + STAGES[idx].id);
+    if(el) el.scrollIntoView({behavior:"smooth"});
+    return;
+  }
+  if(busy || idx === cur) return;
+  busy = true;
+  const secs = document.querySelectorAll(".dsec");
+  secs[cur].classList.add("exiting");
+  secs[cur].classList.remove("visible");
+  setTimeout(() => {
+    secs[cur].classList.remove("exiting");
+    secs[cur].scrollTop = 0;
+    cur = idx;
+    secs[cur].classList.add("visible");
+    secs[cur].scrollTop = 0;
+    busy = false;
+    syncUI(cur);
+  }, 240);
+}
+ 
+function onInnerScroll(e) {
+  if(window.innerWidth <= 960) return;
+  const sec = document.querySelectorAll(".dsec")[cur];
+  if(!sec || e.target !== sec) return;
+  const atBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 10;
+  if(atBottom && cur < STAGES.length - 1) { goTo(cur + 1); return; }
+  const pct = sec.scrollHeight > sec.clientHeight
+    ? ((cur + sec.scrollTop / (sec.scrollHeight - sec.clientHeight)) / STAGES.length) * 100
+    : (cur / STAGES.length) * 100;
+  document.getElementById("pbar").style.width = pct + "%";
+}
+ 
+let winTick = false;
+function onWinScroll() {
+  if(window.innerWidth > 960) return;
+  if(winTick) return;
+  winTick = true;
+  requestAnimationFrame(() => {
+    const secs = document.querySelectorAll(".dsec");
+    let active = 0;
+    secs.forEach((s, i) => {
+      if(s.getBoundingClientRect().top <= window.innerHeight * 0.4) active = i;
+    });
+    if(active !== cur) {
+      cur = active;
+      syncUI(cur);
+      const mb = document.querySelectorAll(".mbtn")[cur];
+      if(mb) mb.scrollIntoView({behavior:"smooth",block:"nearest",inline:"center"});
+    }
+    const sc = document.documentElement.scrollHeight - window.innerHeight;
+    setProgress(sc > 0 ? (window.scrollY / sc) * 100 : 0);
+    winTick = false;
+  });
+}
+ 
+function syncUI(idx) {
+  document.querySelectorAll(".sbtn").forEach((b, i) => {
+    b.classList.remove("active","done");
+    if(i < idx) b.classList.add("done");
+    if(i === idx) b.classList.add("active");
+  });
+  document.querySelectorAll(".mbtn").forEach((b, i) => b.classList.toggle("active", i === idx));
+  const hCur = document.getElementById("hCur");
+  if(hCur) hCur.textContent = STAGES[idx].label;
+  setProgress((idx / (STAGES.length - 1)) * 100);
+}
+ 
+function setProgress(pct) {
+  document.getElementById("pbar").style.width = pct + "%";
+}
+ 
+// Order logic
+let selectedVar = null;
+const prices = {
+  mag: {base: 599, label: "V1 Magnetic Snap"},
+  grip: {base: 549, label: "V2 Rubber Corner Grip"}
+};
+ 
+function selectVar(v) {
+  selectedVar = v;
+  document.getElementById("oc-mag").classList.toggle("selected", v === "mag");
+  document.getElementById("oc-grip").classList.toggle("selected", v === "grip");
+  updateSummary();
+}
+ 
+function updateSummary() {
+  if(!selectedVar) return;
+  const qty = parseInt(document.getElementById("inp-qty").value) || 1;
+  const price = prices[selectedVar].base;
+  const total = price * qty;
+  document.getElementById("summary-var").textContent = prices[selectedVar].label + " × " + qty;
+  document.getElementById("summary-price").textContent = "R" + total.toLocaleString();
+  document.getElementById("summary-note").textContent = "Excludes shipping. 30-day satisfaction guarantee included.";
+}
+ 
+document.addEventListener("change", updateSummary);
+document.addEventListener("input", function(e) { if(e.target.id === "inp-qty") updateSummary(); });
+ 
+function handleOrder() {
+  const finish = document.getElementById("sel-finish").value;
+  const volume = document.getElementById("sel-volume").value;
+  const delivery = document.getElementById("sel-delivery").value;
+  const qty = document.getElementById("inp-qty").value;
+  if(!selectedVar || !finish || !volume || !delivery || !qty) {
+    alert("Please complete all fields before placing your order.");
+    return;
+  }
+  alert("Thank you for your LINKPOD™ order!\n\nVariation: " + prices[selectedVar].label + "\nQuantity: " + qty + "\n\nWe will contact you within 24 hours to confirm your order details and arrange payment.");
+}
+</script>
+</body>
+</html>

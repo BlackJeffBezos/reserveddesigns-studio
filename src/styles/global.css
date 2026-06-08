@@ -2,16 +2,21 @@
 
 @import "tailwindcss";
 
-@layer components {
-  .card {
-    @apply bg-white rounded-2xl p-6 shadow-lg;
-  }
-}
+/* ====================== TAILWIND v4 CONFIG ====================== */
+@theme {
+  /* Custom Fonts */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
 
-/* ====================== CUSTOM COLORS ====================== */
+  /* Custom Colors */
+  --color-primary-pink: #E91E8C;
+  --color-primary-pink-light: #FF69B4;
+  --color-primary-blue: #4169E1;
+  --color-primary-blue-light: #6495ED;
+  --color-accent-cyan: #00D9FF;
+  --color-accent-purple: #A855F7;
 
-:root {
-  /* Main Brand Colors */
+  /* CSS Variables */
   --color-pink: #E91E8C;
   --color-pink-light: #FF69B4;
   --color-pink-translucent: rgba(233, 30, 140, 0.8);
@@ -26,7 +31,27 @@
   --color-purple: #A855F7;
 }
 
+/* ====================== CUSTOM COMPONENTS ====================== */
+@layer components {
+  .card {
+    @apply bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-800;
+  }
 
+  :root {
+  /* Main Brand Colors */
+  --color-pink: #E91E8C;
+  --color-pink-light: #FF69B4;
+  --color-pink-translucent: rgba(233, 30, 140, 0.8);
+  --color-pink-soft: rgba(233, 30, 140, 0.1);
+
+  --color-blue: #4169E1;
+  --color-blue-light: #6495ED;
+  --color-blue-translucent: rgba(65, 105, 225, 0.8);
+  --color-blue-soft: rgba(65, 105, 225, 0.1);
+
+  --color-cyan: #00D9FF;
+  --color-purple: #A855F7;
+}
 
 * {
   margin: 0;
@@ -54,6 +79,7 @@ body {
     color: white;
     border: 2px solid var(--color-primary-blue);
   }
+}
 
   .btn-primary:hover {
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);

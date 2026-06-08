@@ -51,6 +51,26 @@ body{
   overflow:hidden;
   height:100dvh;
 }
+
+/* Universal Responsive Images */
+img {
+    max-width: 100% !important;
+    height: auto !important;
+    width: auto !important;           /* Prevents forced stretching */
+    display: block;                   /* Removes unwanted inline spacing */
+    object-fit: contain;              /* Ensures image stays fully visible (not cropped) */
+    image-rendering: -webkit-optimize-contrast; /* Better quality on some browsers */
+}
+
+/* Optional: Make images inside common containers even more responsive */
+img, 
+.picture img, 
+.figure img, 
+.card img, 
+.post img {
+    max-width: 100% !important;
+    height: auto !important;
+}
 /* PU Leather texture using CSS */
 body::before{
   content:'';
@@ -561,6 +581,7 @@ header::after{
 <div class="mob-infopanel" id="mobInfoPanel">
   <div class="c-badge">Case Study 2025</div>
   <div class="c-img">
+
     <svg width="52" height="44" viewBox="0 0 60 44" fill="none" style="position:relative;z-index:1">
       <rect x="3" y="5" width="15" height="32" rx="3" stroke="#C4854A" stroke-width="2"/>
       <path d="M7 11h7M11 35v0" stroke="#C4854A" stroke-width="1.5" stroke-linecap="round"/>
@@ -570,6 +591,7 @@ header::after{
       <path d="M35 18h10M35 22h7M35 26h8" stroke="#C4854A" stroke-width="1.3" stroke-linecap="round"/>
       <path d="M49 11c2.5 2 4 5.5 4 9s-1.5 7-4 9" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
+    
     <span class="c-img-label">LINKPOD™</span>
     <span class="c-img-sub">2-in-1 Carry System</span>
   </div>
@@ -617,25 +639,25 @@ header::after{
         <div class="igrid c1 img-wrap">
           <div class="img-ph r169 dark">
             <div class="ph-dim">1600 × 900</div>
-            <svg width="56" height="44" viewBox="0 0 60 44" fill="none">
-              <rect x="3" y="5" width="15" height="32" rx="3" stroke="#C4854A" stroke-width="2"/>
-              <path d="M7 11h7M11 35v0" stroke="#C4854A" stroke-width="1.5" stroke-linecap="round"/>
-              <path d="M18 21h10" stroke="#D4A574" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="2 1.5"/>
-              <circle cx="28" cy="21" r="2.5" fill="#D4A574"/>
-              <rect x="30" y="13" width="20" height="18" rx="2.5" stroke="#C4854A" stroke-width="2"/>
-              <path d="M35 18h10M35 22h7M35 26h8" stroke="#C4854A" stroke-width="1.3" stroke-linecap="round"/>
-              <path d="M49 11c2.5 2 4 5.5 4 9s-1.5 7-4 9" stroke="#D4A574" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
+
+                    <img src="/images/linkpod-mifi-router-pouch-back-view-side-by-side.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case versions side by side">
+
             <div class="ph-label">HERO IMAGE — LINKPOD™ MAGNETIC ATTACHED TO PHONE<br>PU LEATHER FINISH — BOTH VARIATIONS SIDE BY SIDE</div>
           </div>
         </div>
         <div class="igrid c2 img-wrap">
           <div class="img-ph r43">
+         <img src="/images/mifi-router-easy-gets-lost-in-bags-because-its-just-a-loose-thing-floating-inside.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case versions side by side">
             <div class="ph-dim">800 × 600</div>
+           
             <div class="ph-icon">📱</div>
             <div class="ph-label">CARRY MODE — MIFI LOCKED<br>TO PHONE AS ONE SYSTEM</div>
           </div>
           <div class="img-ph r43">
+           <img src="/images/mifi-router-does-not-have-a-place-to-belong-always-falls-off-desks-when-working.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case versions side by side">
             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">🖥</div>
             <div class="ph-label">STAND MODE — DESKTOP ANGLE<br>VENTILATED + VISIBLE</div>
@@ -659,12 +681,16 @@ header::after{
         </div>
         <div class="igrid c2 img-wrap">
           <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
+         <img src="/images/mifi-router-easy-gets-lost-in-bags-because-its-just-a-loose-thing-floating-inside.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case versions side by side">
+             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">😤</div>
             <div class="ph-label">USER PAIN POINT — MIFI LOST<br>IN BAG, BURIED UNDER ITEMS</div>
           </div>
           <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
+           <img src="/images/mifi-router-does-not-have-a-place-to-belong-always-falls-off-desks-when-working.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case versions side by side">
+             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">📦</div>
             <div class="ph-label">NO DEFINED CARRY PLACE —<br>FLOATING LOOSE DAILY</div>
           </div>
@@ -718,7 +744,9 @@ header::after{
         </div>
         <div class="igrid c1 img-wrap">
           <div class="img-ph r169">
-            <div class="ph-dim">1600 × 900</div>
+        <img src="/images/reserved-designs-2-in-1-mifi-pouch-&-stand.avif" 
+             alt="Initial sketch of Mi-fi router phone case">
+             <div class="ph-dim">1600 × 900</div>
             <div class="ph-icon">🔗</div>
             <div class="ph-label">DIAGRAM — PHONE + LINKPOD™ + MIFI SYSTEM UNIFICATION<br>PHYSICAL BRIDGE CONCEPT ILLUSTRATION</div>
           </div>
@@ -779,18 +807,7 @@ header::after{
             </div>
           </div>
         </div>
-        <div class="igrid c2 img-wrap">
-          <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
-            <div class="ph-icon">🏭</div>
-            <div class="ph-label">PROTOTYPE PROGRESSION —<br>P1 FOAM → P2 3D-PRINT → P3 CAST</div>
-          </div>
-          <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
-            <div class="ph-icon">🔬</div>
-            <div class="ph-label">QUALITY GATE TESTING —<br>DROP + MAGNET + THERMAL</div>
-          </div>
-        </div>
+  
         <div class="shint">scroll to continue</div>
       </section>
  
@@ -837,11 +854,15 @@ header::after{
         </div>
         <div class="igrid c2 img-wrap">
           <div class="img-ph r43 dark">
-            <div class="ph-dim">800 × 600</div>
+        <img src="/images/linkpod-pu-leather.avif" 
+             alt="linkpod-pu-leather">               
+             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">🧲</div>
             <div class="ph-label">V1 MAGNETIC — SNAP ATTACHMENT<br>PU LEATHER FINISH CLOSE-UP</div>
           </div>
           <div class="img-ph r43 rubber">
+        <img src="/images/linkpod-flexible-silicone-mifi-router-pouch.avif" 
+             alt="linkpod-flexible-silicone-mifi-router-pouch">            
             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">🤝</div>
             <div class="ph-label">V2 RUBBER GRIP — CORNER HOOKS<br>MATTE RUBBER FINISH CLOSE-UP</div>
@@ -917,12 +938,16 @@ header::after{
         </div>
         <div class="igrid c2 img-wrap">
           <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
+        <img src="/images/linlkpod-magnetic-landscape-with-stand-on-top-of-desk4.avif" 
+             alt="linlkpod-magnetic-landscape-with-stand-on-top-of-desk">
+             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">📐</div>
             <div class="ph-label">DIMENSION DIAGRAM — UNIVERSAL<br>FIT CAVITY 115×75×25MM</div>
           </div>
           <div class="img-ph r43 dark">
-            <div class="ph-dim">800 × 600</div>
+        <img src="/images/back-view-rubber-grip-linlkpod-potrait-with-stand-on-top-of-desk2.avif" 
+             alt="back-view-rubber-grip-linlkpod-potrait-with-stand-on-top-of-desk">
+             <div class="ph-dim">800 × 600</div>
             <div class="ph-icon">🌡</div>
             <div class="ph-label">THERMAL VIEW — VENT CHANNELS<br>≤42°C SURFACE TEMP TEST</div>
           </div>
@@ -1166,91 +1191,21 @@ header::after{
         <div class="orderWrap">
           <div class="orderHead">
             <h3>LINKPOD™ — Configure &amp; Order</h3>
-            <p>One size fits all MiFi routers. Ships within 5–7 business days for standard orders. 10–14 days for hand-cast artisan editions.</p>
-          </div>
-          <div class="orderBody">
-            <p style="font-family:var(--fh);font-size:14px;color:var(--ink);margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase">Select Variation</p>
-            <div class="orderGrid">
-              <div class="orderCard" id="oc-mag" onclick="selectVar('mag')">
-                <div class="orderCard-title">V1 — Magnetic Snap</div>
-                <div class="orderCard-desc">N45 magnet array. Instant snap-on/off. Includes magnetic ring adapter + adhesive mount patch.</div>
-                <div class="orderCard-price">From R599</div>
-              </div>
-              <div class="orderCard" id="oc-grip" onclick="selectVar('grip')">
-                <div class="orderCard-title">V2 — Rubber Corner Grip</div>
-                <div class="orderCard-desc">Shore 60A rubber corner hooks. Mechanical grip. No magnets required. Works on all phones.</div>
-                <div class="orderCard-price">From R549</div>
-              </div>
-            </div>
+
  
-            <div class="orderFields">
-              <div class="orderField">
-                <label>Finish</label>
-                <select id="sel-finish">
-                  <option value="">— Select Finish —</option>
-                  <option value="pu-tan">PU Leather — Cognac Tan</option>
-                  <option value="pu-black">PU Leather — Jet Black</option>
-                  <option value="pu-brown">PU Leather — Espresso Brown</option>
-                  <option value="rb-black">Matte Rubber — Stealth Black</option>
-                  <option value="rb-grey">Matte Rubber — Slate Grey</option>
-                  <option value="rb-green">Matte Rubber — Forest Green</option>
-                </select>
-              </div>
-              <div class="orderField">
-                <label>Volume</label>
-                <select id="sel-volume">
-                  <option value="">— Select Volume —</option>
-                  <option value="1">1–5 units (Hand-cast artisan)</option>
-                  <option value="10">6–50 units (Hand-cast batch)</option>
-                  <option value="50">51–499 units (Pre-production run)</option>
-                  <option value="500">500+ units (Manufacturer scale)</option>
-                </select>
-              </div>
-              <div class="orderField">
-                <label>Quantity</label>
-                <input type="number" id="inp-qty" min="1" value="1" placeholder="Qty">
-              </div>
-              <div class="orderField">
-                <label>Delivery</label>
-                <select id="sel-delivery">
-                  <option value="">— Select Delivery —</option>
-                  <option value="std">Standard (5–7 business days)</option>
-                  <option value="exp">Express (2–3 business days)</option>
-                  <option value="coll">Collection (Johannesburg)</option>
-                </select>
-              </div>
-            </div>
- 
-            <div style="background:linear-gradient(135deg,#EDE8E0,#E0D5C5);border:1.5px solid var(--leather-warm);border-radius:4px;padding:14px 18px;margin-bottom:20px">
-              <div style="font-family:var(--fm);font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Order Summary</div>
-              <div style="display:flex;justify-content:space-between;font-family:var(--fh);font-size:14px;color:var(--ink)">
-                <span id="summary-var">Variation: —</span>
-                <span id="summary-price">R—</span>
-              </div>
-              <div style="font-family:var(--fb);font-size:12px;font-style:italic;color:var(--muted);margin-top:4px" id="summary-note">Select your variation and finish to see pricing</div>
-            </div>
  
             <button class="orderBtn" onclick="handleOrder()">
               PLACE ORDER — LINKPOD™ →
             </button>
             <div class="orderNote">
-              ✦ Hand-cast units individually inspected &nbsp;|&nbsp; Factory units AQL 2.5 QC &nbsp;|&nbsp; 30-day satisfaction guarantee<br>
-              ✦ One size fits all MiFi routers (up to 115×75×25mm)
+              ✦ Specify phone type<br>
+              ✦ Feel free to add any customization requests in the order notes<br>
+              ✦ Limited stock available for launch — order now to secure yours!
             </div>
           </div>
         </div>
  
-        <div class="igrid c2 img-wrap">
-          <div class="img-ph r43 dark">
-            <div class="ph-dim">800 × 600</div>
-            <div class="ph-icon">📦</div>
-            <div class="ph-label">PACKAGED PRODUCT — KRAFT BOX<br>UNBOXING EXPERIENCE SHOT</div>
-          </div>
-          <div class="img-ph r43">
-            <div class="ph-dim">800 × 600</div>
-            <div class="ph-icon">🎁</div>
-            <div class="ph-label">IN-USE LIFESTYLE SHOT —<br>LINKPOD ON DESK, COFFEE SHOP</div>
-          </div>
+
         </div>
  
       </section>

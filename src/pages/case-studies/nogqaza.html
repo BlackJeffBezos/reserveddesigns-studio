@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOGQAZA — The Indigenous Xhosa Fast-Reflex Number Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D32F2F;
+    --red-bright: #FF1F1F;
+    --red-dark: #8B0000;
+    --black: #0A0A0A;
+    --black-soft: #111111;
+    --black-mid: #1A1A1A;
+    --white: #F5F0E8;
+    --white-dim: #D9D4CB;
+    --gold: #C9A84C;
+    --ink: #0D0D0D;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Source Serif 4', Georgia, serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(211,47,47,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--white-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--red); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 3rem 4rem;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(211,47,47,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(211,47,47,0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+
+  @keyframes gridShift {
+    from { background-position: 0 0; }
+    to { background-position: 60px 60px; }
+  }
+
+  .hero-numbers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .floating-num {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    color: rgba(211,47,47,0.08);
+    font-size: clamp(3rem, 8vw, 10rem);
+    animation: floatNum linear infinite;
+    user-select: none;
+  }
+
+  @keyframes floatNum {
+    from { transform: translateY(110vh) rotate(-10deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { transform: translateY(-10vh) rotate(10deg); opacity: 0; }
+  }
+
+  .hero-inner {
+    position: relative;
+    text-align: center;
+    max-width: 900px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 18vw, 18rem);
+    line-height: 0.88;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.5s forwards;
+  }
+
+  .hero-title span { color: var(--red); }
+
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    font-style: italic;
+    color: var(--white-dim);
+    margin: 2rem auto 3rem;
+    max-width: 600px;
+    line-height: 1.7;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.8s forwards;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.25em;
+    padding: 1.1rem 3.5rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.1s forwards;
+  }
+
+  .hero-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--red-bright);
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hero-cta:hover::before { transform: translateX(0); }
+  .hero-cta span { position: relative; z-index: 1; }
+
+  .hero-stats {
+    margin-top: 4rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 1.4s forwards;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: var(--red);
+    display: block;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--white-dim);
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 7rem 3rem; }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+    color: var(--red);
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    line-height: 0.92;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .section-title.black-on-white { color: var(--ink); }
+
+  /* ── OUR STORY ── */
+  #story {
+    background: var(--black-soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 7rem 4rem;
+    border-radius: 0;
+  }
+
+  .story-left { position: relative; }
+
+  .story-paper {
+    background: #F4EDD6;
+    padding: 3rem;
+    position: relative;
+    transform: rotate(-2deg);
+    box-shadow: 8px 8px 40px rgba(0,0,0,0.6), -2px -2px 0px rgba(0,0,0,0.2);
+  }
+
+  .story-paper::before {
+    content: '';
+    position: absolute;
+    left: 2.5rem;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: rgba(211,47,47,0.4);
+  }
+
+  .paper-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .paper-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--ink);
+    line-height: 1;
+    position: relative;
+    padding-left: 1rem;
+  }
+
+  .paper-number.highlight { color: var(--red-dark); }
+  .paper-number.tapped {
+    color: var(--red);
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+  }
+
+  .paper-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: #8B7355;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .story-right { }
+
+  .story-body {
+    font-size: 1.15rem;
+    line-height: 1.85;
+    color: var(--white-dim);
+    font-weight: 300;
+  }
+
+  .story-body p + p { margin-top: 1.5rem; }
+
+  .story-body strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .story-pull {
+    margin: 2.5rem 0;
+    border-left: 4px solid var(--red);
+    padding-left: 2rem;
+    font-size: 1.5rem;
+    font-style: italic;
+    line-height: 1.5;
+    font-weight: 300;
+    color: var(--white);
+  }
+
+  /* ── HOW TO PLAY ── */
+  #how-to-play {
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  #how-to-play .section-label { color: var(--red); }
+  #how-to-play .section-title { color: var(--ink); }
+
+  .how-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    max-width: 1200px;
+    margin: 4rem auto 0;
+    align-items: start;
+  }
+
+  .objective-block {
+    background: var(--ink);
+    color: var(--white);
+    padding: 3rem;
+    position: relative;
+  }
+
+  .objective-block h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  .sequence-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .seq-num {
+    width: 42px; height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--red);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--white);
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .seq-num.active {
+    background: var(--red);
+    color: var(--white);
+  }
+
+  .seq-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--red);
+    align-self: center;
+  }
+
+  .obj-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--white-dim);
+    font-weight: 300;
+  }
+
+  .rules-block { }
+
+  .rules-block h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--ink);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .rule-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--red);
+    line-height: 1;
+    min-width: 2rem;
+  }
+
+  .rule-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink);
+    padding-top: 0.4rem;
+    font-weight: 400;
+  }
+
+  .rule-text strong { font-weight: 700; }
+
+  /* ── BRAIN TRAINING BANNER ── */
+  #brain-banner {
+    background: var(--red);
+    padding: 5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #brain-banner::before {
+    content: 'THINK FAST TAP FASTER';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 12vw, 14rem);
+    color: rgba(255,255,255,0.06);
+    white-space: nowrap;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 0.1em;
+    pointer-events: none;
+  }
+
+  .brain-inner { position: relative; }
+
+  .brain-inner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 6rem);
+    color: var(--white);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .brain-inner p {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.85);
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .brain-features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .brain-feat {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+
+  /* ── EVOLUTION / FEATURES ── */
+  #evolution {
+    background: var(--black-mid);
+    padding: 7rem 3rem;
+  }
+
+  .evolution-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 4rem;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .feat-card {
+    background: var(--black-mid);
+    padding: 2.5rem;
+    position: relative;
+    transition: background 0.3s;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .feat-card:hover { background: #1F1F1F; }
+
+  .feat-icon {
+    width: 48px; height: 48px;
+    border: 2px solid var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .feat-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.8rem;
+  }
+
+  .feat-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+  }
+
+  /* ── INSTALL ── */
+  #install {
+    background: var(--black-soft);
+    padding: 7rem 3rem;
+  }
+
+  .install-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .install-intro {
+    margin: 1.5rem 0 3rem;
+    font-size: 1.1rem;
+    color: var(--white-dim);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .install-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .install-card {
+    border: 1px solid rgba(211,47,47,0.3);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .install-card:hover { border-color: var(--red); }
+
+  .install-device {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .install-steps {
+    list-style: none;
+    counter-reset: steps;
+  }
+
+  .install-steps li {
+    counter-increment: steps;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    color: var(--white-dim);
+    line-height: 1.5;
+  }
+
+  .install-steps li::before {
+    content: counter(steps);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    background: rgba(211,47,47,0.1);
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  /* ── PLAY CTA ── */
+  #play-cta {
+    background: var(--ink);
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .play-bg-num {
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    color: rgba(211,47,47,0.03);
+    font-size: 50vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .play-inner { position: relative; }
+
+  .play-inner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 10rem);
+    color: var(--white);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .play-inner h2 span { color: var(--red); }
+
+  .play-inner p {
+    font-size: 1.15rem;
+    color: var(--white-dim);
+    font-style: italic;
+    font-weight: 300;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+
+  .btn-play {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.3em;
+    padding: 1.4rem 5rem;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(211,47,47,0.4);
+    transition: box-shadow 0.3s;
+  }
+
+  .btn-play:hover { box-shadow: 0 0 100px rgba(211,47,47,0.7); }
+
+  .btn-play::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+  }
+
+  /* ── COMMUNITY ── */
+  #community {
+    background: var(--white);
+    color: var(--ink);
+    padding: 7rem 3rem;
+  }
+
+  #community .section-label { color: var(--red); }
+  #community .section-title { color: var(--ink); }
+
+  .community-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    max-width: 1200px;
+    margin: 4rem auto 0;
+    align-items: start;
+  }
+
+  .community-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .comm-feat {
+    padding: 1.5rem;
+    border: 1px solid rgba(0,0,0,0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .comm-feat:hover {
+    border-color: var(--red);
+    box-shadow: 4px 4px 0 var(--red);
+  }
+
+  .comm-feat-icon { font-size: 1.4rem; margin-bottom: 0.6rem; }
+
+  .comm-feat-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .comm-feat-desc {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .review-box {
+    background: var(--ink);
+    color: var(--white);
+    padding: 3rem;
+  }
+
+  .review-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 2rem;
+  }
+
+  .review-card {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 1.5rem 0;
+  }
+
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+  }
+
+  .reviewer-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--white);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .review-stars { color: var(--red); font-size: 0.8rem; }
+
+  .review-text {
+    font-size: 0.9rem;
+    color: var(--white-dim);
+    line-height: 1.6;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  /* ── SERVICES ── */
+  #services {
+    background: var(--black);
+    padding: 7rem 3rem;
+  }
+
+  .services-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .services-intro {
+    font-size: 1.1rem;
+    color: var(--white-dim);
+    font-style: italic;
+    font-weight: 300;
+    margin: 1.5rem 0 4rem;
+    max-width: 600px;
+    line-height: 1.7;
+  }
+
+  .services-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .service-col {
+    border-top: 3px solid var(--red);
+    padding-top: 2rem;
+  }
+
+  .service-col-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .service-list li {
+    font-size: 0.95rem;
+    color: var(--white-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 300;
+  }
+
+  .service-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  .why-block {
+    background: rgba(211,47,47,0.06);
+    border: 1px solid rgba(211,47,47,0.2);
+    padding: 3rem;
+    margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .why-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--red);
+    letter-spacing: 0.05em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+  }
+
+  .why-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .why-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.95rem;
+    color: var(--white-dim);
+    font-weight: 300;
+  }
+
+  .why-check {
+    color: var(--red);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .btn-quote {
+    display: inline-block;
+    background: transparent;
+    border: 2px solid var(--red);
+    color: var(--red);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.25em;
+    padding: 1rem 3.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .btn-quote:hover { background: var(--red); color: var(--white); }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--white);
+    color: var(--ink);
+    padding: 7rem 3rem;
+  }
+
+  #contact .section-label { color: var(--red); }
+  #contact .section-title { color: var(--ink); }
+
+  .contact-inner {
+    max-width: 900px;
+    margin: 4rem auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-form { }
+
+  .contact-form p {
+    font-size: 1rem;
+    color: #555;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: #F9F6F0;
+    border: 1px solid rgba(0,0,0,0.15);
+    padding: 0.9rem 1.1rem;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    resize: none;
+    border-radius: 0;
+    -webkit-appearance: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--red); }
+
+  .form-group textarea { min-height: 130px; }
+
+  .btn-send {
+    width: 100%;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.25em;
+    padding: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-send::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--red);
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+  }
+
+  .btn-send:hover::before { transform: translateX(0); }
+  .btn-send span { position: relative; z-index: 1; }
+
+  .contact-info { }
+
+  .contact-info h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .contact-info p {
+    font-size: 1rem;
+    color: #555;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-size: 0.9rem;
+    color: var(--ink);
+    font-weight: 300;
+  }
+
+  .contact-detail-icon {
+    width: 36px; height: 36px;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 3rem;
+    border-top: 1px solid rgba(211,47,47,0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    color: var(--red);
+    letter-spacing: 0.15em;
+  }
+
+  .footer-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-top: -0.3rem;
+  }
+
+  .footer-right {
+    text-align: right;
+  }
+
+  .footer-link {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-top: 0.3rem;
+    transition: color 0.2s;
+  }
+
+  .footer-link:hover { color: var(--red); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    #story { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 2rem; }
+    .story-paper { transform: rotate(-1deg); }
+    .how-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .install-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .community-grid { grid-template-columns: 1fr; }
+    .services-cols { grid-template-columns: 1fr; }
+    .why-block { grid-template-columns: 1fr; }
+    .why-title { writing-mode: horizontal-tb; transform: none; }
+    .why-items { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; }
+    section { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-right { text-align: center; }
+    .hero-stats { gap: 2rem; flex-wrap: wrap; }
+  }
+
+  @media (max-width: 600px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .community-features { grid-template-columns: 1fr; }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">NOGQAZA</a>
+  <ul class="nav-links">
+    <li><a href="#story">Our Story</a></li>
+    <li><a href="#how-to-play">How To Play</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#community">Community</a></li>
+    <li><a href="#services">Build With Us</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- FLOATING NUMBERS BG -->
+<div class="hero-numbers" aria-hidden="true" id="floatingNums"></div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">The Indigenous Xhosa Fast-Reflex Number Game</p>
+    <h1 class="hero-title">NOG<span>Q</span>AZA</h1>
+    <p class="hero-sub">Before smartphones. Before social media. There was Nogqaza — played on torn school pages, and now South Africa's next digital obsession.</p>
+    <a href="https://nogqaza.reserveddesigns.co.za" class="hero-cta" target="_blank" rel="noopener">
+      <span>Play Now →</span>
+    </a>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">193K+</span>
+        <span class="stat-label">TikTok Views</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">11.5K</span>
+        <span class="stat-label">Likes in Days</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">6–10</span>
+        <span class="stat-label">Rounds Per First Visit</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">Daily</span>
+        <span class="stat-label">Player Return Rate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR STORY -->
+<section id="story">
+  <div class="story-left reveal">
+    <div class="story-paper" role="img" aria-label="Torn exercise book page with numbers written on it">
+      <div class="paper-lines">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
+          <span class="paper-number tapped">1</span>
+          <span class="paper-number tapped">2</span>
+          <span class="paper-number">7</span>
+          <span class="paper-number tapped">3</span>
+          <span class="paper-number">10</span>
+          <span class="paper-number tapped">4</span>
+          <span class="paper-number">9</span>
+          <span class="paper-number highlight">5</span>
+          <span class="paper-number">12</span>
+          <span class="paper-number">8</span>
+          <span class="paper-number">11</span>
+          <span class="paper-number">6</span>
+        </div>
+        <div style="display:flex;justify-content:center;margin-top:0.5rem;">
+          <div style="width:80px;height:80px;border:3px solid #8B0000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;color:#8B0000;transform:rotate(-15deg);opacity:0.7;">TAP 5</div>
+        </div>
+      </div>
+      <p class="paper-label">Torn Exercise Book Page · Circa School Days</p>
+    </div>
+  </div>
+  <div class="story-right reveal">
+    <p class="section-label">01 — Our Story</p>
+    <h2 class="section-title">From Torn<br>Pages to<br>Screen</h2>
+    <div class="story-body">
+      <div class="story-pull">"This is the game we used to play!"</div>
+      <p>Before smartphones, before mobile games, and before social media, there was <strong>Nogqaza</strong>.</p>
+      <p>A beloved playground challenge among Xhosa school children — often played using torn pages from exercise books. Players would randomly write numbers across a sheet and challenge one another to find and tap them in ascending order as quickly as possible.</p>
+      <p>The game was simple, but the competition was <strong>intense</strong>. It tested speed, concentration, focus, hand-eye coordination, and reflexes. In an age where AI has introduced automation bias — and effortless answers are quietly reducing effortful thinking — Nogqaza brings back a kind of focus that <strong>cannot be outsourced</strong>.</p>
+      <p>What began as a simple paper game has become a modern digital experience.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW TO PLAY -->
+<section id="how-to-play">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">02 — How To Play</p>
+    <h2 class="section-title">Simple.<br>Demanding.</h2>
+    <div class="how-grid">
+      <div class="objective-block reveal">
+        <h3>The Objective</h3>
+        <p style="font-size:0.95rem;color:rgba(255,255,255,0.6);font-weight:300;margin-bottom:1.5rem;line-height:1.6;">Find and tap the numbers in ascending order as fast as possible.</p>
+        <div class="sequence-row" id="seqRow" aria-label="Number sequence 1 to 12">
+          <div class="seq-num active">1</div>
+          <div class="seq-num">2</div>
+          <div class="seq-num">3</div>
+          <div class="seq-num">4</div>
+          <div class="seq-num">5</div>
+          <div class="seq-num">6</div>
+          <div class="seq-num">7</div>
+          <div class="seq-num">8</div>
+          <div class="seq-num">9</div>
+          <div class="seq-num">10</div>
+          <div class="seq-num">11</div>
+          <div class="seq-num">12</div>
+        </div>
+        <p class="obj-desc">Tap numbers 1 to 12 in sequence. Too slow? Use the big red <strong style="color:var(--red);">NOGQAZA button</strong> once per number to survive. Multiple intense modes, pass-and-play multiplayer, and a global leaderboard.</p>
+      </div>
+      <div class="rules-block reveal">
+        <h3>The Rules</h3>
+        <div class="rule-item">
+          <span class="rule-num">01</span>
+          <p class="rule-text">Numbers appear <strong>randomly</strong> on the screen.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">02</span>
+          <p class="rule-text">Tap them in the correct <strong>ascending order.</strong></p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">03</span>
+          <p class="rule-text">One <strong>wrong tap</strong> ends your turn.</p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">04</span>
+          <p class="rule-text">Complete the sequence <strong>before time runs out.</strong></p>
+        </div>
+        <div class="rule-item">
+          <span class="rule-num">05</span>
+          <p class="rule-text"><strong>Beat your previous score</strong> and challenge others on the global leaderboard.</p>
+        </div>
+        <p style="margin-top:2rem;font-family:'Space Mono',monospace;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--red);font-weight:700;">Nogqaza is all about speed, focus, and fast reflexes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRAIN TRAINING BANNER -->
+<div id="brain-banner">
+  <div class="brain-inner reveal">
+    <h2>No AI Assistance.<br>No Passive Scrolling.<br>Just You.</h2>
+    <p>In a world where effortless answers are quietly reducing effortful thinking, Nogqaza forces active thinking — and rebuilds your focus through play.</p>
+    <div class="brain-features">
+      <span class="brain-feat">Speed</span>
+      <span class="brain-feat">Focus</span>
+      <span class="brain-feat">Concentration</span>
+      <span class="brain-feat">Hand-Eye Coordination</span>
+      <span class="brain-feat">Fast Reflexes</span>
+    </div>
+  </div>
+</div>
+
+<!-- MODERN EVOLUTION -->
+<section id="evolution">
+  <div class="evolution-inner">
+    <p class="section-label">03 — The Modern Evolution</p>
+    <h2 class="section-title reveal">Now A Powerful<br>Brain-Training<br>Experience.</h2>
+    <div class="features-grid reveal">
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <h3 class="feat-title">Score Tracking</h3>
+        <p class="feat-desc">Every session counts. Watch your scores evolve and measure your improvement over time.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔥</div>
+        <h3 class="feat-title">Multiple Difficulty Modes</h3>
+        <p class="feat-desc">From beginner-friendly to ruthlessly demanding — choose the intensity that suits your reflexes.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📈</div>
+        <h3 class="feat-title">Performance Statistics</h3>
+        <p class="feat-desc">Deep stats on your play patterns, streaks, and personal bests. Know exactly where you stand.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🌍</div>
+        <h3 class="feat-title">Global Leaderboard</h3>
+        <p class="feat-desc">Compete against players worldwide. Real streaks. Real consistency. Real bragging rights.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🧠</div>
+        <h3 class="feat-title">Reflex & Concentration Training</h3>
+        <p class="feat-desc">Not just a game — a mental workout. Players average 6–10 rounds per session on their very first visit.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📱</div>
+        <h3 class="feat-title">Mobile-Friendly Gameplay</h3>
+        <p class="feat-desc">Designed mobile-first. Play anywhere, anytime, on any device — no download required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ADD TO HOME SCREEN -->
+<section id="install">
+  <div class="install-inner">
+    <p class="section-label">04 — Add To Your Home Screen</p>
+    <h2 class="section-title reveal">No Downloads.<br>No App Store.</h2>
+    <p class="install-intro">Nogqaza is a Web App. Install it directly from your browser and enjoy a full-screen app experience in seconds.</p>
+    <div class="install-grid reveal">
+      <div class="install-card">
+        <div class="install-device">🤖 Android</div>
+        <ol class="install-steps">
+          <li>Open Nogqaza in Chrome</li>
+          <li>Tap the ⋮ menu</li>
+          <li>Select "Add to Home Screen"</li>
+          <li>Tap "Install"</li>
+          <li>Launch Nogqaza from your home screen</li>
+        </ol>
+      </div>
+      <div class="install-card">
+        <div class="install-device">🍎 iPhone & iPad</div>
+        <ol class="install-steps">
+          <li>Open Nogqaza in Safari</li>
+          <li>Tap the Share button</li>
+          <li>Select "Add to Home Screen"</li>
+          <li>Confirm by tapping "Add"</li>
+          <li>Launch Nogqaza like a native app</li>
+        </ol>
+      </div>
+      <div class="install-card">
+        <div class="install-device">📱 Huawei & Other</div>
+        <ol class="install-steps">
+          <li>Open Nogqaza in your preferred browser</li>
+          <li>Open the browser menu</li>
+          <li>Choose "Add to Home Screen" or "Install App"</li>
+          <li>Follow the prompts</li>
+          <li>Start playing instantly</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLAY CTA -->
+<section id="play-cta">
+  <div class="play-bg-num" aria-hidden="true">1</div>
+  <div class="play-inner reveal">
+    <h2>Ready To Test<br>Your <span>Reflexes?</span></h2>
+    <p>Challenge yourself, beat your best time, and climb the global rankings. Add it to your home screen in 10 seconds.</p>
+    <a href="https://nogqaza.reserveddesigns.co.za" class="btn-play" target="_blank" rel="noopener">PLAY NOGQAZA</a>
+    <p style="margin-top:2rem;font-family:'Space Mono',monospace;font-size:0.65rem;text-transform:uppercase;letter-spacing:0.3em;color:rgba(255,255,255,0.3);">Then tell us: What's your best streak?</p>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section id="community">
+  <div style="max-width:1200px;margin:0 auto;">
+    <p class="section-label">06 — Community</p>
+    <h2 class="section-title">Reviews &<br>Live Chat</h2>
+    <div class="community-grid">
+      <div>
+        <p style="font-size:1.05rem;color:#555;font-style:italic;font-weight:300;line-height:1.7;margin:1.5rem 0 2.5rem;">Share your experience with players from around the world. Join the growing Nogqaza community.</p>
+        <div class="community-features reveal">
+          <div class="comm-feat">
+            <div class="comm-feat-icon">⭐</div>
+            <div class="comm-feat-title">Leave a Review</div>
+            <div class="comm-feat-desc">Rate the game and share your experience</div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon">💬</div>
+            <div class="comm-feat-title">Reply to Comments</div>
+            <div class="comm-feat-desc">Engage in discussion and strategy talk</div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon">⚔️</div>
+            <div class="comm-feat-title">Challenge Friends</div>
+            <div class="comm-feat-desc">Pass-and-play or compare leaderboard ranks</div>
+          </div>
+          <div class="comm-feat">
+            <div class="comm-feat-icon">🏆</div>
+            <div class="comm-feat-title">Celebrate High Scores</div>
+            <div class="comm-feat-desc">Share your streaks and climb the rankings</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-box reveal">
+        <h3>What Players Are Saying</h3>
+        <div class="review-card">
+          <div class="review-header">
+            <span class="reviewer-name">Thabo M.</span>
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <p class="review-text">"This is the game we used to play! Takes me straight back to school. New generation could never survive this."</p>
+        </div>
+        <div class="review-card">
+          <div class="review-header">
+            <span class="reviewer-name">Nandi K.</span>
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <p class="review-text">"I've done 8 rounds already and I can't stop. My hands know what to do before my brain does!"</p>
+        </div>
+        <div class="review-card">
+          <div class="review-header">
+            <span class="reviewer-name">Sipho D.</span>
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <p class="review-text">"Protecting my streak every single day. This is the most intense 30 seconds of my lunch break."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-inner">
+    <p class="section-label">07 — Build With Us</p>
+    <h2 class="section-title reveal">Need A Website,<br>App, or Software?</h2>
+    <p class="services-intro">Have an idea you'd like to bring to life? We design and develop digital products with purpose — built mobile-first, built to last.</p>
+    <div class="services-cols reveal">
+      <div class="service-col">
+        <h3 class="service-col-title">Websites</h3>
+        <ul class="service-list">
+          <li>Business Websites</li>
+          <li>E-Commerce Stores</li>
+          <li>Landing Pages</li>
+          <li>Portfolio Websites</li>
+        </ul>
+      </div>
+      <div class="service-col">
+        <h3 class="service-col-title">Mobile Apps</h3>
+        <ul class="service-list">
+          <li>Android Apps</li>
+          <li>iOS Apps</li>
+          <li>Progressive Web Apps</li>
+        </ul>
+      </div>
+      <div class="service-col">
+        <h3 class="service-col-title">Software Solutions</h3>
+        <ul class="service-list">
+          <li>Business Systems</li>
+          <li>Dashboards</li>
+          <li>Custom Platforms</li>
+          <li>Internal Tools</li>
+        </ul>
+      </div>
+    </div>
+    <div class="why-block reveal">
+      <div class="why-title">WHY US?</div>
+      <div class="why-items">
+        <div class="why-item"><span class="why-check">✓</span> Once-Off Development Cost</div>
+        <div class="why-item"><span class="why-check">✓</span> Fast Turnaround Times</div>
+        <div class="why-item"><span class="why-check">✓</span> Modern Designs</div>
+        <div class="why-item"><span class="why-check">✓</span> Mobile-First Development</div>
+        <div class="why-item"><span class="why-check">✓</span> Ongoing Support Available</div>
+      </div>
+    </div>
+    <p style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.05em;margin-bottom:1.5rem;color:var(--white);">Let's Build Something Great Together</p>
+    <a href="#contact" class="btn-quote">Request A Quote</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p class="section-label">08 — Get In Touch</p>
+    <h2 class="section-title">Contact Us</h2>
+    <div class="contact-inner">
+      <div class="contact-form reveal">
+        <p>Have questions, suggestions, partnership opportunities, or business inquiries? We would love to hear from you.</p>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" placeholder="Your full name">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+27 ...">
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" placeholder="Tell us about your project or question..."></textarea>
+        </div>
+        <button class="btn-send" type="button" onclick="handleSend(this)"><span>Send Message</span></button>
+      </div>
+      <div class="contact-info reveal">
+        <h3>We're Always<br>Happy To Chat.</h3>
+        <p>Reach out directly or use the form — whichever works best for you. We typically respond within 24 hours.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🌐</div>
+          <span>info@reserveddesigns.co.za</span>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🇿🇦</div>
+          <span>South Africa — Serving Clients Nationwide</span>
+        </div>
+        <div style="margin-top:3rem;padding:2rem;background:var(--ink);color:var(--white);">
+          <p style="font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;color:var(--red);margin-bottom:0.5rem;">What's Your Best Streak?</p>
+          <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);font-weight:300;line-height:1.6;font-style:italic;">Play Nogqaza, then come back and tell us. We challenge you to beat ours.</p>
+          <a href="https://nogqaza.reserveddesigns.co.za" target="_blank" rel="noopener" style="display:inline-block;margin-top:1rem;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:0.2em;color:var(--red);text-decoration:none;">Go Play Now →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">NOGQAZA</div>
+    <div class="footer-tagline">The Indigenous Xhosa Fast-Reflex Number Game</div>
+  </div>
+  <div class="footer-right">
+    <a href="https://nogqaza.reserveddesigns.co.za" class="footer-link" target="_blank" rel="noopener">Play The Game →</a>
+    <a href="#story" class="footer-link">Our Story</a>
+    <a href="#contact" class="footer-link">Contact Us</a>
+    <p style="font-family:'Space Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.2em;margin-top:1rem;">© 2024 Nogqaza · Reserved Designs</p>
+  </div>
+</footer>
+
+
+<script>
+  // Floating numbers
+  const container = document.getElementById('floatingNums');
+  for (let i = 1; i <= 24; i++) {
+    const num = document.createElement('div');
+    num.className = 'floating-num';
+    num.textContent = Math.floor(Math.random() * 12) + 1;
+    num.style.left = Math.random() * 100 + '%';
+    num.style.animationDuration = (12 + Math.random() * 20) + 's';
+    num.style.animationDelay = (Math.random() * 20) + 's';
+    num.style.fontSize = (3 + Math.random() * 8) + 'rem';
+    container.appendChild(num);
+  }
+
+  // Sequence animation
+  const seqNums = document.querySelectorAll('.seq-num');
+  let current = 0;
+  setInterval(() => {
+    seqNums.forEach((n, i) => n.classList.toggle('active', i === current));
+    current = (current + 1) % seqNums.length;
+  }, 600);
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Send button feedback
+  function handleSend(btn) {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+    if (!name || !email || !message) {
+      btn.querySelector('span').textContent = 'Fill In All Fields';
+      setTimeout(() => btn.querySelector('span').textContent = 'Send Message', 2000);
+      return;
+    }
+    btn.querySelector('span').textContent = 'Message Sent ✓';
+    btn.style.background = '#1a1a1a';
+    btn.disabled = true;
+  }
+</script>
+
+<script>
+// Handle Contact Form Submission
+function handleSend(button) {
+  const name = document.getElementById('name')?.value.trim();
+  const email = document.getElementById('email')?.value.trim();
+  const phone = document.getElementById('phone')?.value.trim();
+  const message = document.getElementById('message')?.value.trim();
+
+  // Basic validation
+  if (!name || !email || !message) {
+    alert('Please fill in your name, email, and message.');
+    return;
+  }
+
+  // Loading state
+  const originalText = button.querySelector('span').textContent;
+  button.style.pointerEvents = 'none';
+  button.querySelector('span').textContent = 'Sending...';
+
+  const BASIN_ENDPOINT = 'https://usebasin.com/f/d1012b1e0982';
+
+  const formData = {
+    name: name,
+    email: email,
+    phone: phone || '',
+    message: message,
+    type: 'contact',
+    source: 'Contact Page Form'
+  };
+
+  fetch(BASIN_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => {
+    if (response.ok) {
+      showContactSuccess(button);
+    } else {
+      throw new Error('Submission failed');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Failed to send message. Please try again.');
+  })
+  .finally(() => {
+    button.style.pointerEvents = 'auto';
+    button.querySelector('span').textContent = originalText;
+  });
+}
+
+// Optional: Show success message after submission
+function showContactSuccess(button) {
+  const form = button.closest('.contact-form');
+  
+  if (form) {
+    form.innerHTML = `
+      <div style="text-align:center; padding: 3rem 1rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem;">✅</div>
+        <h3 style="margin-bottom: 1rem;">Message Sent Successfully!</h3>
+        <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
+      </div>
+    `;
+  }
+}
+</script>
+
+</body>
+</html>

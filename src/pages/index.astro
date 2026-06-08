@@ -1,17 +1,1044 @@
 ---
-
+import MainLayout from '../layouts/MainLayout.astro';
+import PortfolioCard from '../components/PortfolioCard.astro';
+import BlogCard from '../components/BlogCard.astro';
+import PricingSection from '../components/PricingSection.astro';
+import ValidateIdea from '../components/ValidateIdea.astro';
+import InfiniteSlider from "../components/InfiniteSlider.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<MainLayout title="Product Development Design Studio - Turn Ideas into Reality"
+  description="We specialize in turning vague ideas into real, working, testable, and market-ready toys, gadgets, apps and everyday products people love and talk about, backed by top-tier expertise. Say hi, let's test your idea."
+>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO — Video Background
+     ═══════════════════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0a0a0a]">
+
+  <!-- Video Background -->
+  <div class="absolute inset-0 w-full h-full">
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      class="absolute inset-0 w-full h-full object-cover"
+    >
+      <source src="/videos/hero-animation.webm" type="video/webm">
+      <source src="/images/reserved-designs-animated-logo.mp8" type="video/mp4">
+
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70"></div>
+  </div>
+
+  <!-- Content — reduced font so video breathes -->
+  <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight mb-5">
+        TURN YOUR IDEA INTO<br>
+        <span class="bg-gradient-to-r from-[#00f5ff] via-[#ff00ff] to-[#ff0088] bg-clip-text text-transparent">
+          A WORKING PRODUCT IN FEW DAYS
+        </span>
+      </h1>
+
+      <p class="text-base sm:text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto leading-relaxed">
+        We turn vague ideas into real, working, testable, and market-ready toys, gadgets, apps and everyday products people love and talk about.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/intake"
+          class="bg-gradient-to-r from-[#00f5ff] to-[#ff0088] hover:from-[#00e6ff] hover:to-[#ff1a8c] text-white font-semibold text-base px-8 py-3.5 rounded-2xl transition-all duration-300 hover:scale-105"
+        >
+          Hi, Let's Start Your Project
+        </a>
+
+        <a
+          href="/portfolio"
+          class="border border-white/50 hover:border-white text-white font-semibold text-base px-8 py-3.5 rounded-2xl transition-all duration-300 hover:bg-white/10"
+        >
+          See Proof Of Transformation
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/60 animate-bounce">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    </svg>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAIN SECTION — "You have the idea..."
+     Animation: cards fade-slide-up staggered on scroll
+     Highlight: key phrase at 70% in view
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-[#0a0a0a] py-28" id="pain-section">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Badge -->
+    <div class="flex justify-center mb-6">
+      <div class="bg-[#E91E8C] text-white text-xs font-semibold tracking-widest px-6 py-2 rounded-full">
+        YOU'RE NOT ALONE
+      </div>
+    </div>
+
+    <!-- Headline with highlight words -->
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter text-white leading-tight">
+        You have the idea...<br>
+        For a physical product or app/software<br>
+        but not the
+        <span class="highlight-word inline-block relative">
+          execution.
+          <span class="highlight-underline absolute left-0 bottom-0 h-[3px] w-0 bg-[#E91E8C] transition-all duration-700 ease-out rounded-full"></span>
+        </span>
+      </h2>
+      <div class="h-px w-16 bg-[#E91E8C] mx-auto mt-8"></div>
+    </div>
+
+    <!-- Three Cards — staggered entry -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+      <div class="section-card opacity-0 translate-y-8 bg-[#111827] rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 group" style="transition-delay: 0ms;">
+        <div class="w-12 h-12 bg-[#E91E8C]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <span class="text-3xl">🧠</span>
+        </div>
+        <h3 class="text-xl font-semibold text-white mb-4">The idea has lived for months (or years) in your head</h3>
+        <p class="text-gray-400 leading-relaxed text-sm">
+          You keep thinking about it. You sketch it on every page of your notebooks. But it never leaves your head.
+        </p>
+      </div>
+
+      <div class="section-card opacity-0 translate-y-8 bg-[#111827] rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 group" style="transition-delay: 120ms;">
+        <div class="w-12 h-12 bg-[#E91E8C]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <span class="text-3xl">📐</span>
+        </div>
+        <h3 class="text-xl font-semibold text-white mb-4">You don't know how to design it</h3>
+        <p class="text-gray-400 leading-relaxed text-sm">
+          Multiple design tools feel impossible to learn. You're not an engineer. You just want the thing to exist.
+        </p>
+      </div>
+
+      <div class="section-card opacity-0 translate-y-8 bg-[#111827] rounded-3xl p-8 hover:-translate-y-2 transition-all duration-300 group" style="transition-delay: 240ms;">
+        <div class="w-12 h-12 bg-[#E91E8C]/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <span class="text-3xl">💰</span>
+        </div>
+        <h3 class="text-xl font-semibold text-white mb-4">Investors and funders ignore you</h3>
+        <p class="text-gray-400 leading-relaxed text-sm">
+          No proper documentation. No display or functional prototype. They don't take "idea people" seriously.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Bottom Message -->
+    <div class="text-center mt-16">
+      <p class="text-xl text-gray-300">So your idea stays stuck.</p>
+      <p class="text-2xl font-semibold text-[#E91E8C] mt-2">We change that.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     INTRODUCING RESERVED DESIGNS
+     Animation: left text slides in, right card slides in
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-white py-24" id="intro-section">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+      <!-- Left -->
+      <div class="intro-left opacity-0 -translate-x-8 transition-all duration-700 ease-out space-y-8">
+        <div>
+          <span class="uppercase text-sm font-semibold tracking-widest text-[#4169E1]">INTRODUCING RESERVED DESIGNS</span>
+        </div>
+        <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-gray-900 leading-none">
+          THAT'S WHERE WE <span class="text-[#E91E8C]">COME IN</span> TO <span class="text-[#E91E8C]"> UNSTUCK</span> YOUR IDEA.
+        </h2>
+        <div class="space-y-5 text-lg text-gray-700 max-w-lg">
+          <p>We have helped regular people, hobbyists turn vague ideas into functional prototypes. Entrepreneurs and creators to have  real, testable products to showcase to investors and sell to their audiences and designed Equipment, Jigs and Fixtures for Businesses, Workshops to have a streamlined workflow.</p>
+          <p>
+            Not just pretty renders.<br>
+            <span class="font-semibold">Actual working prototypes</span> you can hold, test, and pitch to investors — even shelf-ready to sell.
+          </p>
+        </div>
+        <div class="pt-6 border-t border-gray-200">
+          <p class="inline-flex items-center gap-3 text-sm font-medium uppercase tracking-widest text-[#E91E8C]">
+            <span class="h-px w-12 bg-[#E91E8C]"></span>
+            NO TECHNICAL SKILLS REQUIRED
+            <span class="h-px w-12 bg-[#E91E8C]"></span>
+          </p>
+        </div>
+      </div>
+
+<!-- Right Column -->
+<div class="intro-right opacity-0 translate-x-8 transition-all duration-700 ease-out delay-150 bg-[#0a0a0a] rounded-3xl p-10 text-white">
+  
+  <div class="uppercase text-xs tracking-[2px] text-[#E91E8C] font-semibold mb-8">YOU GET</div>
+  
+  <div class="space-y-10">
+    <div class="flex gap-6">
+      <div class="text-[#E91E8C] font-bold text-3xl">01</div>
+      <div><p class="text-lg leading-tight">Design & Engineering support</p></div>
+    </div>
+    <div class="flex gap-6">
+      <div class="text-[#E91E8C] font-bold text-3xl">02</div>
+      <div><p class="text-lg leading-tight">Product visualization & Website</p></div>
+    </div>
+    <div class="flex gap-6">
+      <div class="text-[#E91E8C] font-bold text-3xl">03</div>
+      <div><p class="text-lg leading-tight">Functional prototype</p></div>
+    </div>
+    <div class="flex gap-6">
+      <div class="text-[#E91E8C] font-bold text-3xl">04</div>
+      <div><p class="text-lg leading-tight">Manufacturing & Launch Guidance</p></div>
+    </div>
+  </div>
+
+  <!-- Lightweight Automatic Image Slider -->
+  <div class="mt-12">
+    <div id="product-slider" class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-black shadow-2xl">
+      
+      <!-- Slides -->
+      <div class="slider-container relative h-full">
+        <img src="/images/reserved-designs-2-in-1-mifi-pouch-&-stand.avif" 
+             alt="Initial sketch of Mi-fi router phone case" 
+             class="slider-image absolute inset-0 w-full h-full object-contain transition-opacity duration-700">
+        
+        <img src="/images/reserved-designs-2-in-1-mifi-pouch-&-stand-pouch-cad-design.avif" 
+             alt="CAD model of Mi-fi router phone case" 
+             class="slider-image absolute inset-0 w-full h-full object-fit-cover opacity-0 transition-opacity duration-700">
+        
+        <img src="/images/reserved-designs-2-in-1-mifi-pouch-&-stand-pouch-hyper-realistic-visualization.avif" 
+             alt="Hyper realistic visualization of Mi-fi router phone case" 
+             class="slider-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700">
+      </div>
+
+      <!-- Optional subtle progress bar -->
+      <div class="absolute bottom-0 left-0 h-0.5 bg-[#E91E8C] transition-all duration-700" id="progress-bar"></div>
+    </div>
+  </div>
+
+  <!-- Testimonial -->
+  <div class="mt-8 bg-[#111827] rounded-2xl p-6">
+    <p class="text-base leading-relaxed italic text-gray-300">
+      "I went from a sketch to holding my product & having a website for it in just 18 days. This is the missing piece every maker needs."
+    </p>
+     <div class="mt-4 text-sm text-gray-400">— 25 yrs old, Creative Thinker</div>
+    <div class="mt-4 text-sm text-gray-400">— LinkPoD (Mi-fi router pouch X stand)</div>
+     <div class="mt-4 text-sm text-gray-400">— Randburg, Johannesburg (ZAR)</div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.slider-image');
+    let current = 0;
+    const intervalTime = 2800; // 2.8 seconds per slide (feels premium but fast)
+
+    function nextSlide() {
+      images[current].classList.add('opacity-0');
+      current = (current + 1) % images.length;
+      images[current].classList.remove('opacity-0');
+    }
+
+    // Start automatic slider
+    setInterval(nextSlide, intervalTime);
+
+    // Optional: Progress bar animation
+    const progressBar = document.getElementById('progress-bar');
+    function animateProgress() {
+      progressBar.style.width = '0%';
+      setTimeout(() => {
+        progressBar.style.transitionDuration = `${intervalTime}ms`;
+        progressBar.style.width = '100%';
+      }, 50);
+    }
+
+    animateProgress();
+    setInterval(() => {
+      animateProgress();
+    }, intervalTime);
+  });
+</script>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     WHAT YOU'LL WALK AWAY WITH
+     Animation: cards pop in on scroll
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-white py-24 border-t border-gray-100" id="deliverables-section">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <div class="flex items-center gap-4 mb-14">
+      <div class="h-px w-8 bg-[#E91E8C]"></div>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">
+        What you'll walk away with
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+      <div class="deliverable-card opacity-0 scale-95 transition-all duration-500 ease-out group bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-1" style="transition-delay:0ms;">
+        <div class="h-44 flex items-center justify-center mb-6 bg-gray-50 rounded-2xl overflow-hidden">
+          <img src="/images/reserved-designs-offers-professional-cad-services-&-engineering-support.avif" alt="Professional 3D CAD Design" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Design<br>& Engineering support</h3>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          Professional 3D CAD design for physical products and annotated code in plain English for software, app and website development.
+        </p>
+      </div>
+
+      <div class="deliverable-card opacity-0 scale-95 transition-all duration-500 ease-out group bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-1" style="transition-delay:100ms;">
+        <div class="h-44 flex items-center justify-center mb-6 bg-gray-50 rounded-2xl overflow-hidden">
+          <img src="/images/reserved-designs-user-flow-ui-ux-animation.avif" alt="Product visualisation" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Product Visualisation<br>& Website</h3>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          Interactive 3D visualizations & a Website to showcase your product's functionality, design & its online presence.
+        </p>
+      </div>
+
+      <div class="deliverable-card opacity-0 scale-95 transition-all duration-500 ease-out group bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-1" style="transition-delay:200ms;">
+        <div class="h-44 flex items-center justify-center mb-6 bg-gray-50 rounded-2xl overflow-hidden">
+          <img src="/images/reserved-designs-make-prototypes-for-all-your-design-needs.avif" alt="Prototype and investor pitch" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Prototype<br>& Investor Pitch preparation</h3>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          A functional prototype and a compelling investor pitch deck and exhibition stand to showcase your product professionally.
+        </p>
+      </div>
+
+      <div class="deliverable-card opacity-0 scale-95 transition-all duration-500 ease-out group bg-white border border-gray-100 rounded-3xl p-8 hover:shadow-xl hover:-translate-y-1" style="transition-delay:300ms;">
+        <div class="h-44 flex items-center justify-center mb-6 bg-gray-50 rounded-2xl overflow-hidden">
+          <img src="/images/reserved-designs-guides-you-to-right-manufacturers-for-your-projects.avif" alt="Clear next steps roadmap" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Clear next<br>steps roadmap</h3>
+        <p class="text-gray-600 leading-relaxed text-sm">
+          A clear, actionable plan to guide your product through post-launch, maintenance and updates — keeping it relevant for years to come.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-14">
+      <a
+        href="/intake"
+        class="inline-block bg-black hover:bg-gray-900 text-white font-semibold text-base px-10 py-4 rounded-2xl transition-all duration-300 hover:scale-105"
+      >
+        GET YOUR IDEA UNSTUCK
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PROOF OF TRANSFORMATION — Portfolio
+     Animation: cards slide up on scroll
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-[#0a0a0a] py-24 px-4 sm:px-6 lg:px-8" id="portfolio-section">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="text-center mb-16 animate-on-scroll">
+      <h2 class="section-title text-white">
+        OUR <span class="gradient-text">PROOF OF TRANSFORMATION</span>
+      </h2>
+      <p class="text-xl text-gray-400 mt-4">
+        Real work turning concepts into products people love and use daily.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+
+      <PortfolioCard
+        href="case-studies/shoprite-case-study.html"
+        imageSrc="/images/reserved-designs-solutions-for-money-market-long-queue.avif"
+        imageAlt="Solving long queues at Shoprite money market Kiosk"
+        category="Customer Experience (UX)"
+        categoryColor="blue-600"
+        borderColor="blue-500/30"
+        title="SHOPRITE MONEY MARKET KIOSK LONG QUEUE CASE STUDY"
+        description="Shoprite Money Market kiosks are essential community infrastructure across South Africa especially for senior citizens, non-techy savvy, non-smart phone users and internet restricted individuals. But a broken queue system is quietly destroying the customer experience every single day. Customers wait up to 60 minutes in a blind queue, only to discover the specific service they need is offline when they finally reach the counter. They leave empty-handed and must return another day."
+        partnerLabel="Eco-Lounge Sofa, Service Availability Display Monitor, Queue-Ticket System, Friendly Buddy with tablet/Ipad"
+        partnerName="Shoprite Money Market Kiosk"
+        data-tags="customer experience, retail, design for community, design-thinker, design development, systems designs, efficiency"
+      />
+
+      <PortfolioCard
+        href="case-studies/diketo-case-study.html"
+        imageSrc="/images/reserved-designs-diketo-nophuca-phuca-masgede-amatshe-box-design.avif"
+        imageAlt="Diketo game reimagined & preserved for future generations"
+        category="Modenize indigenous Game"
+        categoryColor="pink-600"
+        borderColor="pink-500/30"
+        title="DIKETO GAME REIMAGINED"
+        description="In many South African homes today, traditional indigenous games are slowly disappearing. Children are growing up surrounded by smartphones, tablets, and global entertainment, while the rich cultural games their parents and grandparents once played are fading into memory. Ndinga reimagine DIKETO game, a classic African stone-tossing game that enhances eye-hand & catching coordination without removing its soul. He adds non-toxic Glow-in-the-dark stones. Premium feel. Pure African heritage. Designed for both relaxed family play and energetic social settings."
+        partnerLabel="Modernize African game, Preserve African Heritage, Game board"
+        partnerName="Ndinga Dyongo"
+        data-tags="indigenous Game Mordenization, game board design, package design, modernize, redesign, reinvent"
+      />
+
+    </div>
+
+    <div class="text-center mt-14 animate-on-scroll">
+      <a
+        href="/portfolio"
+        class="inline-block bg-gradient-to-r from-[#00f5ff] to-[#ff0088] hover:from-[#00e6ff] hover:to-[#ff1a8c] text-white font-semibold text-base px-10 py-4 rounded-2xl transition-all duration-300 hover:scale-105"
+      >
+        View Full Proof Of Transformation
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PERFECT FOR YOU IF...
+     Animation: checkmarks draw in one by one
+     Highlight: "READY TO SHIP" at 70% in view
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-white py-24" id="fit-section">
+  <div class="max-w-5xl mx-auto px-6">
+
+    <div class="text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-gray-900">
+        THIS IS PERFECT FOR YOU
+      </h2>
+      <div class="flex items-center justify-center gap-3 mt-3">
+        <span class="text-4xl md:text-5xl font-black tracking-tighter text-[#4169E1]">IF...</span>
+      </div>
+      <div class="h-px w-12 bg-[#E91E8C] mx-auto mt-3"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 max-w-4xl mx-auto">
+
+      <div class="fit-item opacity-0 translate-x-4 transition-all duration-500 ease-out flex gap-5" style="transition-delay:0ms;">
+        <div class="flex-shrink-0 w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xl font-bold mt-1">✓</div>
+        <p class="text-lg font-semibold text-gray-900 leading-tight pt-1">
+          YOU HAVE A PRODUCT IDEA<br>THAT'S BEEN LIVING IN YOUR HEAD
+        </p>
+      </div>
+
+      <div class="fit-item opacity-0 translate-x-4 transition-all duration-500 ease-out flex gap-5" style="transition-delay:100ms;">
+        <div class="flex-shrink-0 w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xl font-bold mt-1">✓</div>
+        <p class="text-lg font-semibold text-gray-900 leading-tight pt-1">
+          YOU WANT TO BRING IT TO LIFE —<br><span class="font-black">FAST</span>
+        </p>
+      </div>
+
+      <div class="fit-item opacity-0 translate-x-4 transition-all duration-500 ease-out flex gap-5" style="transition-delay:200ms;">
+        <div class="flex-shrink-0 w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center text-white text-xl font-bold mt-1">✓</div>
+        <p class="text-lg font-semibold text-gray-900 leading-tight pt-1">
+          YOU'RE SERIOUS ABOUT BUILDING SOMETHING REAL<br>
+          <span class="font-light">(NOT JUST ANOTHER MOCKUP)</span>
+        </p>
+      </div>
+
+      <div class="fit-item opacity-0 translate-x-4 transition-all duration-500 ease-out flex gap-5" style="transition-delay:300ms;">
+        <div class="flex-shrink-0 w-9 h-9 bg-rose-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold mt-1">✕</div>
+        <p class="text-lg font-semibold text-gray-400 leading-tight pt-1">
+          YOU JUST WANT "CHEAP DESIGNS" AND AREN'T READY TO BUILD
+        </p>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-20">
+      <p class="text-sm uppercase tracking-widest text-gray-400 font-medium">
+        WE ONLY WORK WITH MAKERS WHO ARE
+        <span class="fit-highlight-word text-gray-400 relative">
+          READY TO SHIP.
+          <span class="fit-highlight-line absolute left-0 -bottom-0.5 h-[2px] w-0 bg-[#4169E1] transition-all duration-700 ease-out rounded-full"></span>
+        </span>
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     MOST IDEAS NEVER BECOME REAL — dark CTA
+     Animation: text fades up in sequence
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-[#0a0a0a] py-28 border-t border-white/10" id="build-cta-section">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <div class="space-y-6">
+
+      <div class="build-line opacity-0 translate-y-4 transition-all duration-600 ease-out text-3xl md:text-5xl leading-tight font-medium tracking-tight text-white" style="transition-delay:0ms;">
+        Most ideas never become real.
+      </div>
+      <div class="build-line opacity-0 translate-y-4 transition-all duration-600 ease-out text-3xl md:text-5xl leading-tight font-medium tracking-tight text-white" style="transition-delay:150ms;">
+        Not because they're bad —
+      </div>
+      <div class="build-line opacity-0 translate-y-4 transition-all duration-600 ease-out text-3xl md:text-5xl leading-tight font-medium tracking-tight text-white" style="transition-delay:300ms;">
+        but because <span class="text-[#ff0088]">no one builds them.</span>
+      </div>
+
+      <div class="build-line opacity-0 translate-y-4 transition-all duration-600 ease-out text-2xl md:text-3xl text-gray-300 font-light tracking-tight mt-4" style="transition-delay:450ms;">
+        Let's build yours.
+      </div>
+
+      <div class="build-line opacity-0 translate-y-4 transition-all duration-600 ease-out pt-6" style="transition-delay:600ms;">
+        <a
+          href="/intake"
+          class="group inline-flex items-center gap-x-4 text-lg font-semibold text-white hover:text-white transition-colors"
+        >
+          GET YOUR IDEA BUILT TODAY
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-[#00f5ff] to-[#ff0088] flex items-center justify-center transition-transform group-hover:scale-110">
+            <span class="text-white text-xl leading-none mt-0.5">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<PricingSection />
+<ValidateIdea />
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     VOICES OF SUCCESS — Testimonials
+     Animation: testimonial cards slide up staggered
+     ═══════════════════════════════════════════════════════════ -->
+<section class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-white" id="testimonials-section">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+      <!-- Left: Heading -->
+      <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-8">
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter leading-tight uppercase">
+          VOICES OF<br />
+          <span class="text-[#E91E8C]">SUCCESS</span>
+        </h2>
+        <p class="text-lg md:text-xl text-gray-700 max-w-lg">
+          We don't just build products — we build relationships.<br class="hidden sm:block" />
+          See what our partners have to say about the Reserved experience.
+        </p>
+        <a
+          href="/services"
+          class="inline-flex items-center gap-2 text-[#4169E1] font-bold text-lg hover:text-[#E91E8C] transition-colors group"
+        >
+          EXPLORE OUR SERVICES
+          <span class="text-xl group-hover:translate-x-1 transition-transform">›</span>
+        </a>
+      </div>
+
+      <!-- Right: Testimonials -->
+      <div class="lg:col-span-7 space-y-8 px-4 max-w-full overflow-x-hidden">
+
+        <div class="testimonial-card opacity-0 translate-y-6 transition-all duration-500 ease-out bg-white rounded-3xl border-2 border-blue-500/30 shadow-lg hover:shadow-xl p-6 md:p-8" style="transition-delay:0ms;">
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src="/images/ckda-favicon.png" alt="Law Consultant" class="w-16 h-16 rounded-2xl object-cover border-2 border-blue-200 flex-shrink-0" loading="lazy">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col xs:flex-row sm:flex-row sm:items-start sm:justify-between gap-y-3">
+                <div>
+                  <h4 class="font-bold text-xl leading-tight">Law Consultant Director | JHB | RSA</h4>
+                  <p class="text-sm text-gray-600 mt-1">No Identity → Logo design</p>
+                  <p class="text-sm text-gray-600">No Online Presence → Website design</p>
+                  <p class="text-sm text-gray-600">No Marketing Materials → Business card design</p>
+                </div>
+                <div class="flex text-yellow-400 text-xl">★★★★★</div>
+              </div>
+              <blockquote class="mt-5 text-gray-700 italic leading-relaxed">
+                "They delivered beyond my expectations, very professional and fast."
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card opacity-0 translate-y-6 transition-all duration-500 ease-out bg-white rounded-3xl border-2 border-pink-500/30 shadow-lg hover:shadow-xl p-6 md:p-8" style="transition-delay:100ms;">
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src="/images/safari-canvas-logo-designed-by-reserved-designs.avif" alt="Start-up Founder" class="w-16 h-16 rounded-2xl object-cover border-2 border-pink-200 flex-shrink-0" loading="lazy">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-y-3">
+                <div>
+                  <h4 class="font-bold text-xl leading-tight">START-UP FOUNDER | CPT | RSA</h4>
+                  <p class="text-sm text-gray-600 mt-1">No online presence → Complete business website</p>
+                  <p class="text-sm text-gray-600">No product visualiser → Product rendering</p>
+                  <p class="text-sm text-gray-600">No display model → Professional prototype</p>
+                </div>
+                <div class="flex text-yellow-400 text-xl">★★★★★</div>
+              </div>
+              <blockquote class="mt-5 text-gray-700 italic leading-relaxed">
+                "Excellent designs, precision prototype. Now investors take me seriously and listen."
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card opacity-0 translate-y-6 transition-all duration-500 ease-out bg-white rounded-3xl border-2 border-pink-500/30 shadow-lg hover:shadow-xl p-6 md:p-8" style="transition-delay:200ms;">
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src="/images/2d-rough-sketch-into-3d-render-with-reserved-designs.avif" alt="Entrepreneur" class="w-16 h-16 rounded-2xl object-cover border-2 border-pink-200 flex-shrink-0" loading="lazy">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-y-3">
+                <div>
+                  <h4 class="font-bold text-xl leading-tight">ENTREPRENEUR | ROSEBANK | RSA</h4>
+                  <p class="text-sm text-gray-600 mt-1">Idea but no CAD skill → High quality designs</p>
+                  <p class="text-sm text-gray-600">No product promoter → User flow animation</p>
+                  <p class="text-sm text-gray-600">No proof of concept → Tested prototype</p>
+                </div>
+                <div class="flex text-yellow-400 text-xl">★★★★★</div>
+              </div>
+              <blockquote class="mt-5 text-gray-700 italic leading-relaxed">
+                "As someone who had been sitting on my idea for over a year — I'm happy now it's a real thing I can show and use. Highly recommended!"
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card opacity-0 translate-y-6 transition-all duration-500 ease-out bg-white rounded-3xl border-2 border-blue-500/30 shadow-lg hover:shadow-xl p-6 md:p-8" style="transition-delay:300ms;">
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src="/images/3d-printing-portfolio3.avif" alt="Maker" class="w-16 h-16 rounded-2xl object-cover border-2 border-blue-200 flex-shrink-0" loading="lazy">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-y-3">
+                <div>
+                  <h4 class="font-bold text-xl leading-tight">MAKER | STELLENBOSCH | RSA</h4>
+                  <p class="text-sm text-gray-600 mt-1">Had an idea for a replacement part but no 3D modelling skill → Precision reverse engineering</p>
+                  <p class="text-sm text-gray-600">No machinery to make part → 3D-printed custom part</p>
+                </div>
+                <div class="flex text-yellow-400 text-xl">★★★★★</div>
+              </div>
+              <blockquote class="mt-5 text-gray-700 italic leading-relaxed">
+                "Ndinga understood my vision instantly and delivered perfectly."
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card opacity-0 translate-y-6 transition-all duration-500 ease-out bg-white rounded-3xl border-2 border-blue-500/30 shadow-lg hover:shadow-xl p-6 md:p-8" style="transition-delay:400ms;">
+          <div class="flex flex-col sm:flex-row gap-5">
+            <img src="/images/reserved-designs-mspt-logo-design.avif" alt="Brand Owner" class="w-16 h-16 rounded-2xl object-cover border-2 border-blue-200 flex-shrink-0" loading="lazy">
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-y-3">
+                <div>
+                  <h4 class="font-bold text-xl leading-tight">BRAND OWNER | DURBAN | RSA</h4>
+                  <p class="text-sm text-gray-600 mt-1">No online presence → Website design</p>
+                  <p class="text-sm text-gray-600">No professional packaging → Eye-catching packaging design</p>
+                  <p class="text-sm text-gray-600">No ideal customer → Identified target audience & market gap</p>
+                </div>
+                <div class="flex text-yellow-400 text-xl">★★★★★</div>
+              </div>
+              <blockquote class="mt-5 text-gray-700 italic leading-relaxed">
+                "They're highly responsive and transparent with their process. I can already imagine our products on big retail shelves. Our whole team was left impressed and inspired."
+              </blockquote>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-16 animate-on-scroll">
+      <a
+        href="/intake"
+        class="inline-block bg-black hover:bg-gray-900 text-white font-semibold text-base px-10 py-4 rounded-2xl transition-all duration-300 hover:scale-105"
+      >
+        SEE WHAT YOUR IDEA COULD BECOME TODAY
+      </a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     DUAL CTA — Shop + Newsletter
+     ═══════════════════════════════════════════════════════════ -->
+<section class="bg-[#0a0a0a] py-24 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-0 border border-white/10 rounded-3xl overflow-hidden">
+
+      <!-- LEFT: SHOP CTA -->
+      <div class="bg-[#111827] p-12 lg:p-16 flex flex-col justify-center border-r border-white/10">
+        <div class="max-w-md">
+          <span class="inline-block px-4 py-1.5 text-xs font-bold tracking-[2px] bg-gradient-to-r from-[#00f5ff] to-[#ff0088] text-white rounded-full mb-6">
+            LIMITED RESERVE
+          </span>
+          <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-white leading-none mb-6">
+            We've reserved launched products for you.
+          </h2>
+          <p class="text-xl text-gray-400 mb-10">
+            Now you can claim them before they're gone.
+          </p>
+          <a
+            href="/shop"
+            class="inline-flex items-center gap-3 bg-gradient-to-r from-[#00f5ff] to-[#ff0088] hover:from-[#00e6ff] hover:to-[#ff1a8c] text-white font-semibold text-lg px-10 py-5 rounded-2xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-pink-500/30"
+          >
+            Claim Your Reserved Products
+            <span class="text-2xl">→</span>
+          </a>
+          <p class="text-xs text-gray-500 mt-8">Only a few pieces remain in your reserved collection.</p>
+        </div>
+      </div>
+
+<!-- RIGHT: NEWSLETTER CTA -->
+<div class="bg-[#0a0a0a] p-12 lg:p-16 flex flex-col justify-center" id="invite">
+  <div class="max-w-md">
+    <span class="inline-block px-4 py-1.5 text-xs font-bold tracking-[2px] border border-[#ff0088]/30 text-[#ff0088] rounded-full mb-6">
+      INVITATION ONLY
+    </span>
+    <h2 class="text-4xl md:text-5xl font-black tracking-tighter text-white leading-none mb-6">
+      Accept this invitation
+    </h2>
+    <p class="text-xl text-gray-400 mb-10">
+      to receive new updates from our launched ideas, early prototypes, and exclusive drops.
+    </p>
+
+    <div id="form-wrap" class="space-y-4">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input
+          type="email"
+          id="basin-email"
+          placeholder="your@email.com"
+          required
+          class="flex-1 bg-white/10 border border-white/20 focus:border-[#ff0088] rounded-2xl px-6 py-5 text-white placeholder-gray-400 outline-none transition-colors"
+        >
+        <button
+          id="basin-btn"
+          type="button"
+          class="bg-white text-black hover:bg-[#ff0088] hover:text-white font-semibold px-10 py-5 rounded-2xl transition-all duration-300 whitespace-nowrap"
+        >
+          Accept Invitation
+        </button>
+      </div>
+      <p id="basin-msg" class="text-xs mt-2 min-h-[1rem]"></p>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-8">
+      You'll be the first to know when something new is born.
+    </p>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+  const btn = document.getElementById('basin-btn')
+  const emailInput = document.getElementById('basin-email')
+  const msg = document.getElementById('basin-msg')
+
+  // ─── NUCLEAR REDIRECT LOCKDOWN ──────────────────────────────────────────────
+  // Intercepts ALL navigation attempts during the Basin fetch window.
+  // Fires before any redirect from Basin can take hold.
+
+  let lockdown = false
+
+  // 1. beforeunload — blocks tab close / hard nav
+  const onBeforeUnload = (e) => {
+    if (!lockdown) return
+    e.preventDefault()
+    e.returnValue = ''
+  }
+
+  // 2. Proxy window.location — intercepts .href = '...' and .replace()
+  const _realLocation = window.location
+  const locationProxy = new Proxy(_realLocation, {
+    set(target, prop, value) {
+      if (lockdown && prop === 'href') {
+        console.warn('[BASIN LOCKDOWN] Blocked location.href redirect →', value)
+        return true // swallow it
+      }
+      Reflect.set(target, prop, value)
+      return true
+    }
+  })
+  try {
+    Object.defineProperty(window, 'location', {
+      get: () => lockdown ? locationProxy : _realLocation,
+      configurable: true
+    })
+  } catch (_) { /* Firefox restricts this — fallback below handles it */ }
+
+  // 3. history API interception — pushState / replaceState
+  const _pushState = history.pushState.bind(history)
+  const _replaceState = history.replaceState.bind(history)
+  history.pushState = (...args) => {
+    if (lockdown) { console.warn('[BASIN LOCKDOWN] Blocked pushState →', args[2]); return }
+    _pushState(...args)
+  }
+  history.replaceState = (...args) => {
+    if (lockdown) { console.warn('[BASIN LOCKDOWN] Blocked replaceState →', args[2]); return }
+    _replaceState(...args)
+  }
+
+  // 4. XMLHttpRequest + fetch monkey-patch — prevents Basin's own redirect-follow
+  const _origFetch = window.fetch
+  window.fetch = (input, init = {}) => {
+    // Force no-follow on all fetches while locked (ours included — we handle it)
+    return _origFetch(input, { redirect: 'manual', ...init })
+  }
+
+  // 5. popstate / hashchange killswitch
+  const onNavEvent = (e) => { if (lockdown) e.stopImmediatePropagation() }
+  window.addEventListener('popstate', onNavEvent, true)
+  window.addEventListener('hashchange', onNavEvent, true)
+
+  // ─── BASIN SUBMIT LOGIC ─────────────────────────────────────────────────────
+
+  btn.addEventListener('click', async () => {
+    const email = emailInput.value.trim()
+    if (!email) return
+
+    btn.disabled = true
+    btn.textContent = 'Sending...'
+    msg.textContent = ''
+
+    // Arm the lockdown the instant we fire the request
+    lockdown = true
+    window.addEventListener('beforeunload', onBeforeUnload)
+
+    try {
+      const res = await fetch('https://usebasin.com/f/b12a06bd44cf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        // _redirect: '' tells Basin: no server-side redirect
+        body: JSON.stringify({ email, _redirect: '' })
+      })
+
+      // Disarm — we're safe now
+      lockdown = false
+      window.removeEventListener('beforeunload', onBeforeUnload)
+
+      // Basin returns 200 or 302 (manual mode catches 302 as opaqueredirect)
+      if (res.ok || res.type === 'opaqueredirect') {
+        btn.textContent = "You're in"
+        btn.style.backgroundColor = '#ff0088'
+        btn.style.color = 'white'
+        emailInput.style.display = 'none'
+        msg.style.color = '#22c55e'
+        msg.textContent = "Welcome. You'll hear from us soon."
+      } else {
+        throw new Error(`Basin responded: ${res.status}`)
+      }
+    } catch (err) {
+      lockdown = false
+      window.removeEventListener('beforeunload', onBeforeUnload)
+      console.error('[BASIN]', err)
+      btn.disabled = false
+      btn.textContent = 'Accept Invitation'
+      msg.style.color = '#ef4444'
+      msg.textContent = 'Something went wrong. Try again.'
+    }
+  })
+</script>
+      
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGBOOK — Insights & Manifestos
+     ═══════════════════════════════════════════════════════════ -->
+<section class="py-20 md:py-28 px-4 sm:px-6 lg:px-8 bg-white">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6">
+      <div>
+        <p class="text-[#E91E8C] uppercase tracking-wider font-medium text-sm mb-2">LOGBOOK</p>
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+          INSIGHTS<span class="text-[#4169E1]">&</span><br />
+          <span class="text-[#4169E1]">MANIFESTOS</span>
+        </h2>
+      </div>
+      <a
+        href="/blogs"
+        class="inline-flex items-center gap-2 text-[#4169E1] font-bold hover:text-[#E91E8C] transition-colors group text-lg"
+      >
+        VIEW ALL BLOGS
+        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+
+      <BlogCard
+        href="/blog/how-to-turn-your-ideas-into-real-money-blog"
+        imageSrc="/images/how-to-turn-your-idea-into-cash-blog.avif"
+        imageAlt="Hands holding stack of dollar bills"
+        category="Entrepreneurship"
+        readTime="3 min read"
+        title="HOW TO TURN YOUR IDEA INTO REAL MONEY IN 2026 (WITHOUT LOSING EVERYTHING)"
+        excerpt="The exact roadmap thousands of everyday people are using right now to license ideas and launch million-dollar businesses."
+      />
+
+      <BlogCard
+        href="/blog/sustainable-product-design-2026"
+        imageSrc="/images/designing-products-that-don't-destroy-earth-blog.avif"
+        category="Sustainability"
+        readTime="2 min read"
+        title="BUILDING PRODUCTS THAT DON'T DESTROY THE PLANET"
+        excerpt="How we use circular design principles, biodegradable materials and lifecycle thinking to create responsible innovation."
+      />
+
+      <BlogCard
+        href="/blog/the-power-of-branding-blog"
+        imageSrc="/images/the-power-of-branding-blog.avif"
+        category="Branding"
+        readTime="4 min read"
+        title="THE POWER OF BRANDING: WHY YOU CAN'T AFFORD TO LOOK AVERAGE"
+        excerpt="Discover why two identical businesses can have completely different results — just because of branding."
+      />
+
+    </div>
+  </div>
+</section>
+
+
+<InfiniteSlider />
+
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE SCRIPTS — scroll animations & word highlights
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+
+  // ── Helper: observe once at 70% threshold ─────────────────
+  function observeAt70(selector: string, onVisible: (el: Element, i: number) => void) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          onVisible(entry.target, 0);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.7 });
+
+    document.querySelectorAll(selector).forEach(el => obs.observe(el));
+  }
+
+  // ── Helper: observe once at 20% threshold (earlier, for groups) ──
+  function observeSection(id: string, onVisible: (section: Element) => void) {
+    const section = document.getElementById(id);
+    if (!section) return;
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          onVisible(section);
+          obs.unobserve(section);
+        }
+      });
+    }, { threshold: 0.2 });
+    obs.observe(section);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // 1. PAIN SECTION — staggered card entry
+  // ══════════════════════════════════════════════════════════
+  observeSection('pain-section', () => {
+    document.querySelectorAll('#pain-section .section-card').forEach((card, i) => {
+      const delay = parseInt((card as HTMLElement).style.transitionDelay) || i * 120;
+      setTimeout(() => {
+        (card as HTMLElement).style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        card.classList.remove('opacity-0', 'translate-y-8');
+      }, delay);
+    });
+  });
+
+  // 2. PAIN SECTION — highlight "execution." at 70% in view
+  observeAt70('#pain-section .highlight-word', (el) => {
+    const line = el.querySelector('.highlight-underline') as HTMLElement;
+    if (line) {
+      setTimeout(() => { line.style.width = '100%'; }, 200);
+    }
+    (el as HTMLElement).style.color = '#E91E8C';
+    (el as HTMLElement).style.transition = 'color 0.5s ease-out';
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // 3. INTRO SECTION — slide in left/right
+  // ══════════════════════════════════════════════════════════
+  observeSection('intro-section', () => {
+    const left  = document.querySelector('#intro-section .intro-left') as HTMLElement;
+    const right = document.querySelector('#intro-section .intro-right') as HTMLElement;
+    if (left)  { left.classList.remove('opacity-0', '-translate-x-8');  }
+    if (right) {
+      setTimeout(() => { right.classList.remove('opacity-0', 'translate-x-8'); }, 150);
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // 4. DELIVERABLES — pop in
+  // ══════════════════════════════════════════════════════════
+  observeSection('deliverables-section', () => {
+    document.querySelectorAll('#deliverables-section .deliverable-card').forEach((card, i) => {
+      const delay = i * 100;
+      setTimeout(() => {
+        card.classList.remove('opacity-0', 'scale-95');
+      }, delay);
+    });
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // 5. FIT SECTION — slide in from right
+  // ══════════════════════════════════════════════════════════
+  observeSection('fit-section', () => {
+    document.querySelectorAll('#fit-section .fit-item').forEach((item, i) => {
+      const delay = i * 100;
+      setTimeout(() => {
+        item.classList.remove('opacity-0', 'translate-x-4');
+      }, delay);
+    });
+  });
+
+  // 6. FIT SECTION — highlight "READY TO SHIP." at 70%
+  observeAt70('#fit-section .fit-highlight-word', (el) => {
+    const line = el.querySelector('.fit-highlight-line') as HTMLElement;
+    if (line) {
+      setTimeout(() => { line.style.width = '100%'; }, 200);
+    }
+    (el as HTMLElement).style.color = '#4169E1';
+    (el as HTMLElement).style.transition = 'color 0.5s ease-out';
+    (el as HTMLElement).style.fontWeight = '900';
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // 7. BUILD CTA SECTION — lines fade up sequentially
+  // ══════════════════════════════════════════════════════════
+  observeSection('build-cta-section', () => {
+    document.querySelectorAll('#build-cta-section .build-line').forEach((line, i) => {
+      const delay = i * 150;
+      setTimeout(() => {
+        line.classList.remove('opacity-0', 'translate-y-4');
+      }, delay);
+    });
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // 8. TESTIMONIALS — staggered slide up
+  // ══════════════════════════════════════════════════════════
+  observeSection('testimonials-section', () => {
+    document.querySelectorAll('#testimonials-section .testimonial-card').forEach((card, i) => {
+      const delay = i * 100;
+      setTimeout(() => {
+        card.classList.remove('opacity-0', 'translate-y-6');
+      }, delay);
+    });
+  });
+
+})();
+</script>
+
+</MainLayout>

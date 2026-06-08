@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safari Canvas — Coming Soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bree+Serif&family=Public+Sans:wght@400;600;700;900&family=Arial+Nova&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --vivid-green: #2FF73C;
+    --gray-brown: #A65824;
+    --orange: #FA9402;
+    --orange-2: #FC6C12;
+    --black: #000000;
+    --white: #FFFFFF;
+    --fire-red: #E82A00;
+    --fire-yellow: #FFD600;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #0A0A00;
+    color: var(--white);
+    font-family: 'Public Sans', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── FIRE PARTICLE CANVAS ── */
+  #fire-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.35;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── TOP NAV STRIP ── */
+  .nav-strip {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid rgba(250, 148, 2, 0.25);
+  }
+
+  .nav-logo {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+
+  .nav-logo span {
+    background: var(--orange);
+    color: var(--black);
+    padding: 2px 8px;
+    margin-right: 4px;
+  }
+
+  .nav-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    width: 100%;
+    max-width: 1100px;
+    padding: 5rem 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--vivid-green);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--vivid-green);
+  }
+
+  .hero-title {
+    font-family: 'Bree Serif', serif;
+    font-size: clamp(4.5rem, 12vw, 10rem);
+    line-height: 0.88;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    position: relative;
+    margin-bottom: 0.3rem;
+  }
+
+  .hero-title .line-safari {
+    display: block;
+    -webkit-text-stroke: 3px var(--orange);
+    color: transparent;
+    position: relative;
+  }
+
+  .hero-title .line-canvas {
+    display: block;
+    color: var(--white);
+    position: relative;
+  }
+
+  .fire-word {
+    position: relative;
+    display: inline-block;
+  }
+
+  .fire-word::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--fire-red), var(--orange), var(--fire-yellow));
+    border-radius: 2px;
+    animation: fireUnderline 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes fireUnderline {
+    0% { transform: scaleX(0.95); opacity: 0.8; }
+    100% { transform: scaleX(1.0); opacity: 1; }
+  }
+
+  .hero-sub {
+    font-family: 'Public Sans', sans-serif;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    max-width: 680px;
+    line-height: 1.65;
+    margin-top: 2rem;
+  }
+
+  .hero-sub strong {
+    color: var(--orange);
+    font-weight: 700;
+  }
+
+  /* ── MANIFESTO STRIP ── */
+  .manifesto {
+    width: 100%;
+    background: var(--orange);
+    overflow: hidden;
+    padding: 0.9rem 0;
+    position: relative;
+  }
+
+  .manifesto-track {
+    display: flex;
+    gap: 0;
+    animation: scrollLeft 18s linear infinite;
+    white-space: nowrap;
+  }
+
+  .manifesto-track span {
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--black);
+    padding: 0 2rem;
+    flex-shrink: 0;
+  }
+
+  .manifesto-track span::before {
+    content: '★  ';
+  }
+
+  @keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ── DESCRIPTION BLOCK ── */
+  .description {
+    width: 100%;
+    max-width: 1100px;
+    padding: 5rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .desc-left {
+    position: relative;
+  }
+
+  .desc-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gray-brown);
+    margin-bottom: 1rem;
+  }
+
+  .desc-headline {
+    font-family: 'Bree Serif', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .desc-headline em {
+    color: var(--vivid-green);
+    font-style: normal;
+  }
+
+  .desc-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .desc-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .culture-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(250,148,2,0.3);
+    padding: 0.75rem 1.2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    border-radius: 4px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .culture-tag:hover {
+    border-color: var(--orange);
+    background: rgba(250,148,2,0.08);
+  }
+
+  .culture-tag .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--vivid-green);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--orange), var(--vivid-green), var(--orange), transparent);
+    opacity: 0.6;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    width: 100%;
+    max-width: 1100px;
+    padding: 5rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  /* ── CTA CARDS ── */
+  .cta-card {
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 3rem 2.5rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .cta-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .cta-card.creator {
+    background: #0D0D00;
+    border-color: rgba(47,247,60,0.3);
+  }
+
+  .cta-card.creator:hover {
+    border-color: var(--vivid-green);
+    box-shadow: 0 0 40px rgba(47,247,60,0.08);
+  }
+
+  .cta-card.customer {
+    background: #100800;
+    border-color: rgba(250,148,2,0.3);
+  }
+
+  .cta-card.customer:hover {
+    border-color: var(--orange);
+    box-shadow: 0 0 40px rgba(250,148,2,0.08);
+  }
+
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .cta-card.creator::before {
+    background: var(--vivid-green);
+  }
+
+  .cta-card.customer::before {
+    background: var(--orange);
+  }
+
+  .cta-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .creator .cta-badge {
+    background: rgba(47,247,60,0.12);
+    color: var(--vivid-green);
+    border: 1px solid rgba(47,247,60,0.4);
+  }
+
+  .customer .cta-badge {
+    background: rgba(250,148,2,0.12);
+    color: var(--orange);
+    border: 1px solid rgba(250,148,2,0.4);
+  }
+
+  .cta-card h2 {
+    font-family: 'Bree Serif', serif;
+    font-size: 1.9rem;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+
+  .cta-card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 2rem;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-primary:hover { filter: brightness(1.1); }
+
+  .btn-creator {
+    background: var(--vivid-green);
+    color: var(--black);
+  }
+
+  .btn-customer {
+    background: var(--orange);
+    color: var(--black);
+  }
+
+  /* ── FORM OVERLAYS ── */
+  .form-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .form-overlay.active {
+    display: flex;
+  }
+
+  .form-box {
+    background: #111100;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .form-box.creator-form {
+    border: 1px solid rgba(47,247,60,0.35);
+  }
+
+  .form-box.customer-form {
+    border: 1px solid rgba(250,148,2,0.35);
+  }
+
+  .form-header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    position: sticky;
+    top: 0;
+    background: #111100;
+    z-index: 2;
+  }
+
+  .form-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-header h3 {
+    font-family: 'Bree Serif', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+  }
+
+  .form-close {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .form-close:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--white);
+  }
+
+  .form-header p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .form-body {
+    padding: 2rem 2.5rem 2.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.4rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.45rem;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--white);
+    padding: 0.75rem 1rem;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .form-group select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+  }
+
+  .form-group select option {
+    background: #1a1a00;
+    color: var(--white);
+  }
+
+  .creator-form .form-group input:focus,
+  .creator-form .form-group select:focus {
+    border-color: var(--vivid-green);
+    background: rgba(47,247,60,0.04);
+  }
+
+  .customer-form .form-group input:focus,
+  .customer-form .form-group select:focus {
+    border-color: var(--orange);
+    background: rgba(250,148,2,0.04);
+  }
+
+  .form-group input::placeholder {
+    color: rgba(255,255,255,0.25);
+  }
+
+  .form-submit {
+    width: 100%;
+    padding: 1rem;
+    font-family: 'Public Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: filter 0.15s, transform 0.15s;
+  }
+
+  .form-submit:hover { filter: brightness(1.1); }
+  .form-submit:active { transform: scale(0.99); }
+
+  .creator-form .form-submit { background: var(--vivid-green); color: var(--black); }
+  .customer-form .form-submit { background: var(--orange); color: var(--black); }
+
+  .form-note {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-state {
+    display: none;
+    padding: 4rem 2.5rem;
+    text-align: center;
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .success-state h3 {
+    font-family: 'Bree Serif', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+  }
+
+  .success-state p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+  }
+
+  /* ── HASHTAGS ── */
+  .hashtags {
+    width: 100%;
+    max-width: 1100px;
+    padding: 2rem 2.5rem 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  .hashtag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .hashtag:hover {
+    color: var(--orange);
+    border-color: var(--orange);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    width: 100%;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer .logo-small {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  footer .logo-small span {
+    background: var(--orange);
+    color: var(--black);
+    padding: 1px 6px;
+    margin-right: 3px;
+  }
+
+  footer small {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.7s ease 0.1s both; }
+  .hero-title { animation: fadeUp 0.7s ease 0.25s both; }
+  .hero-sub { animation: fadeUp 0.7s ease 0.4s both; }
+  .cta-section { animation: fadeUp 0.7s ease 0.55s both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .description { grid-template-columns: 1fr; gap: 2.5rem; }
+    .cta-section { grid-template-columns: 1fr; }
+    .hero { padding: 3rem 1.5rem 2rem; }
+    .nav-strip { padding: 1rem 1.5rem; }
+    .description, .cta-section, .hashtags { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .form-header, .form-body { padding-left: 1.5rem; padding-right: 1.5rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fire-canvas"></canvas>
+
+<div class="page">
+
+  <!-- NAV -->
+  <nav class="nav-strip">
+    <div class="nav-logo"><span>SAFARI</span> CANVAS</div>
+    <div class="nav-tag">Coming Soon</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">Mzansi Made &middot; Proudly South African</div>
+
+    <h1 class="hero-title">
+      <span class="line-safari"><span class="fire-word">SAFARI</span></span>
+      <span class="line-canvas">CANVAS</span>
+    </h1>
+
+    <p class="hero-sub">
+      A marketplace dedicated to <strong>South African-inspired</strong> graphic tees, hoodies, streetwear, and creative merchandise that celebrate our landscapes, cultures, languages, humour, heritage, and everyday experiences.
+      <br><br>
+      While the world drowns in faded 'California Love' tees — <strong>we're rising with ink that bleeds red, gold, and green.</strong>
+    </p>
+  </section>
+
+  <!-- SCROLLING MANIFESTO -->
+  <div class="manifesto" aria-hidden="true">
+    <div class="manifesto-track">
+      <span>Wear Your Culture</span>
+      <span>Support Local Creativity</span>
+      <span>Carry South Africa With You</span>
+      <span>From Joburg Streets to Cape Town Shores</span>
+      <span>Township Culture. Urban Life. Mzansi Magic</span>
+      <span>Wear Your Culture</span>
+      <span>Support Local Creativity</span>
+      <span>Carry South Africa With You</span>
+      <span>From Joburg Streets to Cape Town Shores</span>
+      <span>Township Culture. Urban Life. Mzansi Magic</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- DESCRIPTION -->
+  <section class="description">
+    <div class="desc-left">
+      <div class="desc-label">Our Mission</div>
+      <h2 class="desc-headline">Bottling <em>Mzansi magic</em> and daring you to wear it unapologetically.</h2>
+      <p class="desc-body">
+        Safari Canvas isn't simply selling clothing. We're creating a platform where South African creativity can thrive, where local stories take center stage, and where culture becomes something you can wear proudly.<br><br>
+        From the streets of Johannesburg to the shores of Cape Town — every piece is designed to carry a piece of Mzansi with it. Your soul hums with the fire of a thousand braais. We hear you.
+      </p>
+    </div>
+    <div class="desc-right">
+      <div class="culture-tag"><span class="dot"></span> Graphic Tees &amp; Hoodies</div>
+      <div class="culture-tag"><span class="dot"></span> Township Culture &amp; Urban Streetwear</div>
+      <div class="culture-tag"><span class="dot"></span> South African Languages &amp; Humour</div>
+      <div class="culture-tag"><span class="dot"></span> Landscapes, Heritage &amp; Identity</div>
+      <div class="culture-tag"><span class="dot"></span> Accessories &amp; Creative Merch</div>
+      <div class="culture-tag"><span class="dot"></span> Local Creators. Authentic Stories.</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CTA SECTION -->
+  <section class="cta-section" aria-label="Join the movement">
+    <!-- CREATOR CARD -->
+    <div class="cta-card creator">
+      <div class="cta-badge">For Designers &amp; Creators</div>
+      <h2>Ready to tell your story on a tee?</h2>
+      <p>Join the Safari Canvas creator community. Sell your South African-inspired designs to a marketplace that gets it. Be one of the founding creators when we launch.</p>
+      <button class="btn-primary btn-creator" onclick="openForm('creator')">
+        Join as Designer / Creator →
+      </button>
+    </div>
+
+    <!-- CUSTOMER CARD -->
+    <div class="cta-card customer">
+      <div class="cta-badge">For Customers</div>
+      <h2>Be first to wear Mzansi, unapologetically.</h2>
+      <p>Get notified the moment we launch. Be among the first to shop pieces that carry the spirit of South Africa — made by local creators who live it.</p>
+      <button class="btn-primary btn-customer" onclick="openForm('customer')">
+        Remind Me The Launch →
+      </button>
+    </div>
+  </section>
+
+  <!-- HASHTAGS -->
+  <div class="hashtags" aria-label="Campaign tags">
+    <span class="hashtag">#WearYourCulture</span>
+    <span class="hashtag">#SupportLocalCreativity</span>
+    <span class="hashtag">#CarrySouthAfricaWithYou</span>
+    <span class="hashtag">#SafariCanvas</span>
+    <span class="hashtag">#MzansiMade</span>
+    <span class="hashtag">#ProudlySouthAfrican</span>
+    <span class="hashtag">#LocalIsLekker</span>
+    <span class="hashtag">#UnapologeticallyAfrican</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo-small"><span>SAFARI</span> CANVAS</div>
+    <small>Preserving South African culture on threads that roar. &copy; 2025</small>
+  </footer>
+
+</div>
+
+<!-- ── CREATOR FORM OVERLAY ── -->
+<div class="form-overlay" id="creator-overlay" role="dialog" aria-modal="true" aria-label="Join as Designer or Creator">
+  <div class="form-box creator-form">
+
+    <div id="creator-form-content">
+      <div class="form-header">
+        <div class="form-header-top">
+          <h3>Join as a Creator</h3>
+          <button class="form-close" onclick="closeForm('creator')" aria-label="Close form">&times;</button>
+        </div>
+        <p>Tell us about yourself — we'll reach out when we open creator onboarding.</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-group">
+          <label for="c-name">Full Name</label>
+          <input type="text" id="c-name" placeholder="Your full name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="c-email">Email Address</label>
+          <input type="email" id="c-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="c-instagram">Instagram Handle</label>
+          <input type="text" id="c-instagram" placeholder="@yourhandle">
+        </div>
+        <div class="form-group">
+          <label for="c-portfolio">Portfolio / Website Link</label>
+          <input type="url" id="c-portfolio" placeholder="https://yourportfolio.com">
+        </div>
+        <div class="form-group">
+          <label for="c-category">Design Category</label>
+          <select id="c-category">
+            <option value="" disabled selected>Select your primary category</option>
+            <option>Graphic Tees &amp; Streetwear</option>
+            <option>Cultural &amp; Heritage Illustration</option>
+            <option>Township &amp; Urban Art</option>
+            <option>Photography &amp; Print</option>
+            <option>Typography &amp; Language Art</option>
+            <option>Nature &amp; Wildlife</option>
+            <option>Accessories &amp; Product Design</option>
+            <option>Other / Mixed</option>
+          </select>
+        </div>
+<button type="button" class="form-submit" data-form="creator">
+  Submit My Application →
+</button>
+        </button>
+        <p class="form-note">No spam. We'll only reach out about Safari Canvas creator opportunities.</p>
+      </div>
+    </div>
+
+    <div class="success-state" id="creator-success">
+      <div class="success-icon">🔥</div>
+      <h3>You're in, Creator!</h3>
+      <p>We've got your details. When we open creator onboarding, you'll be among the first to know. Keep making magic — <strong>Mzansi needs your stories.</strong></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── CUSTOMER FORM OVERLAY ── -->
+<div class="form-overlay" id="customer-overlay" role="dialog" aria-modal="true" aria-label="Remind me at launch">
+  <div class="form-box customer-form">
+
+    <div id="customer-form-content">
+      <div class="form-header">
+        <div class="form-header-top">
+          <h3>Remind Me The Launch</h3>
+          <button class="form-close" onclick="closeForm('customer')" aria-label="Close form">&times;</button>
+        </div>
+        <p>Drop your details and we'll notify you the moment Safari Canvas goes live.</p>
+      </div>
+
+      <div class="form-body">
+        <div class="form-group">
+          <label for="cu-name">Full Name</label>
+          <input type="text" id="cu-name" placeholder="Your full name" autocomplete="name">
+        </div>
+        <div class="form-group">
+          <label for="cu-email">Email Address</label>
+          <input type="email" id="cu-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="cu-province">Province</label>
+          <select id="cu-province">
+            <option value="" disabled selected>Select your province</option>
+            <option>Gauteng</option>
+            <option>Western Cape</option>
+            <option>KwaZulu-Natal</option>
+            <option>Eastern Cape</option>
+            <option>Limpopo</option>
+            <option>Mpumalanga</option>
+            <option>North West</option>
+            <option>Free State</option>
+            <option>Northern Cape</option>
+            <option>Outside South Africa</option>
+          </select>
+        </div>
+<button type="button" class="form-submit" data-form="customer">
+  Notify Me When Launching →
+</button>
+        <p class="form-note">No spam. Launch notification only. Unsubscribe anytime.</p>
+      </div>
+    </div>
+
+    <div class="success-state" id="customer-success">
+      <div class="success-icon">🌍</div>
+      <h3>We've got you!</h3>
+      <p>You're on the list. The moment Safari Canvas launches, you'll be the first to know — ready to wear something that's truly <strong>yours</strong>.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* ── FIRE PARTICLE CANVAS ── */
+  const canvas = document.getElementById('fire-canvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  class Particle {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x = Math.random() * canvas.width;
+      this.y = init ? Math.random() * canvas.height : canvas.height + 10;
+      this.size = Math.random() * 4 + 1.5;
+      this.speedY = -(Math.random() * 1.5 + 0.8);
+      this.speedX = (Math.random() - 0.5) * 0.6;
+      this.life = 1;
+      this.decay = Math.random() * 0.008 + 0.004;
+      const palette = [
+        [232, 42, 0],
+        [250, 148, 2],
+        [255, 214, 0],
+        [47, 247, 60],
+      ];
+      this.color = palette[Math.floor(Math.random() * palette.length)];
+    }
+    update() {
+      this.x += this.speedX + Math.sin(this.y * 0.03) * 0.3;
+      this.y += this.speedY;
+      this.life -= this.decay;
+      if (this.life <= 0 || this.y < -20) this.reset(false);
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.life * 0.6;
+      ctx.fillStyle = `rgb(${this.color[0]},${this.color[1]},${this.color[2]})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * this.life, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  const particles = Array.from({ length: 120 }, () => new Particle());
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* ── FORMS ── */
+  function openForm(type) {
+    document.getElementById(type + '-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeForm(type) {
+    document.getElementById(type + '-overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  function submitForm(type) {
+    const isCreator = type === 'creator';
+    if (isCreator) {
+      const name = document.getElementById('c-name').value.trim();
+      const email = document.getElementById('c-email').value.trim();
+      if (!name || !email) { alert('Please fill in your name and email to continue.'); return; }
+    } else {
+      const name = document.getElementById('cu-name').value.trim();
+      const email = document.getElementById('cu-email').value.trim();
+      if (!name || !email) { alert('Please fill in your name and email to continue.'); return; }
+    }
+    document.getElementById(type + '-form-content').style.display = 'none';
+    document.getElementById(type + '-success').style.display = 'block';
+  }
+
+  document.querySelectorAll('.form-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) {
+        const type = overlay.id.replace('-overlay', '');
+        closeForm(type);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.form-overlay.active').forEach(o => {
+        closeForm(o.id.replace('-overlay', ''));
+      });
+    }
+  });
+</script>
+
+<script>
+// Universal Basin Form Handler
+function submitToBasin(formId, data) {
+  const BASIN_ENDPOINT = 'https://usebasin.com/f/d1012b1e0982';
+  
+  // Show loading state
+  const submitBtn = document.querySelector(`[onclick="submitForm('${formId}')"]`);
+  if (submitBtn) {
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled = true;
+  }
+
+  fetch(BASIN_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+    // Basin also accepts form-data, but JSON works well
+  })
+  .then(response => {
+    if (response.ok) {
+      showSuccess(formId);
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(err => {
+    console.error('Form submission error:', err);
+    alert('Connection error. Please check your internet and try again.');
+  })
+  .finally(() => {
+    if (submitBtn) {
+      submitBtn.textContent = originalText || 'Submit';
+      submitBtn.disabled = false;
+    }
+  });
+}
+
+// Show success state
+function showSuccess(formType) {
+  const content = document.getElementById(`${formType}-form-content`);
+  const success = document.getElementById(`${formType}-success`);
+  
+  if (content && success) {
+    content.style.display = 'none';
+    success.style.display = 'block';
+  }
+}
+
+// Close form
+function closeForm(formType) {
+  const overlay = document.getElementById(`${formType}-overlay`);
+  if (overlay) overlay.style.display = 'none';
+}
+
+// Universal submit handler (keeps your existing onclick)
+function submitForm(formType) {
+  let data = {};
+
+  if (formType === 'creator') {
+    data = {
+      name: document.getElementById('c-name')?.value,
+      email: document.getElementById('c-email')?.value,
+      instagram: document.getElementById('c-instagram')?.value,
+      portfolio: document.getElementById('c-portfolio')?.value,
+      category: document.getElementById('c-category')?.value,
+      type: 'creator'
+    };
+  } 
+  else if (formType === 'customer') {
+    data = {
+      name: document.getElementById('cu-name')?.value,
+      email: document.getElementById('cu-email')?.value,
+      province: document.getElementById('cu-province')?.value,
+      type: 'customer'
+    };
+  }
+
+  // Basic validation
+  if (!data.email || !data.name) {
+    alert('Please fill in your name and email address.');
+    return;
+  }
+
+  submitToBasin(formType, data);
+}
+</script>
+
+<script>
+// Super universal version - auto-detects all forms
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.form-submit').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const formType = this.getAttribute('data-form');
+      if (formType) submitForm(formType);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
